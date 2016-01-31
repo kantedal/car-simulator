@@ -41,64 +41,56 @@ class CarSimulator {
 
                 var newground_forward = groundPlane.clone();
                 newground_forward.mesh.position.set(0,0,120);
-                newground_forward.mesh.scale.set(1,1,-1);
-                newground_forward.scale(1,1,-1);
+                newground_forward.scale = new THREE.Vector3(1,1,-1);
                 newground_forward.geometry.translate(0,0,120);
                 self._groundPlanes.push(newground_forward)
                 self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
 
                 var newground_forward_left = groundPlane.clone();
                 newground_forward_left.mesh.position.set(120,0,120);
-                newground_forward_left.mesh.scale.set(-1,1,-1);
-                newground_forward_left.scale(-1,1,-1);
+                newground_forward_left.scale = new THREE.Vector3(-1,1,-1);
                 newground_forward_left.geometry.translate(120,0,120);
                 self._groundPlanes.push(newground_forward_left)
                 self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
 
                 var newground_forward_right = groundPlane.clone();
                 newground_forward_right.mesh.position.set(-120,0,120);
-                newground_forward_right.mesh.scale.set(-1,1,-1);
-                newground_forward_right.scale(new THREE.Vector3(-1,1,-1));
+                newground_forward_right.scale =new THREE.Vector3(-1,1,-1);
                 newground_forward_right.geometry.translate(-120,0,120);
                 self._groundPlanes.push(newground_forward_right)
                 self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
 
                 var newground_right = groundPlane.clone();
                 newground_right.mesh.position.set(-120,0,0);
-                newground_right.mesh.scale.set(-1,1,1);
-                newground_right.geometry.scale(-1,1,1);
+                newground_right.scale = new THREE.Vector3(-1,1,1);
                 newground_right.geometry.translate(-120,0,0);
                 self._groundPlanes.push(newground_right)
                 self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
 
                 var newground_left = groundPlane.clone();
                 newground_left.mesh.position.set(120,0,0);
-                newground_left.mesh.scale.set(-1,1,1);
-                newground_left.geometry.scale(new THREE.Vector3(-1,1,1));
+                newground_left.scale = new THREE.Vector3(-1,1,1);
                 newground_left.geometry.translate(120,0,0);
                 self._groundPlanes.push(newground_left)
                 self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
 
                 var newground_backwards = groundPlane.clone();
                 newground_backwards.mesh.position.set(0,0,-120);
-                newground_backwards.mesh.scale.set(1,1,-1);
-                newground_backwards.scale(new THREE.Vector3(1,1,-1));
+                newground_backwards.scale = new THREE.Vector3(1,1,-1);
                 newground_backwards.geometry.translate(0,0,-120);
                 self._groundPlanes.push(newground_backwards)
                 self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
 
                 var newground_backwards_left = groundPlane.clone();
                 newground_backwards_left.mesh.position.set(120,0,-120);
-                newground_backwards_left.mesh.scale.set(-1,1,-1);
-                newground_backwards_left.scale(new THREE.Vector3(-1,1,-1));
+                newground_backwards_left.scale = new THREE.Vector3(-1,1,-1);
                 newground_backwards_left.geometry.translate(120,0,-120);
                 self._groundPlanes.push(newground_backwards_left)
                 self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
 
                 var newground_backwards_right = groundPlane.clone();
                 newground_backwards_right.mesh.position.set(-120,0,-120);
-                newground_backwards_right.mesh.scale.set(-1,1,-1);
-                newground_backwards_right.scale(new THREE.Vector3(-1,1,-1));
+                newground_backwards_right.scale = new THREE.Vector3(-1,1,-1);
                 newground_backwards_right.geometry.translate(-120,0,-120);
                 self._groundPlanes.push(newground_backwards_right)
                 self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
@@ -117,32 +109,53 @@ class CarSimulator {
         if(currentSurfaceIndex != this._surfaceIndex){
             var xMove = this._groundPlanes[currentSurfaceIndex].mesh.position.x - this._groundPlanes[this._surfaceIndex].mesh.position.x;
             var zMove = this._groundPlanes[currentSurfaceIndex].mesh.position.z - this._groundPlanes[this._surfaceIndex].mesh.position.z;
-            var surfacePos = this._groundPlanes[currentSurfaceIndex].mesh.position.clone();
+
+            var oldSurfacePos : THREE.Vector3 = this._groundPlanes[this._surfaceIndex].mesh.position.clone();
+            var surfacePos : THREE.Vector3 = this._groundPlanes[currentSurfaceIndex].mesh.position.clone();
+            var surfaceScale : THREE.Vector3 = this._groundPlanes[this._surfaceIndex].scale.clone();
 
             if(xMove < 0){
-                //var newground_forward_right = this._baseGroundPlane.clone();
-                //newground_forward_right.mesh.position.set(surfacePos.x-120, surfacePos.y, surfacePos.z+120);
-                //newground_forward_right.mesh.scale.set(-1,1,-1);
-                //newground_forward_right.geometry.scale(-1,1,-1);
-                //newground_forward_right.geometry.translate(surfacePos.x-120, surfacePos.y, surfacePos.z+120);
-                //this._groundPlanes.push(newground_forward_right)
-                //this._renderer.scene.add(this._groundPlanes[this._groundPlanes.length-1].mesh);
+                for(var i=0; i<this._groundPlanes.length; i++){
+                    if(this._groundPlanes[i].mesh.position.x > oldSurfacePos.x){
+                        this._groundPlanes[i].mesh.position.set(this._groundPlanes[i].mesh.position.x-360, this._groundPlanes[i].mesh.position.y, this._groundPlanes[i].mesh.position.z);
+                        //if(i != 0) {
+                        //    this._groundPlanes[i].geometry.scale(-this._groundPlanes[i].geometry.scale.x, 1, 1);
+                        //    this._groundPlanes[i].mesh.scale.set(-this._groundPlanes[i].mesh.scale.x, 1, 1);
+                        //    this._groundPlanes[i].geometry.scale.
+                        //}
+                        //this._groundPlanes[i].scale = new THREE.Vector3(1,1,1);
+                        this._groundPlanes[i].geometry.translate(-360, 0, 0);
+                    }
+                }
+            }else if(xMove > 0){
+                for(var i=0; i<this._groundPlanes.length; i++){
+                    if(this._groundPlanes[i].mesh.position.x < oldSurfacePos.x){
+                        //this._groundPlanes[i].mesh.translateX(360)
+                        // this._groundPlanes[i].mesh.scale.set(this._groundPlanes[i].scale.x*(-1),this._groundPlanes[i].scale.y,this._groundPlanes[i].scale.z*(1))
+                        //this._groundPlanes[i].scale = new THREE.Vector3(this._groundPlanes[i].scale.x*(-1),this._groundPlanes[i].scale.y,this._groundPlanes[i].scale.z*(1));
+                        //this._groundPlanes[i].geometry.translate(360, 0, 0);
+                    }
+                }
+            }
 
-                var newground_right = this._baseGroundPlane.clone();
-                newground_right.mesh.position.set(surfacePos.x-120, surfacePos.y, surfacePos.z);
-                newground_right.mesh.scale.set(-1,1,1);
-                newground_right.geometry.scale(-1,1,1);
-                newground_right.geometry.translate(surfacePos.x-120, surfacePos.y, surfacePos.z);
-                this._groundPlanes.push(newground_right)
-                this._renderer.scene.add(this._groundPlanes[this._groundPlanes.length-1].mesh);
-
-                //var newground_backwards_right = this._baseGroundPlane.clone();
-                //newground_backwards_right.mesh.position.set(surfacePos.x-120, surfacePos.y, surfacePos.z-120);
-                //newground_backwards_right.mesh.scale.set(-1,1,-1);
-                //newground_backwards_right.geometry.scale(-1,1,-1);
-                //newground_backwards_right.geometry.translate(surfacePos.x-120, surfacePos.y, surfacePos.z-120);
-                //this._groundPlanes.push(newground_backwards_right)
-                //this._renderer.scene.add(this._groundPlanes[this._groundPlanes.length-1].mesh);
+            if(zMove < 0){
+                for(var i=0; i<this._groundPlanes.length; i++){
+                    if(this._groundPlanes[i].mesh.position.z > oldSurfacePos.z){
+                        this._groundPlanes[i].mesh.translateZ(-360)
+                        // this._groundPlanes[i].mesh.scale.set(this._groundPlanes[i].scale.x*(-1),this._groundPlanes[i].scale.y,this._groundPlanes[i].scale.z*(1))
+                        //this._groundPlanes[i].scale = new THREE.Vector3(this._groundPlanes[i].scale.x*(-1),this._groundPlanes[i].scale.y,this._groundPlanes[i].scale.z*(1));
+                        this._groundPlanes[i].geometry.translate(0, 0, -360);
+                    }
+                }
+            }else if(zMove > 0){
+                for(var i=0; i<this._groundPlanes.length; i++){
+                    if(this._groundPlanes[i].mesh.position.z < oldSurfacePos.z){
+                        this._groundPlanes[i].mesh.translateZ(360)
+                        // this._groundPlanes[i].mesh.scale.set(this._groundPlanes[i].scale.x*(-1),this._groundPlanes[i].scale.y,this._groundPlanes[i].scale.z*(1))
+                        //this._groundPlanes[i].scale = new THREE.Vector3(this._groundPlanes[i].scale.x*(-1),this._groundPlanes[i].scale.y,this._groundPlanes[i].scale.z*(1));
+                        this._groundPlanes[i].geometry.translate(0, 0, 360);
+                    }
+                }
             }
 
             this._surfaceIndex = currentSurfaceIndex;

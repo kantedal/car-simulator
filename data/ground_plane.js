@@ -39,6 +39,7 @@ var GroundPlane = (function () {
         },
         set: function (scale) {
             this._geometry.scale(scale.x, scale.y, scale.z);
+            this.mesh.scale.set(scale.x, scale.y, scale.z);
             this._scale = scale;
         },
         enumerable: true,

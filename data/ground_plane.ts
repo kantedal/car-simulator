@@ -57,6 +57,7 @@ class GroundPlane {
 
     set scale(scale:THREE.Vector3) {
         this._geometry.scale(scale.x, scale.y, scale.z);
+        this.mesh.scale.set(scale.x, scale.y, scale.z);
         this._scale = scale;
     }
 
