@@ -18,7 +18,7 @@ class GroundPlane {
         var self = this;
         var loader = new THREE.OBJLoader();
         loader.load(
-            './models/ground_test_model.obj',
+            './models/ground_model2.obj',
             function(object){
                 console.log("success");
                 self._mesh = object;

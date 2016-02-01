@@ -8,7 +8,7 @@ var GroundPlane = (function () {
         this._renderer = renderer;
         var self = this;
         var loader = new THREE.OBJLoader();
-        loader.load('./models/ground_test_model.obj', function (object) {
+        loader.load('./models/ground_model2.obj', function (object) {
             console.log("success");
             self._mesh = object;
             var material = new THREE.MeshPhongMaterial({

@@ -5,14 +5,15 @@
 ///<reference path="../renderer.ts"/>
 ///<reference path="./parts/wheel.ts"/>
 ///<reference path="./ground_plane.ts"/>
+///<reference path="../carsimulator.ts"/>
 var Car = (function () {
     function Car(renderer) {
         //super(new THREE.BoxGeometry(7, 2, 5), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
         this._renderer = renderer;
         this._wheels = [new Wheel(renderer)];
-        this._wheels[0].position.set(0, 0, -3);
+        this._wheels[0].position.set(0, 0, 50);
         renderer.scene.add(this._wheels[0].object);
-        this._position = new THREE.Vector3(0, 0, -3);
+        this._position = new THREE.Vector3(0, 0, 50);
     }
     Car.prototype.update = function (time, delta) {
         for (var i = 0; i < this._wheels.length; i++) {
@@ -26,7 +27,7 @@ var Car = (function () {
         var surfaceIndex = 0;
         for (var g = 0; g < groundPlanes.length; g++) {
             for (var i = 0; i < this._wheels.length; i++) {
-                if (Math.abs(this._wheels[i].position.x - groundPlanes[g].mesh.position.x) < 60 && Math.abs(this._wheels[i].position.z - groundPlanes[g].mesh.position.z) < 60) {
+                if (Math.abs(this._wheels[i].position.x - groundPlanes[g].mesh.position.x) < CarSimulator.ground_width / 2 && Math.abs(this._wheels[i].position.z - groundPlanes[g].mesh.position.z) < CarSimulator.ground_width / 2) {
                     this._wheels[i].connectCollisionSurface(groundPlanes[g].geometry);
                     surfaceIndex = g;
                     break;

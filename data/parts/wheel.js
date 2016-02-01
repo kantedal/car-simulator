@@ -22,14 +22,14 @@ var Wheel = (function (_super) {
                         _this.desiredDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.35);
                         break;
                     case 38:
-                        _this.updateVelocity(new THREE.Vector3(_this.realDirection.x + 0.2, _this.realDirection.y + 0.2, _this.realDirection.z + 0.2));
+                        _this.updateVelocity(new THREE.Vector3(_this.realDirection.x * 1.5, _this.realDirection.y * 1.5, _this.realDirection.z * 1.5));
                         break;
                     case 39:
                         _this._rotation -= 0.35;
                         _this.desiredDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), -0.35);
                         break;
                     case 40:
-                        _this.updateVelocity(new THREE.Vector3(_this.realDirection.x * 0.8, _this.realDirection.y * 0.8, _this.realDirection.z * 0.8));
+                        _this.updateVelocity(new THREE.Vector3(-_this.realDirection.x, -_this.realDirection.y, -_this.realDirection.z));
                         break;
                 }
             }
@@ -39,7 +39,7 @@ var Wheel = (function (_super) {
         window.addEventListener('keydown', this.onKeyDown, false);
     }
     Wheel.prototype.update = function (time, delta) {
-        this.updateVelocity(new THREE.Vector3(this.velocity.x * 0.95, this.velocity.y * 0.95, this.velocity.z * 0.95));
+        //this.updateVelocity(new THREE.Vector3(this.velocity.x*0.95, this.velocity.y*0.95, this.velocity.z*0.95));
         var prev_norm = this.normalDirection.clone();
         _super.prototype.update.call(this, time, delta);
         //this.object.setRotationFromAxisAngle(this.normalDirection, this._rotation);

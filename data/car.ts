@@ -5,6 +5,7 @@
 ///<reference path="../renderer.ts"/>
 ///<reference path="./parts/wheel.ts"/>
 ///<reference path="./ground_plane.ts"/>
+///<reference path="../carsimulator.ts"/>
 
 class Car {
     private _renderer:Renderer;
@@ -17,10 +18,10 @@ class Car {
 
         this._wheels = [new Wheel(renderer)];
 
-        this._wheels[0].position.set(0,0,-3);
+        this._wheels[0].position.set(0,0,50);
         renderer.scene.add(this._wheels[0].object);
 
-        this._position = new THREE.Vector3(0,0,-3);
+        this._position = new THREE.Vector3(0,0,50);
     }
 
     public update(time:number, delta:number):void {
@@ -37,7 +38,7 @@ class Car {
         var surfaceIndex = 0;
         for(var g=0; g<groundPlanes.length; g++){
             for(var i=0; i<this._wheels.length; i++) {
-                if(Math.abs(this._wheels[i].position.x - groundPlanes[g].mesh.position.x) < 60 && Math.abs(this._wheels[i].position.z - groundPlanes[g].mesh.position.z) < 60) {
+                if(Math.abs(this._wheels[i].position.x - groundPlanes[g].mesh.position.x) < CarSimulator.ground_width/2 && Math.abs(this._wheels[i].position.z - groundPlanes[g].mesh.position.z) < CarSimulator.ground_width/2) {
                     this._wheels[i].connectCollisionSurface(groundPlanes[g].geometry);
                     surfaceIndex = g;
                     break;

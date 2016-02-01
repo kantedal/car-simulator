@@ -17,8 +17,8 @@ class DynamicRigidBody extends PhysicsObject3d {
         super(geometry, material, renderer);
 
         this._gravity = -9.82;
-        this._mass = 100;
-        this._frictionConst = 0.99;
+        this._mass = 500;
+        this._frictionConst = 0.97;
 
         this._inclineForce = new Vector3(0,0,0);
         this._frictionForce = new Vector3(0,0,0);
@@ -26,19 +26,30 @@ class DynamicRigidBody extends PhysicsObject3d {
 
     public update(time:number, delta:number):void{
         if(this.hasCollisionSurface) {
-            this.position.setX(this.position.x + this.realDirection.x * this.velocity.length());
-            this.position.setY(this.position.y + this.realDirection.y * this.velocity.length());
-            this.position.setZ(this.position.z + this.realDirection.z * this.velocity.length());
 
-            var gradientMagnitude = Math.cos(this.gradientDirection.angleTo(new THREE.Vector3(0,-1,0)))*this._gravity*this._mass*50;
-            this._inclineForce.set(this.gradientDirection.x,this.gradientDirection.y,this.gradientDirection.z).multiplyScalar(gradientMagnitude);
-            this._frictionForce.set(this._inclineForce.x,this._inclineForce.y,this._inclineForce.z).reflect(this.normalDirection).multiplyScalar(0);
 
-            //this.updateVelocity(new THREE.Vector3(
-            //    (this._inclineForce.x - this._frictionForce.x)*delta,
-            //    (this._inclineForce.y - this._frictionForce.y)*delta,
-            //    (this._inclineForce.z - this._frictionForce.z)*delta
-            //);
+            var gradientMagnitude = -Math.abs(Math.PI/2 - this.gradientDirection.angleTo(new THREE.Vector3(0,-1,0)))/(Math.PI/2);
+            var normalMagnitude = -Math.abs(this.gradientDirection.angleTo(new THREE.Vector3(0,-1,0)))/(Math.PI/2);
+            this._inclineForce.set(this.gradientDirection.x,this.gradientDirection.y,this.gradientDirection.z).multiplyScalar(this._mass*this._gravity*gradientMagnitude);
+            //this._frictionForce.set(-this.gradientDirection.x,this.gradientDirection.y,-this.gradientDirection.z).reflect(this.normalDirection).multiplyScalar(this._mass*this._gravity*gradientMagnitude*normalMagnitude);
+
+            //console.log(this._inclineForce.length() + "  " + this._frictionForce.length() + "  " + normalMagnitude + "  " + gradientMagnitude);
+
+            var newVelocity = new THREE.Vector3(
+                this.velocity.x + (this._inclineForce.x)*delta,
+                this.velocity.y + (this._inclineForce.y)*delta,
+                this.velocity.z + (this._inclineForce.z)*delta
+            ).projectOnPlane(this.normalDirection).multiplyScalar(this._frictionConst);
+
+            this.updateVelocity(new THREE.Vector3(
+                newVelocity.x,
+                newVelocity.y,
+                newVelocity.z
+            );
+
+            this.position.setX(this.position.x + this.velocity.x); // + this.velocity.x); //this.realDirection.x * this.velocity.length());
+            this.position.setY(this.position.y + this.velocity.y); // + this.velocity.y); //this.realDirection.y * this.velocity.length());
+            this.position.setZ(this.position.z + this.velocity.z); // + this.velocity.z); //this.realDirection.z * this.velocity.length());
         }
         super.update(time,delta);
     }

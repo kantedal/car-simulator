@@ -19,7 +19,7 @@ class Wheel extends DynamicRigidBody{
     }
 
     public update(time: number, delta: number){
-        this.updateVelocity(new THREE.Vector3(this.velocity.x*0.95, this.velocity.y*0.95, this.velocity.z*0.95));
+        //this.updateVelocity(new THREE.Vector3(this.velocity.x*0.95, this.velocity.y*0.95, this.velocity.z*0.95));
 
         var prev_norm = this.normalDirection.clone();
         super.update(time, delta);
@@ -58,14 +58,14 @@ class Wheel extends DynamicRigidBody{
                     this.desiredDirection.applyAxisAngle(new THREE.Vector3(0,1,0), 0.35);
                     break;
                 case 38: //Up
-                    this.updateVelocity(new THREE.Vector3(this.realDirection.x+0.2, this.realDirection.y+0.2, this.realDirection.z+0.2));
+                    this.updateVelocity(new THREE.Vector3(this.realDirection.x*1.5, this.realDirection.y*1.5, this.realDirection.z*1.5));
                     break;
                 case 39: //Right
                     this._rotation -= 0.35;
                     this.desiredDirection.applyAxisAngle(new THREE.Vector3(0,1,0), -0.35);
                     break;
                 case 40: //Down
-                    this.updateVelocity(new THREE.Vector3(this.realDirection.x*0.8, this.realDirection.y*0.8, this.realDirection.z*0.8));
+                    this.updateVelocity(new THREE.Vector3(-this.realDirection.x, -this.realDirection.y, -this.realDirection.z));
                     break;
             }
         }

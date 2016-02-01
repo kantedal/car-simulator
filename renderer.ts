@@ -13,7 +13,7 @@ class Renderer {
         this.renderer.setClearColor(0xFFFFFF,1);
 
         this._scene = new THREE.Scene();
-        this._scene.fog = new THREE.Fog(0xffffff, 10, 125);
+        this._scene.fog = new THREE.Fog(0xffffff, 10, 200);
         this._camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.4, 1000);
         this._camera.removeEventListener()
         this._camera.aspect = 20;
