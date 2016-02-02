@@ -169,10 +169,15 @@ class PhysicsObject3d {
 
 
     public updateVelocity(newVelocity:THREE.Vector3):void {
-        //this._acceleration = this._velocity - this._velocity;
+        newVelocity.projectOnPlane(this.normalDirection);
+        this._acceleration = new THREE.Vector3(
+            this._velocity.x - newVelocity.x,
+            this._velocity.y - newVelocity.y,
+            this._velocity.z - newVelocity.z
+        );
+
         this._velocity.set(newVelocity.x, newVelocity.y, newVelocity.z);
     }
-
 
     public connectCollisionSurface(surface : THREE.Geometry):void {
         this._collisionSurface = surface;
@@ -322,5 +327,13 @@ class PhysicsObject3d {
 
     set gradientDirection(value:THREE.Vector3) {
         this._gradientDirection = value;
+    }
+
+    get acceleration():THREE.Vector3 {
+        return this._acceleration;
+    }
+
+    set acceleration(value:THREE.Vector3) {
+        this._acceleration = value;
     }
 }

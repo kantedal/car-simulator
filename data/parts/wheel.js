@@ -8,42 +8,20 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 ///<reference path="../physics_object3d.ts"/>
 ///<reference path="../dynamic_rigid_body.ts"/>
+///<reference path="./motor.ts"/>
 var Wheel = (function (_super) {
     __extends(Wheel, _super);
     function Wheel(renderer) {
-        var _this = this;
         _super.call(this, new THREE.CylinderGeometry(2, 2, 1).rotateX(Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }), renderer);
         this._wheelRotation = 0;
-        this.onKeyDown = function (e) {
-            if (e) {
-                switch (e.which) {
-                    case 37:
-                        _this._rotation += 0.35;
-                        _this.desiredDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.35);
-                        break;
-                    case 38:
-                        _this.updateVelocity(new THREE.Vector3(_this.realDirection.x * 1.5, _this.realDirection.y * 1.5, _this.realDirection.z * 1.5));
-                        break;
-                    case 39:
-                        _this._rotation -= 0.35;
-                        _this.desiredDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), -0.35);
-                        break;
-                    case 40:
-                        _this.updateVelocity(new THREE.Vector3(-_this.realDirection.x, -_this.realDirection.y, -_this.realDirection.z));
-                        break;
-                }
-            }
-        };
         this.collisionRadius = 0;
         this._rotation = 0;
-        window.addEventListener('keydown', this.onKeyDown, false);
     }
     Wheel.prototype.update = function (time, delta) {
         //this.updateVelocity(new THREE.Vector3(this.velocity.x*0.95, this.velocity.y*0.95, this.velocity.z*0.95));
         var prev_norm = this.normalDirection.clone();
         _super.prototype.update.call(this, time, delta);
-        //this.object.setRotationFromAxisAngle(this.normalDirection, this._rotation);
-        //this.object.setRotationFromAxisAngle(this.realDirection, 0);
+        this.forwardForce = this._connectedMotor.torque;
         var ort = this.normalDirection.clone().cross(this.realDirection);
         var norm = this.normalDirection.clone();
         var normYZ = new THREE.Vector2(norm.y, norm.x);
@@ -63,6 +41,21 @@ var Wheel = (function (_super) {
         this._wheelRotation += 0.05;
         this.geometry.rotateZ(-0.2 * this.velocity.length());
     };
+    Wheel.prototype.connectMotor = function (motor) {
+        this._connectedMotor = motor;
+    };
+    Object.defineProperty(Wheel.prototype, "rotation", {
+        get: function () {
+            return this._rotation;
+        },
+        set: function (value) {
+            this.object.rotateOnAxis(new THREE.Vector3(0, 1, 0), value - this._rotation);
+            this.desiredDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), value - this._rotation);
+            this._rotation = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return Wheel;
 })(DynamicRigidBody);
 //# sourceMappingURL=wheel.js.map

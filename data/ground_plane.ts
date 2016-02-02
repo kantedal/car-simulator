@@ -20,25 +20,33 @@ class GroundPlane {
         loader.load(
             './models/ground_model2.obj',
             function(object){
-                console.log("success");
-                self._mesh = object;
-                var material = new THREE.MeshPhongMaterial( {
-                    color: 0x555555,
-                    specular: 0x999999,
-                    shininess: 10,
-                    shading: THREE.SmoothShading
+
+                var textureLoader : THREE.TextureLoader = new THREE.TextureLoader();
+                textureLoader.load("./texture/sand.jpg", function(texture){
+                    console.log("success");
+
+                    //var material1 = new THREE.MeshBasicMaterial({map: texture});
+
+                    self._mesh = object;
+                    var material = new THREE.MeshPhongMaterial( {
+                        color: 0xFFFFFF,
+                        specular: 0xFFDDCC,
+                        shininess: 3,
+                        shading: THREE.SmoothShading,
+                        map: texture
+                    });
+
+                    var material1 = new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true});
+
+                    object.traverse( function ( child ) {
+                        if (child instanceof THREE.Mesh) {
+                            child.material = material1;
+                            self._geometry = new THREE.Geometry().fromBufferGeometry(child.geometry);
+                        }
+                    } );
+
+                    listener.planeLoaded(self);
                 });
-
-                var material1 = new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true});
-
-                object.traverse( function ( child ) {
-                    if (child instanceof THREE.Mesh) {
-                        child.material = material1;
-                        self._geometry = new THREE.Geometry().fromBufferGeometry(child.geometry);
-                    }
-                } );
-
-                listener.planeLoaded(self);
             },
             function ( xhr ) {
                 console.log( 'An error happened' );

@@ -4,18 +4,18 @@
 
 ///<reference path="../physics_object3d.ts"/>
 ///<reference path="../dynamic_rigid_body.ts"/>
+///<reference path="./motor.ts"/>
 
 class Wheel extends DynamicRigidBody{
     private _rotation : number;
     private _wheelRotation : number = 0;
+    private _connectedMotor : Motor;
 
     constructor(renderer: Renderer){
         super(new THREE.CylinderGeometry(2,2,1).rotateX(Math.PI/2), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
 
         this.collisionRadius = 0;
         this._rotation = 0;
-
-        window.addEventListener( 'keydown', this.onKeyDown, false );
     }
 
     public update(time: number, delta: number){
@@ -24,8 +24,7 @@ class Wheel extends DynamicRigidBody{
         var prev_norm = this.normalDirection.clone();
         super.update(time, delta);
 
-        //this.object.setRotationFromAxisAngle(this.normalDirection, this._rotation);
-        //this.object.setRotationFromAxisAngle(this.realDirection, 0);
+        this.forwardForce = this._connectedMotor.torque;
 
         var ort = this.normalDirection.clone().cross(this.realDirection);
         var norm = this.normalDirection.clone();
@@ -50,24 +49,17 @@ class Wheel extends DynamicRigidBody{
         this.geometry.rotateZ(-0.2*this.velocity.length());
     }
 
-    onKeyDown = (e) => {
-        if (e) {
-            switch (e.which) {
-                case 37: //Left
-                    this._rotation += 0.35;
-                    this.desiredDirection.applyAxisAngle(new THREE.Vector3(0,1,0), 0.35);
-                    break;
-                case 38: //Up
-                    this.updateVelocity(new THREE.Vector3(this.realDirection.x*1.5, this.realDirection.y*1.5, this.realDirection.z*1.5));
-                    break;
-                case 39: //Right
-                    this._rotation -= 0.35;
-                    this.desiredDirection.applyAxisAngle(new THREE.Vector3(0,1,0), -0.35);
-                    break;
-                case 40: //Down
-                    this.updateVelocity(new THREE.Vector3(-this.realDirection.x, -this.realDirection.y, -this.realDirection.z));
-                    break;
-            }
-        }
+    public connectMotor(motor:Motor):void {
+        this._connectedMotor = motor;
+    }
+
+    get rotation():number {
+        return this._rotation;
+    }
+
+    set rotation(value:number) {
+        this.object.rotateOnAxis(new THREE.Vector3(0,1,0), value-this._rotation);
+        this.desiredDirection.applyAxisAngle(new THREE.Vector3(0,1,0), value-this._rotation);
+        this._rotation = value;
     }
 }
