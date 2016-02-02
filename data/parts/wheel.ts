@@ -6,7 +6,7 @@
 ///<reference path="../dynamic_rigid_body.ts"/>
 ///<reference path="./motor.ts"/>
 
-class Wheel extends DynamicRigidBody{
+class Wheel extends DynamicRigidBody {
     private _rotation : number;
     private _wheelRotation : number = 0;
     private _connectedMotor : Motor;
@@ -16,12 +16,23 @@ class Wheel extends DynamicRigidBody{
 
         this.collisionRadius = 0;
         this._rotation = 0;
+        this.position.set(0,100,0);
     }
 
     public update(time: number, delta: number){
         //this.updateVelocity(new THREE.Vector3(this.velocity.x*0.95, this.velocity.y*0.95, this.velocity.z*0.95));
 
         var prev_norm = this.normalDirection.clone();
+        var normalizedGradient = this.velocity.clone().normalize();
+        if(this.velocity.length() == 0)
+            normalizedGradient = this.realDirection.clone();
+
+        this.frictionConst = 0.8 + 0.12*(Math.abs(
+                this.realDirection.x*normalizedGradient.x +
+                this.realDirection.y*normalizedGradient.y +
+                this.realDirection.z*normalizedGradient.z
+            ));
+
         super.update(time, delta);
 
         this.forwardForce = this._connectedMotor.torque;

@@ -26,6 +26,7 @@ var PhysicsObject3d = (function () {
         this._directionArrow = new THREE.ArrowHelper(dir, origin, length, 0x00ff00);
         this._gradientArrow = new THREE.ArrowHelper(dir, origin, length, 0xff00ff);
         this._realArrow = new THREE.ArrowHelper(dir, origin, length, 0x0000ff);
+        this._accelerationArrow = new THREE.ArrowHelper(dir, origin, length, 0x00ffff);
         renderer.scene.add(this._normalArrow);
         renderer.scene.add(this._gradientArrow);
         renderer.scene.add(this._directionArrow);
@@ -59,8 +60,9 @@ var PhysicsObject3d = (function () {
                     var c1 = areaA / areaT;
                     var c2 = areaB / areaT;
                     var c3 = areaC / areaT;
-                    this._normalDirection = new THREE.Vector3(vertexNormals[0].x * c1 + vertexNormals[1].x * c2 + vertexNormals[2].x * c3, vertexNormals[0].y * c1 + vertexNormals[1].y * c2 + vertexNormals[2].y * c3, vertexNormals[0].z * c1 + vertexNormals[1].z * c2 + vertexNormals[2].z * c3);
-                    //this._normalDirection = this._collisionSurface.faces[faceIndex].normal;
+                    if (this.isColliding) {
+                        this._normalDirection = new THREE.Vector3(vertexNormals[0].x * c1 + vertexNormals[1].x * c2 + vertexNormals[2].x * c3, vertexNormals[0].y * c1 + vertexNormals[1].y * c2 + vertexNormals[2].y * c3, vertexNormals[0].z * c1 + vertexNormals[1].z * c2 + vertexNormals[2].z * c3);
+                    }
                     break;
                 }
             }
@@ -101,8 +103,6 @@ var PhysicsObject3d = (function () {
         }
     };
     PhysicsObject3d.prototype.updateVelocity = function (newVelocity) {
-        newVelocity.projectOnPlane(this.normalDirection);
-        this._acceleration = new THREE.Vector3(this._velocity.x - newVelocity.x, this._velocity.y - newVelocity.y, this._velocity.z - newVelocity.z);
         this._velocity.set(newVelocity.x, newVelocity.y, newVelocity.z);
     };
     PhysicsObject3d.prototype.connectCollisionSurface = function (surface) {
@@ -121,8 +121,8 @@ var PhysicsObject3d = (function () {
             return true;
         }
         else {
-            if (this._position.y >= height + 0.1)
-                this._position.y = height;
+            // if (this._position.y >= height + 0.1)
+            //     this._position.y = height;
             return false;
         }
     };
@@ -271,6 +271,16 @@ var PhysicsObject3d = (function () {
         },
         set: function (value) {
             this._acceleration = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PhysicsObject3d.prototype, "isColliding", {
+        get: function () {
+            return this._isColliding;
+        },
+        set: function (value) {
+            this._isColliding = value;
         },
         enumerable: true,
         configurable: true

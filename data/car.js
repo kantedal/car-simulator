@@ -46,14 +46,12 @@ var Car = (function () {
                 }
             }
         };
-        //super(new THREE.BoxGeometry(7, 2, 5), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
         this._renderer = renderer;
-        this._motor = new Motor(15000, 3);
+        this._motor = new Motor(2500, 3);
         this._wheels = [new Wheel(renderer)];
-        this._wheels[0].position.set(0, 0, 50);
+        this._position = new THREE.Vector3(0, 0, 0);
         renderer.scene.add(this._wheels[0].object);
         this._wheels[0].connectMotor(this._motor);
-        this._position = new THREE.Vector3(0, 0, 50);
         window.addEventListener('keydown', this.onKeyDown, false);
         window.addEventListener('keyup', this.onKeyUp, false);
     }
@@ -63,7 +61,7 @@ var Car = (function () {
             this._wheels[i].update(time, delta);
         }
         this._renderer.camera.lookAt(this._wheels[0].object.position);
-        this._renderer.camera.position.set(this._wheels[0].position.x, this._wheels[0].position.y + 10, this._wheels[0].position.z - 15);
+        this._renderer.camera.position.set(this._wheels[0].position.x, this._wheels[0].position.y + 10, this._wheels[0].position.z + 15);
         this._position.set(this._wheels[0].position.x, this._wheels[0].position.y, this._wheels[0].position.z);
     };
     Car.prototype.connectCollisionSurface = function (groundPlanes) {

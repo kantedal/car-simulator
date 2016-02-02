@@ -16,10 +16,17 @@ var Wheel = (function (_super) {
         this._wheelRotation = 0;
         this.collisionRadius = 0;
         this._rotation = 0;
+        this.position.set(0, 100, 0);
     }
     Wheel.prototype.update = function (time, delta) {
         //this.updateVelocity(new THREE.Vector3(this.velocity.x*0.95, this.velocity.y*0.95, this.velocity.z*0.95));
         var prev_norm = this.normalDirection.clone();
+        var normalizedGradient = this.velocity.clone().normalize();
+        if (this.velocity.length() == 0)
+            normalizedGradient = this.realDirection.clone();
+        this.frictionConst = 0.8 + 0.12 * (Math.abs(this.realDirection.x * normalizedGradient.x +
+            this.realDirection.y * normalizedGradient.y +
+            this.realDirection.z * normalizedGradient.z));
         _super.prototype.update.call(this, time, delta);
         this.forwardForce = this._connectedMotor.torque;
         var ort = this.normalDirection.clone().cross(this.realDirection);

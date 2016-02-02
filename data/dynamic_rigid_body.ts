@@ -27,17 +27,43 @@ class DynamicRigidBody extends PhysicsObject3d {
 
     public update(time:number, delta:number):void{
         if(this.hasCollisionSurface) {
-
-
             var gradientMagnitude = -Math.abs(Math.PI/2 - this.gradientDirection.angleTo(new THREE.Vector3(0,-1,0)))/(Math.PI/2);
             var normalMagnitude = -Math.abs(this.gradientDirection.angleTo(new THREE.Vector3(0,-1,0)))/(Math.PI/2);
             this._inclineForce.set(this.gradientDirection.x,this.gradientDirection.y,this.gradientDirection.z).multiplyScalar(this._mass*this._gravity*gradientMagnitude);
 
-            var newVelocity = new THREE.Vector3(
-                this.velocity.x + (this._inclineForce.x + this.realDirection.x*this._forwardForce)*delta,
-                this.velocity.y + (this._inclineForce.y + this.realDirection.y*this._forwardForce)*delta,
-                this.velocity.z + (this._inclineForce.z + this.realDirection.z*this._forwardForce)*delta
-            ).multiplyScalar(this._frictionConst);
+            var newVelocity = new THREE.Vector3(0,0,0);
+
+            this.acceleration = new THREE.Vector3(
+                (this._inclineForce.x + this.realDirection.x*this._forwardForce),
+                (this._inclineForce.y + this.realDirection.y*this._forwardForce),
+                (this._inclineForce.z + this.realDirection.z*this._forwardForce)
+            );
+
+            if (this.isColliding){
+                newVelocity = new THREE.Vector3(
+                    this.velocity.x + this.acceleration.x*0.00005,
+                    this.velocity.y + this.acceleration.y*0.00005,
+                    this.velocity.z + this.acceleration.z*0.00005
+                ).multiplyScalar(this._frictionConst);
+
+                var projectedDir = newVelocity.clone().projectOnPlane(this.normalDirection);
+                var realDir = newVelocity.clone().projectOnPlane(new Vector3(0,1,0));
+
+                var yDiff = (newVelocity.y-projectedDir.y)*this.velocity.length();
+
+                if(yDiff < 0.0) {
+                    newVelocity = projectedDir;
+                }
+
+                //if(newVelocity.clone().projectOnPlane(this.normalDirection).angleTo(this.desiredDirection))
+                    //newVelocity.projectOnPlane(this.normalDirection);
+            }else{
+                newVelocity = new THREE.Vector3(
+                    this.velocity.x,
+                    this.velocity.y + (this._mass*this._gravity)*0.000005,
+                    this.velocity.z
+                );
+            }
 
             this.updateVelocity(new THREE.Vector3(
                 newVelocity.x,
@@ -45,9 +71,9 @@ class DynamicRigidBody extends PhysicsObject3d {
                 newVelocity.z
             ));
 
-            this.position.setX(this.position.x + this.velocity.x); // + this.velocity.x); //this.realDirection.x * this.velocity.length());
-            this.position.setY(this.position.y + this.velocity.y); // + this.velocity.y); //this.realDirection.y * this.velocity.length());
-            this.position.setZ(this.position.z + this.velocity.z); // + this.velocity.z); //this.realDirection.z * this.velocity.length());
+            this.position.setX(this.position.x + (this.velocity.x)); // + this.velocity.x); //this.realDirection.x * this.velocity.length());
+            this.position.setY(this.position.y + (this.velocity.y)); // + this.velocity.y); //this.realDirection.y * this.velocity.length());
+            this.position.setZ(this.position.z + (this.velocity.z)); // + this.velocity.z); //this.realDirection.z * this.velocity.length());
         }
         super.update(time,delta);
     }
@@ -60,4 +86,11 @@ class DynamicRigidBody extends PhysicsObject3d {
         this._forwardForce = value;
     }
 
+    get frictionConst():number {
+        return this._frictionConst;
+    }
+
+    set frictionConst(value:number) {
+        this._frictionConst = value;
+    }
 }
