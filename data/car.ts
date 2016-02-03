@@ -20,7 +20,7 @@ class Car {
         //super(new THREE.BoxGeometry(7, 2, 5), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
         this._renderer = renderer
 
-        this._motor = new Motor(15000,3);
+        this._motor = new Motor(1500,3);
         this._wheels = [new Wheel(renderer)];
 
         this._wheels[0].position.set(0,0,50);

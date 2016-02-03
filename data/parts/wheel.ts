@@ -10,6 +10,7 @@ class Wheel extends DynamicRigidBody{
     private _rotation : number;
     private _wheelRotation : number = 0;
     private _connectedMotor : Motor;
+    private _frictionalMomentum : number;
 
     constructor(renderer: Renderer){
         super(new THREE.CylinderGeometry(2,2,1).rotateX(Math.PI/2), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
@@ -24,7 +25,21 @@ class Wheel extends DynamicRigidBody{
         var prev_norm = this.normalDirection.clone();
         super.update(time, delta);
 
-        this.forwardForce = this._connectedMotor.torque;
+
+        ////////////***************************************//////////////
+        if(this._connectedMotor) {
+            //var angVel = (this._connectedMotor.torque-this.realDirection.angleTo(new THREE.Vector3(0,1,0))/(Math.PI/2))*2;
+
+            var frictionCoeff = 0.5;
+            this._frictionalMomentum = Math.abs(Math.acos(this.normalDirection.dot(new THREE.Vector3(0,1,0)))*500*(9.82)*frictionCoeff);
+
+            console.log("FRIC_MOMENT = "+this._frictionalMomentum);
+
+            var totalTorque = Math.abs(this._connectedMotor.torque-this._frictionalMomentum);
+
+            this.forwardForce = totalTorque;
+        }
+        //////////******************************************/////////////////
 
         var ort = this.normalDirection.clone().cross(this.realDirection);
         var norm = this.normalDirection.clone();
