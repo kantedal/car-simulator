@@ -47,13 +47,13 @@ class DynamicRigidBody extends PhysicsObject3d {
                 ).multiplyScalar(this._frictionConst);
 
                 var projectedDir = newVelocity.clone().projectOnPlane(this.normalDirection);
-                var realDir = newVelocity.clone().projectOnPlane(new Vector3(0,1,0));
 
                 var yDiff = (newVelocity.y-projectedDir.y)*this.velocity.length();
 
-                if(yDiff < 0.0) {
+                if(yDiff < 0.05) {
                     newVelocity = projectedDir;
-                }
+                }else
+                    console.log(yDiff);
 
                 //if(newVelocity.clone().projectOnPlane(this.normalDirection).angleTo(this.desiredDirection))
                     //newVelocity.projectOnPlane(this.normalDirection);

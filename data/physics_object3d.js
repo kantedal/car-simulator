@@ -16,6 +16,7 @@ var PhysicsObject3d = (function () {
         this._collisionPosition = new THREE.Vector3(0, 0, 0);
         this._desiredDirection = new THREE.Vector3(1, 0, 0);
         this._normalDirection = new THREE.Vector3(0, 0, 0);
+        this._realNormalDirection = new THREE.Vector3(0, 0, 0);
         this._gradientDirection = new THREE.Vector3(0, 0, 0);
         this._realDirection = new THREE.Vector3(0, 0, 0);
         this._moveDirection = new THREE.Vector3(0, 0, 0);
@@ -26,7 +27,6 @@ var PhysicsObject3d = (function () {
         this._directionArrow = new THREE.ArrowHelper(dir, origin, length, 0x00ff00);
         this._gradientArrow = new THREE.ArrowHelper(dir, origin, length, 0xff00ff);
         this._realArrow = new THREE.ArrowHelper(dir, origin, length, 0x0000ff);
-        this._accelerationArrow = new THREE.ArrowHelper(dir, origin, length, 0x00ffff);
         renderer.scene.add(this._normalArrow);
         renderer.scene.add(this._gradientArrow);
         renderer.scene.add(this._directionArrow);
@@ -40,11 +40,21 @@ var PhysicsObject3d = (function () {
         renderer.scene.add(this._vert3);
         renderer.scene.add(this.realPos);
     }
+    Object.defineProperty(PhysicsObject3d.prototype, "realNormalDirection", {
+        get: function () {
+            return this._realNormalDirection;
+        },
+        set: function (value) {
+            this._realNormalDirection = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     PhysicsObject3d.prototype.update = function (time, delta) {
         if (this._hasCollisionSurface) {
             var faceIndex = 0;
             for (var i = 0; i < this._collisionSurface.faces.length; i++) {
-                var collisionPos = new THREE.Vector3(this._position.x - this._collisionRadius * this.normalDirection.x, this._position.y - this._collisionRadius * this.normalDirection.y, this._position.z - this._collisionRadius * this.normalDirection.z);
+                var collisionPos = new THREE.Vector3(this._position.x - this._collisionRadius * this._realNormalDirection.x, this._position.y - this._collisionRadius * this._realNormalDirection.y, this._position.z - this._collisionRadius * this._realNormalDirection.z);
                 this.realPos.position.set(collisionPos.x, collisionPos.y, collisionPos.z);
                 if (this.pointInTriangle(this._position, this._collisionSurface.vertices[this._collisionSurface.faces[i].a], this._collisionSurface.vertices[this._collisionSurface.faces[i].b], this._collisionSurface.vertices[this._collisionSurface.faces[i].c])) {
                     //this._collisionPosition = collisionPos;
@@ -62,6 +72,15 @@ var PhysicsObject3d = (function () {
                     var c3 = areaC / areaT;
                     if (this.isColliding) {
                         this._normalDirection = new THREE.Vector3(vertexNormals[0].x * c1 + vertexNormals[1].x * c2 + vertexNormals[2].x * c3, vertexNormals[0].y * c1 + vertexNormals[1].y * c2 + vertexNormals[2].y * c3, vertexNormals[0].z * c1 + vertexNormals[1].z * c2 + vertexNormals[2].z * c3);
+                        if (this._normalDirection.distanceTo(this._realNormalDirection) < 0.05) {
+                            this._realNormalDirection = this._normalDirection.clone();
+                        }
+                        else {
+                            //Interpolate real normal direction to normal direction on landing
+                            this._realNormalDirection.set(this._normalDirection.x * 0.2 + this._realNormalDirection.x * 0.8, this._normalDirection.y * 0.2 + this._realNormalDirection.y * 0.8, this._normalDirection.z * 0.2 + this._realNormalDirection.z * 0.8);
+                        }
+                    }
+                    else {
                     }
                     break;
                 }
@@ -83,9 +102,9 @@ var PhysicsObject3d = (function () {
             this._object.position.set(this._position.x + 2 * this.normalDirection.x, this._position.y + 2 * this.normalDirection.y, this._position.z + 2 * this.normalDirection.z);
             //this._object.position.set(this._position.x, this._position.y, this._position.z);
             this._realArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._realArrow.setDirection(this._realDirection);
+            this._realArrow.setDirection(this._velocity);
             this._normalArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._normalArrow.setDirection(this._normalDirection);
+            this._normalArrow.setDirection(this._realNormalDirection);
             this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z);
             this._gradientArrow.setDirection(this._gradientDirection);
             this._gradientArrow.setLength(this._gradientDirection.length() * 10);
@@ -115,7 +134,7 @@ var PhysicsObject3d = (function () {
         var l2 = ((p3.z - p1.z) * (this._position.x - p3.x) + (p1.x - p3.x) * (this._position.z - p3.z)) / det;
         var l3 = 1.0 - l1 - l2;
         var height = l1 * p1.y + l2 * p2.y + l3 * p3.y;
-        if (this._position.y <= height + 0.1) {
+        if (this._position.y <= height + 0.3) {
             if (this._position.y <= height - 0.1)
                 this._position.y = height;
             return true;

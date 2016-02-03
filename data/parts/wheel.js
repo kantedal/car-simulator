@@ -9,6 +9,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 ///<reference path="../physics_object3d.ts"/>
 ///<reference path="../dynamic_rigid_body.ts"/>
 ///<reference path="./motor.ts"/>
+///<reference path="./spring.ts"/>
 var Wheel = (function (_super) {
     __extends(Wheel, _super);
     function Wheel(renderer) {
@@ -19,8 +20,6 @@ var Wheel = (function (_super) {
         this.position.set(0, 100, 0);
     }
     Wheel.prototype.update = function (time, delta) {
-        //this.updateVelocity(new THREE.Vector3(this.velocity.x*0.95, this.velocity.y*0.95, this.velocity.z*0.95));
-        var prev_norm = this.normalDirection.clone();
         var normalizedGradient = this.velocity.clone().normalize();
         if (this.velocity.length() == 0)
             normalizedGradient = this.realDirection.clone();
@@ -29,8 +28,7 @@ var Wheel = (function (_super) {
             this.realDirection.z * normalizedGradient.z));
         _super.prototype.update.call(this, time, delta);
         this.forwardForce = this._connectedMotor.torque;
-        var ort = this.normalDirection.clone().cross(this.realDirection);
-        var norm = this.normalDirection.clone();
+        var norm = this.realNormalDirection.clone();
         var normYZ = new THREE.Vector2(norm.y, norm.x);
         var rotZ = Math.acos(normYZ.dot(new THREE.Vector2(1, 0)) / (normYZ.length()));
         if (!rotZ)
@@ -50,6 +48,11 @@ var Wheel = (function (_super) {
     };
     Wheel.prototype.connectMotor = function (motor) {
         this._connectedMotor = motor;
+    };
+    Wheel.prototype.connectSpring = function (spring) {
+        this._connectedSpring = spring;
+        this._connectedSpring.object.position.set(this.position.x, this.position.y, this.position.z);
+        this.object.add(this._connectedSpring.object);
     };
     Object.defineProperty(Wheel.prototype, "rotation", {
         get: function () {

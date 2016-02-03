@@ -28,11 +28,12 @@ var DynamicRigidBody = (function (_super) {
             if (this.isColliding) {
                 newVelocity = new THREE.Vector3(this.velocity.x + this.acceleration.x * 0.00005, this.velocity.y + this.acceleration.y * 0.00005, this.velocity.z + this.acceleration.z * 0.00005).multiplyScalar(this._frictionConst);
                 var projectedDir = newVelocity.clone().projectOnPlane(this.normalDirection);
-                var realDir = newVelocity.clone().projectOnPlane(new Vector3(0, 1, 0));
                 var yDiff = (newVelocity.y - projectedDir.y) * this.velocity.length();
-                if (yDiff < 0.0) {
+                if (yDiff < 0.05) {
                     newVelocity = projectedDir;
                 }
+                else
+                    console.log(yDiff);
             }
             else {
                 newVelocity = new THREE.Vector3(this.velocity.x, this.velocity.y + (this._mass * this._gravity) * 0.000005, this.velocity.z);

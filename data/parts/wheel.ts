@@ -5,11 +5,13 @@
 ///<reference path="../physics_object3d.ts"/>
 ///<reference path="../dynamic_rigid_body.ts"/>
 ///<reference path="./motor.ts"/>
+///<reference path="./spring.ts"/>
 
 class Wheel extends DynamicRigidBody {
     private _rotation : number;
     private _wheelRotation : number = 0;
     private _connectedMotor : Motor;
+    private _connectedSpring : Spring;
 
     constructor(renderer: Renderer){
         super(new THREE.CylinderGeometry(2,2,1).rotateX(Math.PI/2), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
@@ -20,9 +22,7 @@ class Wheel extends DynamicRigidBody {
     }
 
     public update(time: number, delta: number){
-        //this.updateVelocity(new THREE.Vector3(this.velocity.x*0.95, this.velocity.y*0.95, this.velocity.z*0.95));
 
-        var prev_norm = this.normalDirection.clone();
         var normalizedGradient = this.velocity.clone().normalize();
         if(this.velocity.length() == 0)
             normalizedGradient = this.realDirection.clone();
@@ -37,8 +37,7 @@ class Wheel extends DynamicRigidBody {
 
         this.forwardForce = this._connectedMotor.torque;
 
-        var ort = this.normalDirection.clone().cross(this.realDirection);
-        var norm = this.normalDirection.clone();
+        var norm = this.realNormalDirection.clone();
         var normYZ = new THREE.Vector2(norm.y, norm.x);
         var rotZ = Math.acos(normYZ.dot(new THREE.Vector2(1,0))/(normYZ.length()));
         if(!rotZ)
@@ -62,6 +61,12 @@ class Wheel extends DynamicRigidBody {
 
     public connectMotor(motor:Motor):void {
         this._connectedMotor = motor;
+    }
+
+    public connectSpring(spring:Spring):void {
+        this._connectedSpring = spring;
+        this._connectedSpring.object.position.set(this.position.x, this.position.y, this.position.z);
+        this.object.add(this._connectedSpring.object);
     }
 
     get rotation():number {
