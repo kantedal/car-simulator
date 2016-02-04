@@ -33,7 +33,7 @@ var DynamicRigidBody = (function (_super) {
                     newVelocity = projectedDir;
             }
             else {
-                this.acceleration = new THREE.Vector3(0, (this._mass * this._gravity), 0);
+                this.acceleration = new THREE.Vector3(0, (this._gravity), 0);
                 newVelocity = new THREE.Vector3(this.velocity.x, this.velocity.y + (this._mass * this._gravity) * 0.000007, this.velocity.z);
             }
             this.updateVelocity(new THREE.Vector3(newVelocity.x, newVelocity.y, newVelocity.z));

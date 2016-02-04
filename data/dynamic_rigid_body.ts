@@ -58,7 +58,7 @@ class DynamicRigidBody extends PhysicsObject3d {
 
                 this.acceleration = new THREE.Vector3(
                     0,
-                    (this._mass*this._gravity),
+                    (this._gravity),
                     0
                 );
 
