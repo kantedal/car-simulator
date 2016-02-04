@@ -23,7 +23,7 @@ class Car {
     constructor(renderer : Renderer){
         this._renderer = renderer
 
-        this._motor = new Motor(18000,3);
+        this._motor = new Motor(20000,3);
         this._wheels = [new Wheel(renderer)];
         this._springs = [new Spring(renderer, this)];
 

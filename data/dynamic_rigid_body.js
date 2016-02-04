@@ -25,16 +25,16 @@ var DynamicRigidBody = (function (_super) {
             this._inclineForce.set(this.gradientDirection.x, this.gradientDirection.y, this.gradientDirection.z).multiplyScalar(this._mass * this._gravity * gradientMagnitude);
             var newVelocity = new THREE.Vector3(0, 0, 0);
             if (this.isColliding) {
-                this.acceleration = new THREE.Vector3((this._inclineForce.x + this.realDirection.x * this._forwardForce), (this._inclineForce.y + this.realDirection.y * this._forwardForce), (this._inclineForce.z + this.realDirection.z * this._forwardForce));
-                newVelocity = new THREE.Vector3(this.velocity.x + this.acceleration.x * 0.000007, this.velocity.y + this.acceleration.y * 0.000007, this.velocity.z + this.acceleration.z * 0.000007).multiplyScalar(this._frictionConst);
+                this.acceleration = new THREE.Vector3((this._inclineForce.x + this.realDirection.x * this._forwardForce) / this._mass, (this._inclineForce.y + this.realDirection.y * this._forwardForce) / this._mass, (this._inclineForce.z + this.realDirection.z * this._forwardForce) / this._mass);
+                newVelocity = new THREE.Vector3(this.velocity.x + this.acceleration.x * 0.003, this.velocity.y + this.acceleration.y * 0.003, this.velocity.z + this.acceleration.z * 0.003).multiplyScalar(this._frictionConst);
                 var projectedDir = newVelocity.clone().projectOnPlane(this.normalDirection);
                 var yDiff = (newVelocity.y - projectedDir.y) * this.velocity.length();
                 if (yDiff < 0.1)
                     newVelocity = projectedDir;
             }
             else {
-                this.acceleration = new THREE.Vector3(0, (this._mass * this._gravity), 0);
-                newVelocity = new THREE.Vector3(this.velocity.x, this.velocity.y + (this._mass * this._gravity) * 0.000007, this.velocity.z);
+                this.acceleration = new THREE.Vector3(0, this._gravity, 0);
+                newVelocity = new THREE.Vector3(this.velocity.x, this.velocity.y + (this._gravity) * 0.003, this.velocity.z);
             }
             this.updateVelocity(new THREE.Vector3(newVelocity.x, newVelocity.y, newVelocity.z));
             this.position.setX(this.position.x + (this.velocity.x)); // + this.velocity.x); //this.realDirection.x * this.velocity.length());
