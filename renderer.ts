@@ -10,11 +10,7 @@ class Renderer {
         this.renderer = new THREE.WebGLRenderer({ alpha: true });
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
-<<<<<<< HEAD
-        this.renderer.setClearColor(0xFFFFFF,1);
-=======
         this.renderer.setClearColor(0x000000,0);
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
 
         this._scene = new THREE.Scene();
         this._scene.fog = new THREE.Fog(0xffffff, 10, 200);

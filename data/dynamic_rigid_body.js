@@ -13,12 +13,9 @@ var DynamicRigidBody = (function (_super) {
         _super.call(this, geometry, material, renderer);
         this._gravity = -9.82;
         this._mass = 500;
-<<<<<<< HEAD
         this._frictionConst = 0.97;
-=======
         this._forwardForce = 0;
         this._frictionConst = 0.99;
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
         this._inclineForce = new Vector3(0, 0, 0);
         this._frictionForce = new Vector3(0, 0, 0);
     }
@@ -27,11 +24,12 @@ var DynamicRigidBody = (function (_super) {
             var gradientMagnitude = -Math.abs(Math.PI / 2 - this.gradientDirection.angleTo(new THREE.Vector3(0, -1, 0))) / (Math.PI / 2);
             var normalMagnitude = -Math.abs(this.gradientDirection.angleTo(new THREE.Vector3(0, -1, 0))) / (Math.PI / 2);
             this._inclineForce.set(this.gradientDirection.x, this.gradientDirection.y, this.gradientDirection.z).multiplyScalar(this._mass * this._gravity * gradientMagnitude);
-<<<<<<< HEAD
             //this._frictionForce.set(-this.gradientDirection.x,this.gradientDirection.y,-this.gradientDirection.z).reflect(this.normalDirection).multiplyScalar(this._mass*this._gravity*gradientMagnitude*normalMagnitude);
             //console.log(this._inclineForce.length() + "  " + this._frictionForce.length() + "  " + normalMagnitude + "  " + gradientMagnitude);
             var newVelocity = new THREE.Vector3(this.velocity.x + (this._inclineForce.x) * delta, this.velocity.y + (this._inclineForce.y) * delta, this.velocity.z + (this._inclineForce.z) * delta).projectOnPlane(this.normalDirection).multiplyScalar(this._frictionConst);
-=======
+            var gradientMagnitude = -Math.abs(Math.PI / 2 - this.gradientDirection.angleTo(new THREE.Vector3(0, -1, 0))) / (Math.PI / 2);
+            var normalMagnitude = -Math.abs(this.gradientDirection.angleTo(new THREE.Vector3(0, -1, 0))) / (Math.PI / 2);
+            this._inclineForce.set(this.gradientDirection.x, this.gradientDirection.y, this.gradientDirection.z).multiplyScalar(this._mass * this._gravity * gradientMagnitude);
             var newVelocity = new THREE.Vector3(0, 0, 0);
             var gravityInterpolation = Math.pow(10, this.surfaceDistance / 10) / 10;
             if (!gravityInterpolation)
@@ -50,7 +48,6 @@ var DynamicRigidBody = (function (_super) {
                 newVelocity = new THREE.Vector3(this.velocity.x + this.force.x * 0.003, this.velocity.y + this.force.y * 0.003, this.velocity.z + this.force.z * 0.003);
             }
             this.acceleration = new THREE.Vector3(newVelocity.x - this.velocity.x, newVelocity.y - this.velocity.y, newVelocity.z - this.velocity.z);
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
             this.updateVelocity(new THREE.Vector3(newVelocity.x, newVelocity.y, newVelocity.z));
             this.position.setX(this.position.x + this.velocity.x); // + this.velocity.x); //this.realDirection.x * this.velocity.length());
             this.position.setY(this.position.y + this.velocity.y); // + this.velocity.y); //this.realDirection.y * this.velocity.length());
@@ -58,8 +55,6 @@ var DynamicRigidBody = (function (_super) {
         }
         _super.prototype.update.call(this, time, delta);
     };
-<<<<<<< HEAD
-=======
     Object.defineProperty(DynamicRigidBody.prototype, "forwardForce", {
         get: function () {
             return this._forwardForce;
@@ -80,7 +75,6 @@ var DynamicRigidBody = (function (_super) {
         enumerable: true,
         configurable: true
     });
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
     return DynamicRigidBody;
 })(PhysicsObject3d);
 //# sourceMappingURL=dynamic_rigid_body.js.map

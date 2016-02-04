@@ -6,28 +6,16 @@ var PhysicsObject3d = (function () {
         this._hasCollisionSurface = false;
         this._isColliding = false;
         this._collisionRadius = 0;
-<<<<<<< HEAD
-=======
-        this._surfaceDistance = 0;
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
         this._geometry = geometry;
         this._material = material;
         this._object = new THREE.Mesh(this._geometry, this._material);
         this._object.position.y = -1;
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._acceleration = new THREE.Vector3(0, 0, 0);
-<<<<<<< HEAD
-=======
-        this._force = new THREE.Vector3(0, 0, 0);
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
         this._position = new THREE.Vector3(0, 0, 0);
         this._collisionPosition = new THREE.Vector3(0, 0, 0);
         this._desiredDirection = new THREE.Vector3(1, 0, 0);
         this._normalDirection = new THREE.Vector3(0, 0, 0);
-<<<<<<< HEAD
-=======
-        this._realNormalDirection = new THREE.Vector3(0, 0, 0);
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
         this._gradientDirection = new THREE.Vector3(0, 0, 0);
         this._realDirection = new THREE.Vector3(0, 0, 0);
         this._moveDirection = new THREE.Vector3(0, 0, 0);
@@ -55,11 +43,7 @@ var PhysicsObject3d = (function () {
         if (this._hasCollisionSurface) {
             var faceIndex = 0;
             for (var i = 0; i < this._collisionSurface.faces.length; i++) {
-<<<<<<< HEAD
                 var collisionPos = new THREE.Vector3(this._position.x - this._collisionRadius * this.normalDirection.x, this._position.y - this._collisionRadius * this.normalDirection.y, this._position.z - this._collisionRadius * this.normalDirection.z);
-=======
-                var collisionPos = new THREE.Vector3(this._position.x - this._collisionRadius * this._realNormalDirection.x, this._position.y - this._collisionRadius * this._realNormalDirection.y, this._position.z - this._collisionRadius * this._realNormalDirection.z);
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
                 this.realPos.position.set(collisionPos.x, collisionPos.y, collisionPos.z);
                 if (this.pointInTriangle(this._position, this._collisionSurface.vertices[this._collisionSurface.faces[i].a], this._collisionSurface.vertices[this._collisionSurface.faces[i].b], this._collisionSurface.vertices[this._collisionSurface.faces[i].c])) {
                     //this._collisionPosition = collisionPos;
@@ -75,21 +59,8 @@ var PhysicsObject3d = (function () {
                     var c1 = areaA / areaT;
                     var c2 = areaB / areaT;
                     var c3 = areaC / areaT;
-<<<<<<< HEAD
                     this._normalDirection = new THREE.Vector3(vertexNormals[0].x * c1 + vertexNormals[1].x * c2 + vertexNormals[2].x * c3, vertexNormals[0].y * c1 + vertexNormals[1].y * c2 + vertexNormals[2].y * c3, vertexNormals[0].z * c1 + vertexNormals[1].z * c2 + vertexNormals[2].z * c3);
                     //this._normalDirection = this._collisionSurface.faces[faceIndex].normal;
-=======
-                    if (this.isColliding) {
-                        this._normalDirection = new THREE.Vector3(vertexNormals[0].x * c1 + vertexNormals[1].x * c2 + vertexNormals[2].x * c3, vertexNormals[0].y * c1 + vertexNormals[1].y * c2 + vertexNormals[2].y * c3, vertexNormals[0].z * c1 + vertexNormals[1].z * c2 + vertexNormals[2].z * c3);
-                        //Interpolate real normal direction to normal direction on landing
-                        this._realNormalDirection.set(this._normalDirection.x * 0.2 + this._realNormalDirection.x * 0.8, this._normalDirection.y * 0.2 + this._realNormalDirection.y * 0.8, this._normalDirection.z * 0.2 + this._realNormalDirection.z * 0.8);
-                    }
-                    else {
-                        var velocityProj = this._velocity.clone().projectOnPlane(this._realNormalDirection);
-                        var velocityAngle = Math.acos(velocityProj.dot(this._velocity));
-                        var newNormalDir = this.realDirection.clone().applyAxisAngle(new Vector3(1, 0, 0), Math.PI / 2).normalize();
-                    }
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
                     break;
                 }
             }
@@ -110,11 +81,7 @@ var PhysicsObject3d = (function () {
             this._object.position.set(this._position.x + 2 * this.normalDirection.x, this._position.y + 2 * this.normalDirection.y, this._position.z + 2 * this.normalDirection.z);
             //this._object.position.set(this._position.x, this._position.y, this._position.z);
             this._realArrow.position.set(this._position.x, this._position.y, this._position.z);
-<<<<<<< HEAD
             this._realArrow.setDirection(this._realDirection);
-=======
-            this._realArrow.setDirection(this._velocity);
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
             this._normalArrow.position.set(this._position.x, this._position.y, this._position.z);
             this._normalArrow.setDirection(this._normalDirection);
             this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z);
@@ -134,10 +101,6 @@ var PhysicsObject3d = (function () {
         }
     };
     PhysicsObject3d.prototype.updateVelocity = function (newVelocity) {
-<<<<<<< HEAD
-        //this._acceleration = this._velocity - this._velocity;
-=======
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
         this._velocity.set(newVelocity.x, newVelocity.y, newVelocity.z);
     };
     PhysicsObject3d.prototype.connectCollisionSurface = function (surface) {
@@ -150,23 +113,14 @@ var PhysicsObject3d = (function () {
         var l2 = ((p3.z - p1.z) * (this._position.x - p3.x) + (p1.x - p3.x) * (this._position.z - p3.z)) / det;
         var l3 = 1.0 - l1 - l2;
         var height = l1 * p1.y + l2 * p2.y + l3 * p3.y;
-<<<<<<< HEAD
-=======
-        this._surfaceDistance = Math.min(Math.max(this._position.y - height, 0.0001), 10.0) / 10;
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
         if (this._position.y <= height + 0.1) {
             if (this._position.y <= height - 0.1)
                 this._position.y = height;
             return true;
         }
         else {
-<<<<<<< HEAD
             if (this._position.y >= height + 0.1)
                 this._position.y = height;
-=======
-            // if (this._position.y >= height + 0.1)
-            //     this._position.y = height;
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
             return false;
         }
     };
@@ -309,59 +263,6 @@ var PhysicsObject3d = (function () {
         enumerable: true,
         configurable: true
     });
-<<<<<<< HEAD
-=======
-    Object.defineProperty(PhysicsObject3d.prototype, "force", {
-        get: function () {
-            return this._force;
-        },
-        set: function (value) {
-            this._force = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsObject3d.prototype, "isColliding", {
-        get: function () {
-            return this._isColliding;
-        },
-        set: function (value) {
-            this._isColliding = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsObject3d.prototype, "realNormalDirection", {
-        get: function () {
-            return this._realNormalDirection;
-        },
-        set: function (value) {
-            this._realNormalDirection = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsObject3d.prototype, "surfaceDistance", {
-        get: function () {
-            return this._surfaceDistance;
-        },
-        set: function (value) {
-            this._surfaceDistance = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsObject3d.prototype, "acceleration", {
-        get: function () {
-            return this._acceleration;
-        },
-        set: function (value) {
-            this._acceleration = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
     return PhysicsObject3d;
 })();
 //# sourceMappingURL=physics_object3d.js.map

@@ -1,8 +1,6 @@
 /**
  * Created by filles-dator on 2016-02-01.
  */
-<<<<<<< HEAD
-=======
 
 ///<reference path="../../threejs/three.d.ts"/>
 
@@ -66,4 +64,3 @@ class Motor {
         this._torque = value;
     }
 }
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
