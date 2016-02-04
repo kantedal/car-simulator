@@ -25,15 +25,19 @@ var Spring = (function () {
             self._springMesh.scale.set(0.5, 0.5, 0.5);
             self._springMesh.position.set(0, 3, 0);
             //self._springMesh.position.set(self._wheelConnectorMesh.position.x, self._wheelConnectorMesh.position.y, self._wheelConnectorMesh.position.z);
-            self._springGroup.add(self._springMesh);
+            //self._springGroup.add(self._springMesh);
         }, function (xhr) {
             console.log('An error happened');
         });
     };
     Spring.prototype.update = function (time, delta) {
         if (this._springMesh) {
-            this._carBodyConnectorMesh.position.y = 8 + Math.sin(time) * 3;
-            this._springMesh.scale.y = Math.sin(time);
+            if (this._car.isColliding == true) {
+                var dampConst = 200;
+                this._carBodyConnectorMesh.position.y = 8 - (this._car.acceleration.y) / dampConst;
+            }
+            else {
+            }
         }
         // console.log(this._car.acceleration.y);
     };

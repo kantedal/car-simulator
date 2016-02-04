@@ -17,19 +17,22 @@ class Car {
     private _motor:Motor;
 
     private _acceleration:THREE.Vector3;
+    private _isColliding:boolean;
 
     private _steeringAngle = 0;
 
     constructor(renderer : Renderer){
         this._renderer = renderer
 
-        this._motor = new Motor(2500,3);
+        this._motor = new Motor(1800,3);
         this._wheels = [new Wheel(renderer)];
         this._springs = [new Spring(renderer, this)];
 
         this._wheels[0].connectMotor(this._motor);
         this._wheels[0].connectSpring(this._springs[0]);
+
         this._acceleration = this._wheels[0].acceleration;
+        this._isColliding = this._wheels[0].isColliding;
 
         this._position = new THREE.Vector3(0,0,0);
 
@@ -41,6 +44,7 @@ class Car {
     public update(time:number, delta:number):void {
         this._motor.update(time,delta);
         this._acceleration = this._wheels[0].acceleration;
+        this._isColliding = this._wheels[0].isColliding;
 
         for(var i=0; i<this._wheels.length; i++){
             this._wheels[i].update(time, delta);
@@ -121,5 +125,13 @@ class Car {
 
     set acceleration(value:THREE.Vector3) {
         this._acceleration = value;
+    }
+
+    get isColliding():boolean {
+        return this._isColliding;
+    }
+
+    set isColliding(value:boolean) {
+        this._isColliding = value;
     }
 }

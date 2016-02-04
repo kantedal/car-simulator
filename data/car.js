@@ -48,12 +48,13 @@ var Car = (function () {
             }
         };
         this._renderer = renderer;
-        this._motor = new Motor(2500, 3);
+        this._motor = new Motor(1800, 3);
         this._wheels = [new Wheel(renderer)];
         this._springs = [new Spring(renderer, this)];
         this._wheels[0].connectMotor(this._motor);
         this._wheels[0].connectSpring(this._springs[0]);
         this._acceleration = this._wheels[0].acceleration;
+        this._isColliding = this._wheels[0].isColliding;
         this._position = new THREE.Vector3(0, 0, 0);
         renderer.scene.add(this._wheels[0].object);
         window.addEventListener('keydown', this.onKeyDown, false);
@@ -62,6 +63,7 @@ var Car = (function () {
     Car.prototype.update = function (time, delta) {
         this._motor.update(time, delta);
         this._acceleration = this._wheels[0].acceleration;
+        this._isColliding = this._wheels[0].isColliding;
         for (var i = 0; i < this._wheels.length; i++) {
             this._wheels[i].update(time, delta);
             this._springs[i].update(time, delta);
@@ -99,6 +101,16 @@ var Car = (function () {
         },
         set: function (value) {
             this._acceleration = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Car.prototype, "isColliding", {
+        get: function () {
+            return this._isColliding;
+        },
+        set: function (value) {
+            this._isColliding = value;
         },
         enumerable: true,
         configurable: true
