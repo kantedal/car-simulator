@@ -11,10 +11,7 @@
 class CarSimulator {
     private _renderer : Renderer;
     private _clock : THREE.Clock;
-<<<<<<< HEAD
-=======
     private _time : number;
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
     private _surfaceIndex : number = 0;
 
     private _wheel : Wheel;
@@ -27,10 +24,7 @@ class CarSimulator {
     constructor(){
         this._renderer = new Renderer();
         this._clock = new THREE.Clock();
-<<<<<<< HEAD
-=======
         this._time = 0;
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
         this._groundPlanes = [];
     }
 
@@ -104,13 +98,9 @@ class CarSimulator {
     }
 
     update(){
-<<<<<<< HEAD
-        var time = this._clock.getElapsedTime();
-        var delta = this._clock.getDelta();
-=======
+
         var delta = this._clock.getElapsedTime()-this._time;
         this._time = this._clock.getElapsedTime();
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
 
         var currentSurfaceIndex = this._car.connectCollisionSurface(this._groundPlanes);
         if(currentSurfaceIndex != this._surfaceIndex){
@@ -156,13 +146,6 @@ class CarSimulator {
             this._surfaceIndex = currentSurfaceIndex;
         }
 
-<<<<<<< HEAD
-        this._car.update(time,delta);
-
-        this._renderer.render(time);
-
-        requestAnimationFrame(() => this.update());
-=======
         this._car.update(this._time,delta);
 
         this._renderer.render(this._time);
@@ -172,7 +155,6 @@ class CarSimulator {
             requestAnimationFrame(() => self.update());
         }, 1000 / 60 );
 
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
     }
 
     get renderer():Renderer {

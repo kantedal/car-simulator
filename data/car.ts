@@ -6,16 +6,12 @@
 ///<reference path="./parts/wheel.ts"/>
 ///<reference path="./ground_plane.ts"/>
 ///<reference path="../carsimulator.ts"/>
-<<<<<<< HEAD
-=======
 ///<reference path="./parts/motor.ts"/>
 ///<reference path="./parts/spring.ts"/>
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
 
 class Car {
     private _renderer:Renderer;
     private _wheels:Wheel[];
-<<<<<<< HEAD
     private _position:THREE.Vector3;
 
     constructor(renderer : Renderer){
@@ -30,14 +26,7 @@ class Car {
         this._position = new THREE.Vector3(0,0,50);
     }
 
-    public update(time:number, delta:number):void {
-        for(var i=0; i<this._wheels.length; i++){
-            this._wheels[i].update(time, delta)
-        }
 
-        this._renderer.camera.lookAt(this._wheels[0].object.position);
-        this._renderer.camera.position.set(this._wheels[0].position.x, this._wheels[0].position.y+10, this._wheels[0].position.z-15);
-=======
     private _springs:Spring[];
     private _position:THREE.Vector3;
     private _motor:Motor;
@@ -84,7 +73,6 @@ class Car {
 
         this._renderer.camera.lookAt(this._wheels[0].object.position);
         this._renderer.camera.position.set(this._wheels[0].position.x, this._wheels[0].position.y+10, this._wheels[0].position.z+15);
->>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
         this._position.set(this._wheels[0].position.x, this._wheels[0].position.y, this._wheels[0].position.z);
     }
 
@@ -102,8 +90,6 @@ class Car {
         return surfaceIndex;
     }
 
-<<<<<<< HEAD
-=======
     private pressedKeys = [];
     onKeyDown = (e) => {
         if (e) {
