@@ -2,3 +2,5 @@
 .idea/workspace.xml
 
 .idea/typescript-compiler.xml
+
+*.xml
