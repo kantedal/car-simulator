@@ -18,6 +18,7 @@ class GroundPlane {
         var self = this;
         var loader = new THREE.OBJLoader();
         loader.load(
+<<<<<<< HEAD
             './models/ground_model2.obj',
             function(object){
                 console.log("success");
@@ -39,6 +40,37 @@ class GroundPlane {
                 } );
 
                 listener.planeLoaded(self);
+=======
+            './models/ground_model3.obj',
+            function(object){
+
+                var textureLoader : THREE.TextureLoader = new THREE.TextureLoader();
+                textureLoader.load("./texture/sand.jpg", function(texture){
+                    console.log("success");
+
+                    //var material1 = new THREE.MeshBasicMaterial({map: texture});
+
+                    self._mesh = object;
+                    var material = new THREE.MeshPhongMaterial( {
+                        color: 0xFFFFFF,
+                        specular: 0xFFDDCC,
+                        shininess: 3,
+                        shading: THREE.SmoothShading,
+                        map: texture
+                    });
+
+                    var material1 = new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true});
+
+                    object.traverse( function ( child ) {
+                        if (child instanceof THREE.Mesh) {
+                            child.material = material1;
+                            self._geometry = new THREE.Geometry().fromBufferGeometry(child.geometry);
+                        }
+                    } );
+
+                    listener.planeLoaded(self);
+                });
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
             },
             function ( xhr ) {
                 console.log( 'An error happened' );

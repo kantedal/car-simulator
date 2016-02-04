@@ -9,10 +9,18 @@ class PhysicsObject3d {
 
     private _velocity : THREE.Vector3;
     private _acceleration : THREE.Vector3;
+<<<<<<< HEAD
+=======
+    private _force : THREE.Vector3;
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
 
     private _position : THREE.Vector3;
     private _desiredDirection : THREE.Vector3;
     private _normalDirection : THREE.Vector3;
+<<<<<<< HEAD
+=======
+    private _realNormalDirection : THREE.Vector3;
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
     private _gradientDirection : THREE.Vector3;
     private _realDirection : THREE.Vector3;
     private _moveDirection : THREE.Vector3;
@@ -30,6 +38,10 @@ class PhysicsObject3d {
     private _hasCollisionSurface : boolean = false;
     private _isColliding : boolean = false;
     private _collisionRadius : number = 0;
+<<<<<<< HEAD
+=======
+    private _surfaceDistance : number = 0;
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
     private _collisionPosition : THREE.Vector3;
     private _collisionSurface : THREE.Geometry;
 
@@ -41,11 +53,19 @@ class PhysicsObject3d {
 
         this._velocity = new THREE.Vector3(0,0,0);
         this._acceleration = new THREE.Vector3(0,0,0);
+<<<<<<< HEAD
+=======
+        this._force = new THREE.Vector3(0,0,0);
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
 
         this._position = new THREE.Vector3(0,0,0);
         this._collisionPosition = new THREE.Vector3(0,0,0);
         this._desiredDirection = new THREE.Vector3(1,0,0);
         this._normalDirection = new THREE.Vector3(0,0,0);
+<<<<<<< HEAD
+=======
+        this._realNormalDirection = new THREE.Vector3(0,0,0);
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
         this._gradientDirection = new THREE.Vector3(0,0,0);
         this._realDirection = new THREE.Vector3(0,0,0);
         this._moveDirection = new THREE.Vector3(0,0,0);
@@ -80,9 +100,15 @@ class PhysicsObject3d {
             var faceIndex = 0;
             for (var i = 0; i < this._collisionSurface.faces.length; i++) {
                 var collisionPos : THREE.Vector3 = new THREE.Vector3(
+<<<<<<< HEAD
                     this._position.x-this._collisionRadius*this.normalDirection.x,
                     this._position.y-this._collisionRadius*this.normalDirection.y,
                     this._position.z-this._collisionRadius*this.normalDirection.z
+=======
+                    this._position.x-this._collisionRadius*this._realNormalDirection.x,
+                    this._position.y-this._collisionRadius*this._realNormalDirection.y,
+                    this._position.z-this._collisionRadius*this._realNormalDirection.z
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
                 );
                 this.realPos.position.set(collisionPos.x, collisionPos.y, collisionPos.z);
                 if(this.pointInTriangle(
@@ -107,6 +133,7 @@ class PhysicsObject3d {
                     var c2 = areaB/areaT;
                     var c3 = areaC/areaT;
 
+<<<<<<< HEAD
                     this._normalDirection = new THREE.Vector3(
                         vertexNormals[0].x*c1 + vertexNormals[1].x*c2 + vertexNormals[2].x*c3,
                         vertexNormals[0].y*c1 + vertexNormals[1].y*c2 + vertexNormals[2].y*c3,
@@ -114,6 +141,35 @@ class PhysicsObject3d {
                     );
 
                     //this._normalDirection = this._collisionSurface.faces[faceIndex].normal;
+=======
+                    if(this.isColliding){
+                        this._normalDirection = new THREE.Vector3(
+                            vertexNormals[0].x*c1 + vertexNormals[1].x*c2 + vertexNormals[2].x*c3,
+                            vertexNormals[0].y*c1 + vertexNormals[1].y*c2 + vertexNormals[2].y*c3,
+                            vertexNormals[0].z*c1 + vertexNormals[1].z*c2 + vertexNormals[2].z*c3
+                        );
+
+                        //Interpolate real normal direction to normal direction on landing
+                        this._realNormalDirection.set(
+                            this._normalDirection.x*0.2 + this._realNormalDirection.x*0.8,
+                            this._normalDirection.y*0.2 + this._realNormalDirection.y*0.8,
+                            this._normalDirection.z*0.2 + this._realNormalDirection.z*0.8
+                        );
+                    }
+                    else
+                    {
+                        var velocityProj: THREE.Vector3 = this._velocity.clone().projectOnPlane(this._realNormalDirection);
+                        var velocityAngle = Math.acos(velocityProj.dot(this._velocity));
+                        var newNormalDir: THREE.Vector3 = this.realDirection.clone().applyAxisAngle(new Vector3(1,0,0), Math.PI/2).normalize();
+
+                        //Interpolate real normal direction to normal direction on landing
+                        //this._realNormalDirection.set(
+                        //    newNormalDir.x*0.2 + this._realNormalDirection.x*0.8,
+                        //    newNormalDir.y*0.2 + this._realNormalDirection.y*0.8,
+                        //    newNormalDir.z*0.2 + this._realNormalDirection.z*0.8
+                        //);
+                    }
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
 
                     break;
                 }
@@ -127,8 +183,11 @@ class PhysicsObject3d {
             //this._normalDirection = this._collisionSurface.faces[faceIndex].normal;
             this._normalDirection.normalize();
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
             this._gradientDirection.set(0,-1,0);
             this._gradientDirection.projectOnPlane(this._normalDirection);
             if(this._gradientDirection.length() < 0.01)
@@ -142,7 +201,11 @@ class PhysicsObject3d {
             //this._object.position.set(this._position.x, this._position.y, this._position.z);
 
             this._realArrow.position.set(this._position.x, this._position.y, this._position.z);
+<<<<<<< HEAD
             this._realArrow.setDirection(this._realDirection);
+=======
+            this._realArrow.setDirection(this._velocity);
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
 
             this._normalArrow.position.set(this._position.x, this._position.y, this._position.z)
             this._normalArrow.setDirection(this._normalDirection);
@@ -169,11 +232,17 @@ class PhysicsObject3d {
 
 
     public updateVelocity(newVelocity:THREE.Vector3):void {
+<<<<<<< HEAD
         //this._acceleration = this._velocity - this._velocity;
         this._velocity.set(newVelocity.x, newVelocity.y, newVelocity.z);
     }
 
 
+=======
+        this._velocity.set(newVelocity.x, newVelocity.y, newVelocity.z);
+    }
+
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
     public connectCollisionSurface(surface : THREE.Geometry):void {
         this._collisionSurface = surface;
         this._hasCollisionSurface = true;
@@ -188,14 +257,23 @@ class PhysicsObject3d {
 
         var height = l1 * p1.y + l2 * p2.y + l3 * p3.y;
 
+<<<<<<< HEAD
+=======
+        this._surfaceDistance = Math.min(Math.max(this._position.y-height, 0.0001), 10.0)/10;
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
 
         if(this._position.y <= height+0.1) {
             if (this._position.y <= height - 0.1)
                 this._position.y = height;
             return true;
         }else {
+<<<<<<< HEAD
             if (this._position.y >= height + 0.1)
                 this._position.y = height;
+=======
+           // if (this._position.y >= height + 0.1)
+           //     this._position.y = height;
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
             return false;
         }
     }
@@ -323,4 +401,47 @@ class PhysicsObject3d {
     set gradientDirection(value:THREE.Vector3) {
         this._gradientDirection = value;
     }
+<<<<<<< HEAD
+=======
+
+    get force():THREE.Vector3 {
+        return this._force;
+    }
+
+    set force(value:THREE.Vector3) {
+        this._force = value;
+    }
+
+    get isColliding():boolean {
+        return this._isColliding;
+    }
+
+    set isColliding(value:boolean) {
+        this._isColliding = value;
+    }
+
+    get realNormalDirection():THREE.Vector3 {
+        return this._realNormalDirection;
+    }
+
+    set realNormalDirection(value:THREE.Vector3) {
+        this._realNormalDirection = value;
+    }
+
+    get surfaceDistance():number {
+        return this._surfaceDistance;
+    }
+
+    set surfaceDistance(value:number) {
+        this._surfaceDistance = value;
+    }
+
+    get acceleration():THREE.Vector3 {
+        return this._acceleration;
+    }
+
+    set acceleration(value:THREE.Vector3) {
+        this._acceleration = value;
+    }
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
 }

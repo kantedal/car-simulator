@@ -11,6 +11,10 @@ var CarSimulator = (function () {
         this._surfaceIndex = 0;
         this._renderer = new Renderer();
         this._clock = new THREE.Clock();
+<<<<<<< HEAD
+=======
+        this._time = 0;
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
         this._groundPlanes = [];
     }
     CarSimulator.prototype.start = function () {
@@ -70,9 +74,14 @@ var CarSimulator = (function () {
         this.update();
     };
     CarSimulator.prototype.update = function () {
+<<<<<<< HEAD
         var _this = this;
         var time = this._clock.getElapsedTime();
         var delta = this._clock.getDelta();
+=======
+        var delta = this._clock.getElapsedTime() - this._time;
+        this._time = this._clock.getElapsedTime();
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
         var currentSurfaceIndex = this._car.connectCollisionSurface(this._groundPlanes);
         if (currentSurfaceIndex != this._surfaceIndex) {
             var xMove = this._groundPlanes[currentSurfaceIndex].mesh.position.x - this._groundPlanes[this._surfaceIndex].mesh.position.x;
@@ -114,9 +123,18 @@ var CarSimulator = (function () {
             }
             this._surfaceIndex = currentSurfaceIndex;
         }
+<<<<<<< HEAD
         this._car.update(time, delta);
         this._renderer.render(time);
         requestAnimationFrame(function () { return _this.update(); });
+=======
+        this._car.update(this._time, delta);
+        this._renderer.render(this._time);
+        var self = this;
+        setTimeout(function () {
+            requestAnimationFrame(function () { return self.update(); });
+        }, 1000 / 60);
+>>>>>>> 7bc88dac21abbf9f01ffc39f50de8e4d844d3590
     };
     Object.defineProperty(CarSimulator.prototype, "renderer", {
         get: function () {
