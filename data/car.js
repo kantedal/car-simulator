@@ -48,7 +48,7 @@ var Car = (function () {
             }
         };
         this._renderer = renderer;
-        this._motor = new Motor(2500, 3);
+        this._motor = new Motor(12000, 3);
         this._wheels = [new Wheel(renderer)];
         this._springs = [new Spring(renderer, this)];
         this._wheels[0].connectMotor(this._motor);

@@ -32,10 +32,7 @@ var Spring = (function () {
     };
     Spring.prototype.update = function (time, delta) {
         if (this._springMesh) {
-            this._carBodyConnectorMesh.position.y = 8 + Math.sin(time) * 3;
-            this._springMesh.scale.y = Math.sin(time);
         }
-        // console.log(this._car.acceleration.y);
     };
     Object.defineProperty(Spring.prototype, "position", {
         get: function () {

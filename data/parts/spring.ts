@@ -52,10 +52,9 @@ class Spring {
     public update(time:number, delta:number) {
         if (this._springMesh) {
 
-            this._carBodyConnectorMesh.position.y = 8 + Math.sin(time) * 3;
-            this._springMesh.scale.y = Math.sin(time);
+            //this._carBodyConnectorMesh.position.y = 8 + Math.sin(time) * 3;
+            //this._springMesh.scale.y = Math.sin(time);
         }
-       // console.log(this._car.acceleration.y);
     }
 
 
