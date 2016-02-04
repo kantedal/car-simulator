@@ -16,6 +16,8 @@ class Car {
     private _position:THREE.Vector3;
     private _motor:Motor;
 
+    private _acceleration:THREE.Vector3;
+
     private _steeringAngle = 0;
 
     constructor(renderer : Renderer){
@@ -23,24 +25,26 @@ class Car {
 
         this._motor = new Motor(2500,3);
         this._wheels = [new Wheel(renderer)];
+        this._springs = [new Spring(renderer, this)];
+
         this._wheels[0].connectMotor(this._motor);
-        //this._wheels[0].connectSpring(this._springs[0])
+        this._wheels[0].connectSpring(this._springs[0]);
+        this._acceleration = this._wheels[0].acceleration;
 
         this._position = new THREE.Vector3(0,0,0);
 
         renderer.scene.add(this._wheels[0].object);
-
-
-
         window.addEventListener( 'keydown', this.onKeyDown, false );
         window.addEventListener( 'keyup', this.onKeyUp, false );
     }
 
     public update(time:number, delta:number):void {
         this._motor.update(time,delta);
+        this._acceleration = this._wheels[0].acceleration;
 
         for(var i=0; i<this._wheels.length; i++){
-            this._wheels[i].update(time, delta)
+            this._wheels[i].update(time, delta);
+            this._springs[i].update(time, delta);
         }
 
         this._renderer.camera.lookAt(this._wheels[0].object.position);
@@ -109,5 +113,13 @@ class Car {
 
     set position(value:THREE.Vector3) {
         this._position = value;
+    }
+
+    get acceleration():THREE.Vector3 {
+        return this._acceleration;
+    }
+
+    set acceleration(value:THREE.Vector3) {
+        this._acceleration = value;
     }
 }
