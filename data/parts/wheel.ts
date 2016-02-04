@@ -44,8 +44,6 @@ class Wheel extends DynamicRigidBody {
             var frictionCoeff = 0.1;
             this._frictionalMomentum = Math.abs((1-Math.acos(this.normalDirection.dot(new THREE.Vector3(0,1,0))))*500*(9.82)*frictionCoeff);
 
-            console.log("FRIC_MOMENT = "+this._frictionalMomentum);
-
             var totalTorque = Math.abs(this._connectedMotor.torque-this._frictionalMomentum);
 
             this.forwardForce = totalTorque;
