@@ -25,7 +25,7 @@ class Car {
         this._renderer = renderer
 
 
-        this._motor = new Motor(20000,3);
+        this._motor = new Motor(25000,3);
         this._wheels = [new Wheel(renderer)];
         this._springs = [new Spring(renderer, this)];
 
@@ -44,13 +44,14 @@ class Car {
 
     public update(time:number, delta:number):void {
         this._motor.update(time,delta);
-        this._acceleration = this._wheels[0].acceleration;
-        this._isColliding = this._wheels[0].isColliding;
 
         for(var i=0; i<this._wheels.length; i++){
-            this._wheels[i].update(time, delta);
             this._springs[i].update(time, delta);
+            this._wheels[i].update(time, delta);
         }
+
+        this._acceleration = this._wheels[0].acceleration;
+        this._isColliding = this._wheels[0].isColliding;
 
         this._renderer.camera.lookAt(this._wheels[0].object.position);
         this._renderer.camera.position.set(this._wheels[0].position.x, this._wheels[0].position.y+10, this._wheels[0].position.z+15);

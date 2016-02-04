@@ -5,6 +5,9 @@
 ///<reference path="../car.ts"/>
 var Spring = (function () {
     function Spring(renderer, car) {
+        this.a = 0;
+        this.v = 0;
+        this.k = 50;
         this._car = car;
         this._renderer = renderer;
         this._springGroup = new THREE.Group();
@@ -32,12 +35,11 @@ var Spring = (function () {
     };
     Spring.prototype.update = function (time, delta) {
         if (this._springMesh) {
-            if (this._car.isColliding == true) {
-                var dampConst = 200;
-                this._carBodyConnectorMesh.position.y = 8 - (this._car.acceleration.y) / dampConst;
-            }
-            else {
-            }
+            var dampConst = 5000;
+            this.a = -this.k * (this._carBodyConnectorMesh.position.y - 7) / 500;
+            this._carBodyConnectorMesh.position.y += this.v * 0.03;
+            this.v += this.a * 0.03;
+            this._carBodyConnectorMesh.position.y = 8 - (500 * (this._car.acceleration.y + 9.82)) / dampConst;
         }
     };
     Object.defineProperty(Spring.prototype, "position", {

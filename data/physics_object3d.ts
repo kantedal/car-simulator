@@ -31,6 +31,7 @@ class PhysicsObject3d {
     private _hasCollisionSurface : boolean = false;
     private _isColliding : boolean = false;
     private _collisionRadius : number = 0;
+    private _surfaceDistance : number = 0;
     private _collisionPosition : THREE.Vector3;
     private _collisionSurface : THREE.Geometry;
 
@@ -206,8 +207,11 @@ class PhysicsObject3d {
 
         var height = l1 * p1.y + l2 * p2.y + l3 * p3.y;
 
+        this._surfaceDistance = Math.min(Math.max(this._position.y-height,0.0001),1);
 
-        if(this._position.y <= height+0.05) {
+        //console.log("surf dist: " + this._surfaceDistance);
+
+        if(this._position.y <= height+0.1) {
             if (this._position.y <= height - 0.1)
                 this._position.y = height;
             return true;
@@ -364,5 +368,13 @@ class PhysicsObject3d {
 
     set realNormalDirection(value:THREE.Vector3) {
         this._realNormalDirection = value;
+    }
+
+    get surfaceDistance():number {
+        return this._surfaceDistance;
+    }
+
+    set surfaceDistance(value:number) {
+        this._surfaceDistance = value;
     }
 }

@@ -49,21 +49,17 @@ class Spring {
         )
     }
 
+    private a:number = 0;
+    private v:number = 0;
+    private k:number = 50;
     public update(time:number, delta:number) {
         if (this._springMesh) {
-            if(this._car.isColliding == true){
+            var dampConst = 5000;
 
-                var dampConst = 200;
-                this._carBodyConnectorMesh.position.y = 8-(this._car.acceleration.y)/dampConst;
-                //this._springMesh.scale.y = Math.abs(Math.max(500*this._car.acceleration.y/dampConst,0.1));
-                //this._carBodyConnectorMesh.position.y = 4+4*(Math.max(Math.abs(Math.sin(time + Math.PI)),0.2));
-                //this._car.acceleration.y
-            }
-            else{
-
-
-            }
-
+            this.a = -this.k*(this._carBodyConnectorMesh.position.y-7)/500;
+            this._carBodyConnectorMesh.position.y += this.v*0.03;
+            this.v += this.a*0.03;
+            this._carBodyConnectorMesh.position.y = 8-(500*(this._car.acceleration.y+9.82))/dampConst;
         }
     }
 

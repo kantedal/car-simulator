@@ -33,12 +33,16 @@ class DynamicRigidBody extends PhysicsObject3d {
 
             var newVelocity = new THREE.Vector3(0,0,0);
 
+            var gravityInterpolation = Math.pow(5,this.surfaceDistance)/5;
+            if(!gravityInterpolation)
+                gravityInterpolation = 0;
+
             if (this.isColliding){
 
                 this.acceleration = new THREE.Vector3(
-                    (this._inclineForce.x + this.realDirection.x*this._forwardForce)/this._mass,
-                    (this._inclineForce.y + this.realDirection.y*this._forwardForce)/this._mass,
-                    (this._inclineForce.z + this.realDirection.z*this._forwardForce)/this._mass
+                    (1-gravityInterpolation)*(this._inclineForce.x + this.realDirection.x*this._forwardForce)/this._mass,
+                    (1-gravityInterpolation)*(this._inclineForce.y + this.realDirection.y*this._forwardForce)/this._mass + gravityInterpolation*this._gravity,
+                    (1-gravityInterpolation)*(this._inclineForce.z + this.realDirection.z*this._forwardForce)/this._mass
                 );
 
                 newVelocity = new THREE.Vector3(
@@ -55,18 +59,17 @@ class DynamicRigidBody extends PhysicsObject3d {
                     newVelocity = projectedDir;
 
             }else{
-
                 this.acceleration = new THREE.Vector3(
                     0,
-                    (this._gravity),
+                    gravityInterpolation*this._gravity,
                     0
                 );
 
                 newVelocity = new THREE.Vector3(
-                    this.velocity.x,
-                    this.velocity.y + (this._gravity)*0.003,
-                    this.velocity.z
-                );
+                    this.velocity.x + this.acceleration.x*0.003,
+                    this.velocity.y + this.acceleration.y*0.003,
+                    this.velocity.z + this.acceleration.z*0.003
+                )
             }
 
             this.updateVelocity(new THREE.Vector3(
