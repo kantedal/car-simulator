@@ -36,15 +36,15 @@ class DynamicRigidBody extends PhysicsObject3d {
             if (this.isColliding){
 
                 this.acceleration = new THREE.Vector3(
-                    (this._inclineForce.x + this.realDirection.x*this._forwardForce),
-                    (this._inclineForce.y + this.realDirection.y*this._forwardForce),
-                    (this._inclineForce.z + this.realDirection.z*this._forwardForce)
+                    (this._inclineForce.x + this.realDirection.x*this._forwardForce)/this._mass,
+                    (this._inclineForce.y + this.realDirection.y*this._forwardForce)/this._mass,
+                    (this._inclineForce.z + this.realDirection.z*this._forwardForce)/this._mass
                 );
 
                 newVelocity = new THREE.Vector3(
-                    this.velocity.x + this.acceleration.x*0.000007,
-                    this.velocity.y + this.acceleration.y*0.000007,
-                    this.velocity.z + this.acceleration.z*0.000007
+                    this.velocity.x + this.acceleration.x*0.003,
+                    this.velocity.y + this.acceleration.y*0.003,
+                    this.velocity.z + this.acceleration.z*0.003
                 ).multiplyScalar(this._frictionConst);
 
                 var projectedDir = newVelocity.clone().projectOnPlane(this.normalDirection);
@@ -64,7 +64,7 @@ class DynamicRigidBody extends PhysicsObject3d {
 
                 newVelocity = new THREE.Vector3(
                     this.velocity.x,
-                    this.velocity.y + (this._mass*this._gravity)*0.000007,
+                    this.velocity.y + (this._gravity)*0.003,
                     this.velocity.z
                 );
             }
