@@ -3,13 +3,6 @@
 
 import Vector3 = THREE.Vector3;
 class PhysicsObject3d {
-    get realNormalDirection():THREE.Vector3 {
-        return this._realNormalDirection;
-    }
-
-    set realNormalDirection(value:THREE.Vector3) {
-        this._realNormalDirection = value;
-    }
     private _object : THREE.Mesh;
     private _geometry : THREE.Geometry;
     private _material : THREE.Material;
@@ -123,21 +116,25 @@ class PhysicsObject3d {
                             vertexNormals[0].z*c1 + vertexNormals[1].z*c2 + vertexNormals[2].z*c3
                         );
 
-                        if(this._normalDirection.distanceTo(this._realNormalDirection) < 0.05){
-                            this._realNormalDirection = this._normalDirection.clone();
-                        }
-                        else{
-                            //Interpolate real normal direction to normal direction on landing
-                            this._realNormalDirection.set(
-                                this._normalDirection.x*0.2 + this._realNormalDirection.x*0.8,
-                                this._normalDirection.y*0.2 + this._realNormalDirection.y*0.8,
-                                this._normalDirection.z*0.2 + this._realNormalDirection.z*0.8
-                            );
-                        }
+                        //Interpolate real normal direction to normal direction on landing
+                        this._realNormalDirection.set(
+                            this._normalDirection.x*0.2 + this._realNormalDirection.x*0.8,
+                            this._normalDirection.y*0.2 + this._realNormalDirection.y*0.8,
+                            this._normalDirection.z*0.2 + this._realNormalDirection.z*0.8
+                        );
                     }
                     else
                     {
-                        //this._realNormalDirection = this._velocity.clone().applyAxisAngle(this.normalDirection.clone().cross(this.realDirection), Math.PI/2).normalize();
+                        var velocityProj: THREE.Vector3 = this._velocity.clone().projectOnPlane(this._realNormalDirection);
+                        var velocityAngle = Math.acos(velocityProj.dot(this._velocity));
+                        var newNormalDir: THREE.Vector3 = this.realDirection.clone().applyAxisAngle(new Vector3(1,0,0), Math.PI/2).normalize();
+
+                        //Interpolate real normal direction to normal direction on landing
+                        //this._realNormalDirection.set(
+                        //    newNormalDir.x*0.2 + this._realNormalDirection.x*0.8,
+                        //    newNormalDir.y*0.2 + this._realNormalDirection.y*0.8,
+                        //    newNormalDir.z*0.2 + this._realNormalDirection.z*0.8
+                        //);
                     }
 
                     break;
@@ -168,7 +165,7 @@ class PhysicsObject3d {
             this._realArrow.setDirection(this._velocity);
 
             this._normalArrow.position.set(this._position.x, this._position.y, this._position.z)
-            this._normalArrow.setDirection(this._realNormalDirection);
+            this._normalArrow.setDirection(this._normalDirection);
 
             this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z)
             this._gradientArrow.setDirection(this._gradientDirection);
@@ -359,5 +356,13 @@ class PhysicsObject3d {
 
     set isColliding(value:boolean) {
         this._isColliding = value;
+    }
+
+    get realNormalDirection():THREE.Vector3 {
+        return this._realNormalDirection;
+    }
+
+    set realNormalDirection(value:THREE.Vector3) {
+        this._realNormalDirection = value;
     }
 }

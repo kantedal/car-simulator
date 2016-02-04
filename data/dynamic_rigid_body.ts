@@ -33,17 +33,18 @@ class DynamicRigidBody extends PhysicsObject3d {
 
             var newVelocity = new THREE.Vector3(0,0,0);
 
-            this.acceleration = new THREE.Vector3(
-                (this._inclineForce.x + this.realDirection.x*this._forwardForce),
-                (this._inclineForce.y + this.realDirection.y*this._forwardForce),
-                (this._inclineForce.z + this.realDirection.z*this._forwardForce)
-            );
-
             if (this.isColliding){
+
+                this.acceleration = new THREE.Vector3(
+                    (this._inclineForce.x + this.realDirection.x*this._forwardForce),
+                    (this._inclineForce.y + this.realDirection.y*this._forwardForce),
+                    (this._inclineForce.z + this.realDirection.z*this._forwardForce)
+                );
+
                 newVelocity = new THREE.Vector3(
-                    this.velocity.x + this.acceleration.x*0.00005,
-                    this.velocity.y + this.acceleration.y*0.00005,
-                    this.velocity.z + this.acceleration.z*0.00005
+                    this.velocity.x + this.acceleration.x*0.000007,
+                    this.velocity.y + this.acceleration.y*0.000007,
+                    this.velocity.z + this.acceleration.z*0.000007
                 ).multiplyScalar(this._frictionConst);
 
                 var projectedDir = newVelocity.clone().projectOnPlane(this.normalDirection);
@@ -54,9 +55,16 @@ class DynamicRigidBody extends PhysicsObject3d {
                     newVelocity = projectedDir;
 
             }else{
+
+                this.acceleration = new THREE.Vector3(
+                    0,
+                    (this._mass*this._gravity),
+                    0
+                );
+
                 newVelocity = new THREE.Vector3(
                     this.velocity.x,
-                    this.velocity.y + (this._mass*this._gravity)*0.000005,
+                    this.velocity.y + (this._mass*this._gravity)*0.000007,
                     this.velocity.z
                 );
             }

@@ -39,7 +39,6 @@ var Spring = (function () {
             else {
             }
         }
-        // console.log(this._car.acceleration.y);
     };
     Object.defineProperty(Spring.prototype, "position", {
         get: function () {

@@ -40,16 +40,6 @@ var PhysicsObject3d = (function () {
         renderer.scene.add(this._vert3);
         renderer.scene.add(this.realPos);
     }
-    Object.defineProperty(PhysicsObject3d.prototype, "realNormalDirection", {
-        get: function () {
-            return this._realNormalDirection;
-        },
-        set: function (value) {
-            this._realNormalDirection = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
     PhysicsObject3d.prototype.update = function (time, delta) {
         if (this._hasCollisionSurface) {
             var faceIndex = 0;
@@ -72,15 +62,13 @@ var PhysicsObject3d = (function () {
                     var c3 = areaC / areaT;
                     if (this.isColliding) {
                         this._normalDirection = new THREE.Vector3(vertexNormals[0].x * c1 + vertexNormals[1].x * c2 + vertexNormals[2].x * c3, vertexNormals[0].y * c1 + vertexNormals[1].y * c2 + vertexNormals[2].y * c3, vertexNormals[0].z * c1 + vertexNormals[1].z * c2 + vertexNormals[2].z * c3);
-                        if (this._normalDirection.distanceTo(this._realNormalDirection) < 0.05) {
-                            this._realNormalDirection = this._normalDirection.clone();
-                        }
-                        else {
-                            //Interpolate real normal direction to normal direction on landing
-                            this._realNormalDirection.set(this._normalDirection.x * 0.2 + this._realNormalDirection.x * 0.8, this._normalDirection.y * 0.2 + this._realNormalDirection.y * 0.8, this._normalDirection.z * 0.2 + this._realNormalDirection.z * 0.8);
-                        }
+                        //Interpolate real normal direction to normal direction on landing
+                        this._realNormalDirection.set(this._normalDirection.x * 0.2 + this._realNormalDirection.x * 0.8, this._normalDirection.y * 0.2 + this._realNormalDirection.y * 0.8, this._normalDirection.z * 0.2 + this._realNormalDirection.z * 0.8);
                     }
                     else {
+                        var velocityProj = this._velocity.clone().projectOnPlane(this._realNormalDirection);
+                        var velocityAngle = Math.acos(velocityProj.dot(this._velocity));
+                        var newNormalDir = this.realDirection.clone().applyAxisAngle(new Vector3(1, 0, 0), Math.PI / 2).normalize();
                     }
                     break;
                 }
@@ -104,7 +92,7 @@ var PhysicsObject3d = (function () {
             this._realArrow.position.set(this._position.x, this._position.y, this._position.z);
             this._realArrow.setDirection(this._velocity);
             this._normalArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._normalArrow.setDirection(this._realNormalDirection);
+            this._normalArrow.setDirection(this._normalDirection);
             this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z);
             this._gradientArrow.setDirection(this._gradientDirection);
             this._gradientArrow.setLength(this._gradientDirection.length() * 10);
@@ -300,6 +288,16 @@ var PhysicsObject3d = (function () {
         },
         set: function (value) {
             this._isColliding = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PhysicsObject3d.prototype, "realNormalDirection", {
+        get: function () {
+            return this._realNormalDirection;
+        },
+        set: function (value) {
+            this._realNormalDirection = value;
         },
         enumerable: true,
         configurable: true

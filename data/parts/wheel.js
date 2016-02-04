@@ -28,12 +28,14 @@ var Wheel = (function (_super) {
             this.realDirection.z * normalizedGradient.z));
         _super.prototype.update.call(this, time, delta);
         ////////////***************************************//////////////
-        if (this._connectedMotor) {
-            //var angVel = (this._connectedMotor.torque-this.realDirection.angleTo(new THREE.Vector3(0,1,0))/(Math.PI/2))*2;
+        if (this._connectedMotor && this.isColliding && this._connectedMotor.torque != 0) {
             var frictionCoeff = 0.1;
             this._frictionalMomentum = Math.abs((1 - Math.acos(this.normalDirection.dot(new THREE.Vector3(0, 1, 0)))) * 500 * (9.82) * frictionCoeff);
             var totalTorque = Math.abs(this._connectedMotor.torque - this._frictionalMomentum);
             this.forwardForce = totalTorque;
+        }
+        else {
+            this.forwardForce = 0;
         }
         //////////******************************************/////////////////
         var norm = this.realNormalDirection.clone();

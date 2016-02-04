@@ -63,8 +63,8 @@ class Spring {
 
 
             }
+
         }
-       // console.log(this._car.acceleration.y);
     }
 
 
