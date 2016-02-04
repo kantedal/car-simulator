@@ -20,13 +20,23 @@ var Wheel = (function (_super) {
         this.position.set(0, 100, 0);
     }
     Wheel.prototype.update = function (time, delta) {
+        _super.prototype.update.call(this, time, delta);
         var normalizedGradient = this.velocity.clone().normalize();
         if (this.velocity.length() == 0)
             normalizedGradient = this.realDirection.clone();
         this.frictionConst = 0.8 + 0.12 * (Math.abs(this.realDirection.x * normalizedGradient.x +
             this.realDirection.y * normalizedGradient.y +
             this.realDirection.z * normalizedGradient.z));
-        _super.prototype.update.call(this, time, delta);
+        if (this.hasCollisionSurface) {
+            var gradientMagnitude = -Math.abs(Math.PI / 2 - this.gradientDirection.angleTo(new THREE.Vector3(0, -1, 0))) / (Math.PI / 2);
+            var normalMagnitude = -Math.abs(this.gradientDirection.angleTo(new THREE.Vector3(0, -1, 0))) / (Math.PI / 2);
+            this.inclineForce.set(this.gradientDirection.x, this.gradientDirection.y, this.gradientDirection.z).multiplyScalar(this.mass * this.gravity * gradientMagnitude);
+            var newVelocity = new THREE.Vector3(0, 0, 0);
+            this.updateVelocity(new THREE.Vector3(newVelocity.x, newVelocity.y, newVelocity.z));
+            this.position.setX(this.position.x + (this.velocity.x)); // + this.velocity.x); //this.realDirection.x * this.velocity.length());
+            this.position.setY(this.position.y + (this.velocity.y)); // + this.velocity.y); //this.realDirection.y * this.velocity.length());
+            this.position.setZ(this.position.z + (this.velocity.z)); // + this.velocity.z); //this.realDirection.z * this.velocity.length());
+        }
         ////////////***************************************//////////////
         if (this._connectedMotor && this.isColliding && this._connectedMotor.torque != 0) {
             var frictionCoeff = 0.1;

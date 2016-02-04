@@ -23,7 +23,7 @@ class Wheel extends DynamicRigidBody {
     }
 
     public update(time: number, delta: number){
-
+        super.update(time,delta);
         var normalizedGradient = this.velocity.clone().normalize();
         if(this.velocity.length() == 0)
             normalizedGradient = this.realDirection.clone();
@@ -34,7 +34,23 @@ class Wheel extends DynamicRigidBody {
                 this.realDirection.z*normalizedGradient.z
             ));
 
-        super.update(time, delta);
+        if(this.hasCollisionSurface) {
+            var gradientMagnitude = -Math.abs(Math.PI/2 - this.gradientDirection.angleTo(new THREE.Vector3(0,-1,0)))/(Math.PI/2);
+            var normalMagnitude = -Math.abs(this.gradientDirection.angleTo(new THREE.Vector3(0,-1,0)))/(Math.PI/2);
+            this.inclineForce.set(this.gradientDirection.x,this.gradientDirection.y,this.gradientDirection.z).multiplyScalar(this.mass*this.gravity*gradientMagnitude);
+
+            var newVelocity = new THREE.Vector3(0,0,0);
+
+            this.updateVelocity(new THREE.Vector3(
+                newVelocity.x,
+                newVelocity.y,
+                newVelocity.z
+            ));
+
+            this.position.setX(this.position.x + (this.velocity.x)); // + this.velocity.x); //this.realDirection.x * this.velocity.length());
+            this.position.setY(this.position.y + (this.velocity.y)); // + this.velocity.y); //this.realDirection.y * this.velocity.length());
+            this.position.setZ(this.position.z + (this.velocity.z)); // + this.velocity.z); //this.realDirection.z * this.velocity.length());
+        }
 
 
         ////////////***************************************//////////////

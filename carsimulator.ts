@@ -99,7 +99,7 @@ class CarSimulator {
         var time = this._clock.getElapsedTime();
         var delta = this._clock.getDelta();
 
-        var currentSurfaceIndex = this._car.connectCollisionSurface(this._groundPlanes);
+        var currentSurfaceIndex = this._car.connectWheelsToCollisionSurface(this._groundPlanes);
         if(currentSurfaceIndex != this._surfaceIndex){
             var xMove = this._groundPlanes[currentSurfaceIndex].mesh.position.x - this._groundPlanes[this._surfaceIndex].mesh.position.x;
             var zMove = this._groundPlanes[currentSurfaceIndex].mesh.position.z - this._groundPlanes[this._surfaceIndex].mesh.position.z;

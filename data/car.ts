@@ -9,19 +9,18 @@
 ///<reference path="./parts/motor.ts"/>
 ///<reference path="./parts/spring.ts"/>
 
-class Car {
+class Car extends PhysicsObject3d {
     private _renderer:Renderer;
     private _wheels:Wheel[];
     private _springs:Spring[];
-    private _position:THREE.Vector3;
     private _motor:Motor;
-
-    private _acceleration:THREE.Vector3;
 
     private _steeringAngle = 0;
 
     constructor(renderer : Renderer){
-        this._renderer = renderer
+        super(new THREE.BoxGeometry( 1, 2, 5 ), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}), renderer);
+        this.position.set(0,100,0);
+        this._renderer = renderer;
 
         this._motor = new Motor(20000,3);
         this._wheels = [new Wheel(renderer)];
@@ -29,9 +28,7 @@ class Car {
 
         this._wheels[0].connectMotor(this._motor);
         this._wheels[0].connectSpring(this._springs[0]);
-        this._acceleration = this._wheels[0].acceleration;
-
-        this._position = new THREE.Vector3(0,0,0);
+        this.acceleration = this._wheels[0].acceleration;
 
         renderer.scene.add(this._wheels[0].object);
         window.addEventListener( 'keydown', this.onKeyDown, false );
@@ -39,20 +36,24 @@ class Car {
     }
 
     public update(time:number, delta:number):void {
+        super.update(time,delta);
         this._motor.update(time,delta);
-        this._acceleration = this._wheels[0].acceleration;
+        this.acceleration = this._wheels[0].acceleration;
 
         for(var i=0; i<this._wheels.length; i++){
             this._wheels[i].update(time, delta);
             this._springs[i].update(time, delta);
         }
 
+        console.log(this.object.position.y)
+        this.object.position.set(0,100,0);
+
         this._renderer.camera.lookAt(this._wheels[0].object.position);
         this._renderer.camera.position.set(this._wheels[0].position.x, this._wheels[0].position.y+10, this._wheels[0].position.z+15);
-        this._position.set(this._wheels[0].position.x, this._wheels[0].position.y, this._wheels[0].position.z);
+        //this.position.set(this._wheels[0].position.x, this._wheels[0].position.y, this._wheels[0].position.z);
     }
 
-    connectCollisionSurface(groundPlanes: GroundPlane[]): number{
+    public connectWheelsToCollisionSurface(groundPlanes: GroundPlane[]): number{
         var surfaceIndex = 0;
         for(var g=0; g<groundPlanes.length; g++){
             for(var i=0; i<this._wheels.length; i++) {
