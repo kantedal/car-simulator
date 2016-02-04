@@ -5,30 +5,39 @@
 var Spring = (function () {
     function Spring(renderer) {
         this._renderer = renderer;
-        this._position = new THREE.Vector3(0, 0, 0);
+        this._springGroup = new THREE.Group();
+        this._wheelConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 32), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }));
+        this._springGroup.add(this._wheelConnectorMesh);
+        this.loadSpringModel();
     }
-    Spring.loadSpringModel = function (loadedListener) {
+    Spring.prototype.loadSpringModel = function () {
         var self = this;
         var loader = new THREE.OBJLoader();
         loader.load('./models/spring.obj', function (object) {
             console.log("sucess");
             var material1 = new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true });
-            self._object = object.clone();
-            self._renderer.scene.add(self._object);
+            self._springMesh = object.clone();
+            //self._springMesh.position.set(self._wheelConnectorMesh.position.x, self._wheelConnectorMesh.position.y, self._wheelConnectorMesh.position.z);
+            self._springGroup.add(self._springMesh);
         }, function (xhr) {
             console.log('An error happened');
         });
     };
     Spring.prototype.update = function (time, delta) {
-        if (this._object) {
-        }
     };
-    Object.defineProperty(Spring.prototype, "object", {
+    Object.defineProperty(Spring.prototype, "position", {
         get: function () {
-            return this._object;
+            return this._position;
         },
         set: function (value) {
-            this._object = value;
+            this._position = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "springObject", {
+        get: function () {
+            return this._springGroup;
         },
         enumerable: true,
         configurable: true

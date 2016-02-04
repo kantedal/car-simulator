@@ -134,7 +134,7 @@ var PhysicsObject3d = (function () {
         var l2 = ((p3.z - p1.z) * (this._position.x - p3.x) + (p1.x - p3.x) * (this._position.z - p3.z)) / det;
         var l3 = 1.0 - l1 - l2;
         var height = l1 * p1.y + l2 * p2.y + l3 * p3.y;
-        if (this._position.y <= height + 0.3) {
+        if (this._position.y <= height + 0.05) {
             if (this._position.y <= height - 0.1)
                 this._position.y = height;
             return true;

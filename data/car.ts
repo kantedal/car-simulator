@@ -23,17 +23,12 @@ class Car {
 
         this._motor = new Motor(2500,3);
 
-        this._springs = [new Spring(renderer)];
-        var springCallback: SpringLoadedListener = {
-            planeLoaded: function (groundPlane: GroundPlane) {
-
-            }
-        };
-        Spring.loadSpringModel(groundCallback, this._renderer);
+        //this._springs = [new Spring(renderer)];
+        //Spring.loadSpringModel(groundCallback, this._renderer);
 
         this._wheels = [new Wheel(renderer)];
         this._wheels[0].connectMotor(this._motor);
-        this._wheels[0].connectSpring(this._springs[0])
+        //this._wheels[0].connectSpring(this._springs[0])
 
         this._position = new THREE.Vector3(0,0,0);
 

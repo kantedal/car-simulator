@@ -137,7 +137,7 @@ class PhysicsObject3d {
                     }
                     else
                     {
-                        //this._realNormalDirection = this._velocity.clone().applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI/2).normalize();
+                        //this._realNormalDirection = this._velocity.clone().applyAxisAngle(this.normalDirection.clone().cross(this.realDirection), Math.PI/2).normalize();
                     }
 
                     break;
@@ -210,7 +210,7 @@ class PhysicsObject3d {
         var height = l1 * p1.y + l2 * p2.y + l3 * p3.y;
 
 
-        if(this._position.y <= height+0.3) {
+        if(this._position.y <= height+0.05) {
             if (this._position.y <= height - 0.1)
                 this._position.y = height;
             return true;

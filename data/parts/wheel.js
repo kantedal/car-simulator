@@ -51,8 +51,7 @@ var Wheel = (function (_super) {
     };
     Wheel.prototype.connectSpring = function (spring) {
         this._connectedSpring = spring;
-        this._connectedSpring.object.position.set(this.position.x, this.position.y, this.position.z);
-        this.object.add(this._connectedSpring.object);
+        this.object.add(spring.springObject);
     };
     Object.defineProperty(Wheel.prototype, "rotation", {
         get: function () {

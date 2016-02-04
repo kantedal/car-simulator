@@ -50,13 +50,9 @@ class DynamicRigidBody extends PhysicsObject3d {
 
                 var yDiff = (newVelocity.y-projectedDir.y)*this.velocity.length();
 
-                if(yDiff < 0.05) {
+                if(yDiff < 0.1)
                     newVelocity = projectedDir;
-                }else
-                    console.log(yDiff);
 
-                //if(newVelocity.clone().projectOnPlane(this.normalDirection).angleTo(this.desiredDirection))
-                    //newVelocity.projectOnPlane(this.normalDirection);
             }else{
                 newVelocity = new THREE.Vector3(
                     this.velocity.x,

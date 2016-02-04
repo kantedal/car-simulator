@@ -49,15 +49,11 @@ var Car = (function () {
         };
         this._renderer = renderer;
         this._motor = new Motor(2500, 3);
-        this._springs = [new Spring(renderer)];
-        var springCallback = {
-            planeLoaded: function (groundPlane) {
-            }
-        };
-        Spring.loadSpringModel(groundCallback, this._renderer);
+        //this._springs = [new Spring(renderer)];
+        //Spring.loadSpringModel(groundCallback, this._renderer);
         this._wheels = [new Wheel(renderer)];
         this._wheels[0].connectMotor(this._motor);
-        this._wheels[0].connectSpring(this._springs[0]);
+        //this._wheels[0].connectSpring(this._springs[0])
         this._position = new THREE.Vector3(0, 0, 0);
         renderer.scene.add(this._wheels[0].object);
         window.addEventListener('keydown', this.onKeyDown, false);

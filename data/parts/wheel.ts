@@ -65,8 +65,7 @@ class Wheel extends DynamicRigidBody {
 
     public connectSpring(spring:Spring):void {
         this._connectedSpring = spring;
-        this._connectedSpring.object.position.set(this.position.x, this.position.y, this.position.z);
-        this.object.add(this._connectedSpring.object);
+        this.object.add(spring.springObject);
     }
 
     get rotation():number {

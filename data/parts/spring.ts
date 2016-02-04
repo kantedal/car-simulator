@@ -5,17 +5,21 @@
 ///<reference path="../../renderer.ts"/>
 
 class Spring {
-
     private _renderer : Renderer;
-    private _position : THREE.Vector3;
-    private _object : THREE.Mesh;
+    private _springGroup : THREE.Group;
+    private _springMesh : THREE.Mesh;
+    private _wheelConnectorMesh : THREE.Mesh;
 
     constructor(renderer : Renderer){
         this._renderer = renderer;
-        this._position = new THREE.Vector3(0,0,0);
+        this._springGroup = new THREE.Group();
+
+        this._wheelConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry( 1, 1, 1, 32 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
+        this._springGroup.add(this._wheelConnectorMesh);
+        this.loadSpringModel();
     }
 
-    public static loadSpringModel(loadedListener : SpringLoadedListener):void {
+    private loadSpringModel():void {
         var self = this;
         var loader = new THREE.OBJLoader();
         loader.load(
@@ -24,8 +28,9 @@ class Spring {
                 console.log("sucess");
                 var material1 = new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true});
 
-                self._object = object.clone();
-                self._renderer.scene.add(self._object);
+                self._springMesh = object.clone();
+                //self._springMesh.position.set(self._wheelConnectorMesh.position.x, self._wheelConnectorMesh.position.y, self._wheelConnectorMesh.position.z);
+                self._springGroup.add(self._springMesh);
             },
             function ( xhr ) {
                 console.log( 'An error happened' );
@@ -34,20 +39,19 @@ class Spring {
     }
 
     public update(time:number, delta:number){
-        if(this._object){
 
-        }
     }
 
-    get object():THREE.Mesh {
-        return this._object;
+
+    get position():THREE.Vector3 {
+        return this._position;
     }
 
-    set object(value:THREE.Mesh) {
-        this._object = value;
+    set position(value:THREE.Vector3) {
+        this._position = value;
     }
-}
 
-interface SpringLoadedListener {
-    planeLoaded: (springModel: THREE.Mesh) => void;
+    get springObject():THREE.Group {
+        return this._springGroup;
+    }
 }
