@@ -130,11 +130,11 @@ class PhysicsObject3d {
                         var newNormalDir: THREE.Vector3 = this.realDirection.clone().applyAxisAngle(new Vector3(1,0,0), Math.PI/2).normalize();
 
                         //Interpolate real normal direction to normal direction on landing
-                        this._realNormalDirection.set(
-                            newNormalDir.x*0.2 + this._realNormalDirection.x*0.8,
-                            newNormalDir.y*0.2 + this._realNormalDirection.y*0.8,
-                            newNormalDir.z*0.2 + this._realNormalDirection.z*0.8
-                        );
+                        //this._realNormalDirection.set(
+                        //    newNormalDir.x*0.2 + this._realNormalDirection.x*0.8,
+                        //    newNormalDir.y*0.2 + this._realNormalDirection.y*0.8,
+                        //    newNormalDir.z*0.2 + this._realNormalDirection.z*0.8
+                        //);
                     }
 
                     break;

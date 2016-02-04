@@ -69,8 +69,6 @@ var PhysicsObject3d = (function () {
                         var velocityProj = this._velocity.clone().projectOnPlane(this._realNormalDirection);
                         var velocityAngle = Math.acos(velocityProj.dot(this._velocity));
                         var newNormalDir = this.realDirection.clone().applyAxisAngle(new Vector3(1, 0, 0), Math.PI / 2).normalize();
-                        //Interpolate real normal direction to normal direction on landing
-                        this._realNormalDirection.set(newNormalDir.x * 0.2 + this._realNormalDirection.x * 0.8, newNormalDir.y * 0.2 + this._realNormalDirection.y * 0.8, newNormalDir.z * 0.2 + this._realNormalDirection.z * 0.8);
                     }
                     break;
                 }
