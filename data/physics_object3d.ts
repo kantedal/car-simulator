@@ -9,6 +9,7 @@ class PhysicsObject3d {
 
     private _velocity : THREE.Vector3;
     private _acceleration : THREE.Vector3;
+    private _force : THREE.Vector3;
 
     private _position : THREE.Vector3;
     private _desiredDirection : THREE.Vector3;
@@ -43,6 +44,7 @@ class PhysicsObject3d {
 
         this._velocity = new THREE.Vector3(0,0,0);
         this._acceleration = new THREE.Vector3(0,0,0);
+        this._force = new THREE.Vector3(0,0,0);
 
         this._position = new THREE.Vector3(0,0,0);
         this._collisionPosition = new THREE.Vector3(0,0,0);
@@ -207,9 +209,7 @@ class PhysicsObject3d {
 
         var height = l1 * p1.y + l2 * p2.y + l3 * p3.y;
 
-        this._surfaceDistance = Math.min(Math.max(this._position.y-height,0.0001),1);
-
-        //console.log("surf dist: " + this._surfaceDistance);
+        this._surfaceDistance = Math.min(Math.max(this._position.y-height, 0.0001), 10.0)/10;
 
         if(this._position.y <= height+0.1) {
             if (this._position.y <= height - 0.1)
@@ -346,12 +346,12 @@ class PhysicsObject3d {
         this._gradientDirection = value;
     }
 
-    get acceleration():THREE.Vector3 {
-        return this._acceleration;
+    get force():THREE.Vector3 {
+        return this._force;
     }
 
-    set acceleration(value:THREE.Vector3) {
-        this._acceleration = value;
+    set force(value:THREE.Vector3) {
+        this._force = value;
     }
 
     get isColliding():boolean {
@@ -376,5 +376,13 @@ class PhysicsObject3d {
 
     set surfaceDistance(value:number) {
         this._surfaceDistance = value;
+    }
+
+    get acceleration():THREE.Vector3 {
+        return this._acceleration;
+    }
+
+    set acceleration(value:THREE.Vector3) {
+        this._acceleration = value;
     }
 }

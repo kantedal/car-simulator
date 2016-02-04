@@ -17,6 +17,7 @@ class Car {
     private _motor:Motor;
 
     private _acceleration:THREE.Vector3;
+    private _velocity:THREE.Vector3;
     private _isColliding:boolean;
 
     private _steeringAngle = 0;
@@ -25,13 +26,14 @@ class Car {
         this._renderer = renderer
 
 
-        this._motor = new Motor(25000,3);
+        this._motor = new Motor(20000,3);
         this._wheels = [new Wheel(renderer)];
         this._springs = [new Spring(renderer, this)];
 
         this._wheels[0].connectMotor(this._motor);
         this._wheels[0].connectSpring(this._springs[0]);
 
+        this._velocity = this._wheels[0].velocity;
         this._acceleration = this._wheels[0].acceleration;
         this._isColliding = this._wheels[0].isColliding;
 
@@ -51,6 +53,7 @@ class Car {
         }
 
         this._acceleration = this._wheels[0].acceleration;
+        this._velocity = this._wheels[0].velocity;
         this._isColliding = this._wheels[0].isColliding;
 
         this._renderer.camera.lookAt(this._wheels[0].object.position);
@@ -135,5 +138,13 @@ class Car {
 
     set isColliding(value:boolean) {
         this._isColliding = value;
+    }
+
+    get velocity():THREE.Vector3 {
+        return this._velocity;
+    }
+
+    set velocity(value:THREE.Vector3) {
+        this._velocity = value;
     }
 }

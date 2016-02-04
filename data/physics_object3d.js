@@ -13,6 +13,7 @@ var PhysicsObject3d = (function () {
         this._object.position.y = -1;
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._acceleration = new THREE.Vector3(0, 0, 0);
+        this._force = new THREE.Vector3(0, 0, 0);
         this._position = new THREE.Vector3(0, 0, 0);
         this._collisionPosition = new THREE.Vector3(0, 0, 0);
         this._desiredDirection = new THREE.Vector3(1, 0, 0);
@@ -123,8 +124,7 @@ var PhysicsObject3d = (function () {
         var l2 = ((p3.z - p1.z) * (this._position.x - p3.x) + (p1.x - p3.x) * (this._position.z - p3.z)) / det;
         var l3 = 1.0 - l1 - l2;
         var height = l1 * p1.y + l2 * p2.y + l3 * p3.y;
-        this._surfaceDistance = Math.min(Math.max(this._position.y - height, 0.0001), 1);
-        //console.log("surf dist: " + this._surfaceDistance);
+        this._surfaceDistance = Math.min(Math.max(this._position.y - height, 0.0001), 10.0) / 10;
         if (this._position.y <= height + 0.1) {
             if (this._position.y <= height - 0.1)
                 this._position.y = height;
@@ -275,12 +275,12 @@ var PhysicsObject3d = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(PhysicsObject3d.prototype, "acceleration", {
+    Object.defineProperty(PhysicsObject3d.prototype, "force", {
         get: function () {
-            return this._acceleration;
+            return this._force;
         },
         set: function (value) {
-            this._acceleration = value;
+            this._force = value;
         },
         enumerable: true,
         configurable: true
@@ -311,6 +311,16 @@ var PhysicsObject3d = (function () {
         },
         set: function (value) {
             this._surfaceDistance = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PhysicsObject3d.prototype, "acceleration", {
+        get: function () {
+            return this._acceleration;
+        },
+        set: function (value) {
+            this._acceleration = value;
         },
         enumerable: true,
         configurable: true
