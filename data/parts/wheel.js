@@ -27,7 +27,16 @@ var Wheel = (function (_super) {
             this.realDirection.y * normalizedGradient.y +
             this.realDirection.z * normalizedGradient.z));
         _super.prototype.update.call(this, time, delta);
-        this.forwardForce = this._connectedMotor.torque;
+        ////////////***************************************//////////////
+        if (this._connectedMotor) {
+            //var angVel = (this._connectedMotor.torque-this.realDirection.angleTo(new THREE.Vector3(0,1,0))/(Math.PI/2))*2;
+            var frictionCoeff = 0.1;
+            this._frictionalMomentum = Math.abs((1 - Math.acos(this.normalDirection.dot(new THREE.Vector3(0, 1, 0)))) * 500 * (9.82) * frictionCoeff);
+            console.log("FRIC_MOMENT = " + this._frictionalMomentum);
+            var totalTorque = Math.abs(this._connectedMotor.torque - this._frictionalMomentum);
+            this.forwardForce = totalTorque;
+        }
+        //////////******************************************/////////////////
         var norm = this.realNormalDirection.clone();
         var normYZ = new THREE.Vector2(norm.y, norm.x);
         var rotZ = Math.acos(normYZ.dot(new THREE.Vector2(1, 0)) / (normYZ.length()));
