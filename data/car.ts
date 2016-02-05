@@ -14,6 +14,7 @@ class Car {
     private _wheels:Wheel[];
     private _springs:Spring[];
     private _position:THREE.Vector3;
+    private _rotation:THREE.Vector3;
     private _motor:Motor;
 
     private _acceleration:THREE.Vector3;
@@ -54,6 +55,7 @@ class Car {
 
         this._acceleration = this._wheels[0].acceleration;
         this._velocity = this._wheels[0].velocity;
+        this._rotation = this._wheels[0].rotation;
         this._isColliding = this._wheels[0].isColliding;
 
         this._renderer.camera.lookAt(this._wheels[0].object.position);
@@ -146,5 +148,13 @@ class Car {
 
     set velocity(value:THREE.Vector3) {
         this._velocity = value;
+    }
+
+    get rotation():THREE.Vector3 {
+        return this._rotation;
+    }
+
+    set rotation(value:THREE.Vector3) {
+        this._rotation = value;
     }
 }

@@ -69,6 +69,7 @@ var Car = (function () {
         }
         this._acceleration = this._wheels[0].acceleration;
         this._velocity = this._wheels[0].velocity;
+        this._rotation = this._wheels[0].rotation;
         this._isColliding = this._wheels[0].isColliding;
         this._renderer.camera.lookAt(this._wheels[0].object.position);
         this._renderer.camera.position.set(this._wheels[0].position.x, this._wheels[0].position.y + 10, this._wheels[0].position.z + 15);
@@ -123,6 +124,16 @@ var Car = (function () {
         },
         set: function (value) {
             this._velocity = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Car.prototype, "rotation", {
+        get: function () {
+            return this._rotation;
+        },
+        set: function (value) {
+            this._rotation = value;
         },
         enumerable: true,
         configurable: true
