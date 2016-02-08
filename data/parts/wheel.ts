@@ -12,6 +12,7 @@ class Wheel extends DynamicRigidBody {
     private _wheelRotation : number = 0;
     private _connectedMotor : Motor;
     private _connectedSpring : Spring;
+    private _steering : Steering;
     private _frictionalMomentum : number;
 
     constructor(renderer: Renderer){
@@ -79,6 +80,10 @@ class Wheel extends DynamicRigidBody {
     public connectSpring(spring:Spring):void {
         this._connectedSpring = spring;
         this.object.add(spring.springObject);
+    }
+
+    public connectSteering(steering:Steering):void {
+        this._steering = steering;
     }
 
     get rotation():number {

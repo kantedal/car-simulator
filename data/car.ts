@@ -8,14 +8,19 @@
 ///<reference path="../carsimulator.ts"/>
 ///<reference path="./parts/motor.ts"/>
 ///<reference path="./parts/spring.ts"/>
+///<reference path="./parts/steering.ts"/>
 
 class Car {
     private _renderer:Renderer;
-    private _wheels:Wheel[];
-    private _springs:Spring[];
+
     private _position:THREE.Vector3;
     private _rotation:THREE.Vector3;
+
+    private _wheels:Wheel[];
+    private _springs:Spring[];
     private _motor:Motor;
+    private _steering:Steering;
+
 
     private _acceleration:THREE.Vector3;
     private _velocity:THREE.Vector3;
@@ -30,9 +35,11 @@ class Car {
         this._motor = new Motor(20000,3);
         this._wheels = [new Wheel(renderer)];
         this._springs = [new Spring(renderer, this)];
+        this._steering = new Steering(Math.PI/2);
 
         this._wheels[0].connectMotor(this._motor);
         this._wheels[0].connectSpring(this._springs[0]);
+        this._wheels[0].connectS
 
         this._velocity = this._wheels[0].velocity;
         this._acceleration = this._wheels[0].acceleration;
