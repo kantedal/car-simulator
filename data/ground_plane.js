@@ -8,7 +8,7 @@ var GroundPlane = (function () {
         this._renderer = renderer;
         var self = this;
         var loader = new THREE.OBJLoader();
-        loader.load('./models/ground_model3.obj', function (object) {
+        loader.load('./models/ground_model4.obj', function (object) {
             var textureLoader = new THREE.TextureLoader();
             textureLoader.load("./texture/sand.jpg", function (texture) {
                 console.log("success");

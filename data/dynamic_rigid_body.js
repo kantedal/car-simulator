@@ -27,7 +27,6 @@ var DynamicRigidBody = (function (_super) {
             var gravityInterpolation = Math.pow(10, this.surfaceDistance / 10) / 10;
             if (!gravityInterpolation)
                 gravityInterpolation = 0;
-            //console.log(this.surfaceDistance)
             if (this.isColliding) {
                 this.force = new THREE.Vector3((this._inclineForce.x + this.realDirection.x * this._forwardForce) / this._mass, (this._inclineForce.y + this.realDirection.y * this._forwardForce) / this._mass + this._gravity, (this._inclineForce.z + this.realDirection.z * this._forwardForce) / this._mass);
                 newVelocity = new THREE.Vector3(this.velocity.x + this.force.x * 0.003, this.velocity.y + this.force.y * 0.003, this.velocity.z + this.force.z * 0.003).multiplyScalar(this._frictionConst);

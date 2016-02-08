@@ -7,6 +7,7 @@ var PhysicsObject3d = (function () {
         this._isColliding = false;
         this._collisionRadius = 0;
         this._surfaceDistance = 0;
+        this._renderer = renderer;
         this._geometry = geometry;
         this._material = material;
         this._object = new THREE.Mesh(this._geometry, this._material);
@@ -17,10 +18,10 @@ var PhysicsObject3d = (function () {
         this._position = new THREE.Vector3(0, 0, 0);
         this._collisionPosition = new THREE.Vector3(0, 0, 0);
         this._desiredDirection = new THREE.Vector3(1, 0, 0);
-        this._normalDirection = new THREE.Vector3(0, 0, 0);
+        this._normalDirection = new THREE.Vector3(0, 1, 0);
         this._realNormalDirection = new THREE.Vector3(0, 0, 0);
         this._gradientDirection = new THREE.Vector3(0, 0, 0);
-        this._realDirection = new THREE.Vector3(0, 0, 0);
+        this._realDirection = new THREE.Vector3(0, 0, 1);
         this._moveDirection = new THREE.Vector3(0, 0, 0);
         var dir = new THREE.Vector3(0, 1, 0);
         var origin = new THREE.Vector3(0, 0, 0);
@@ -36,18 +37,18 @@ var PhysicsObject3d = (function () {
         this._vert1 = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }));
         this._vert2 = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }));
         this._vert3 = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }));
-        this.realPos = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true }));
-        renderer.scene.add(this._vert1);
-        renderer.scene.add(this._vert2);
-        renderer.scene.add(this._vert3);
-        renderer.scene.add(this.realPos);
+        this._realPos = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true }));
+        this._renderer.scene.add(this._vert1);
+        this._renderer.scene.add(this._vert2);
+        this._renderer.scene.add(this._vert3);
+        this._renderer.scene.add(this._realPos);
     }
     PhysicsObject3d.prototype.update = function (time, delta) {
         if (this._hasCollisionSurface) {
             var faceIndex = 0;
             for (var i = 0; i < this._collisionSurface.faces.length; i++) {
                 var collisionPos = new THREE.Vector3(this._position.x - this._collisionRadius * this._realNormalDirection.x, this._position.y - this._collisionRadius * this._realNormalDirection.y, this._position.z - this._collisionRadius * this._realNormalDirection.z);
-                this.realPos.position.set(collisionPos.x, collisionPos.y, collisionPos.z);
+                this._realPos.position.set(collisionPos.x, collisionPos.y, collisionPos.z);
                 if (this.pointInTriangle(this._position, this._collisionSurface.vertices[this._collisionSurface.faces[i].a], this._collisionSurface.vertices[this._collisionSurface.faces[i].b], this._collisionSurface.vertices[this._collisionSurface.faces[i].c])) {
                     //this._collisionPosition = collisionPos;
                     faceIndex = i;
@@ -82,24 +83,6 @@ var PhysicsObject3d = (function () {
             }
             //this._normalDirection = this._collisionSurface.faces[faceIndex].normal;
             this._normalDirection.normalize();
-            this._gradientDirection.set(0, -1, 0);
-            this._gradientDirection.projectOnPlane(this._normalDirection);
-            if (this._gradientDirection.length() < 0.01)
-                this._gradientDirection.set(0, 0, 0);
-            this._realDirection.set(this._desiredDirection.x, this._desiredDirection.y, this._desiredDirection.z);
-            this._realDirection.projectOnPlane(this._normalDirection);
-            this._realDirection.normalize();
-            this._object.position.set(this._position.x + 2 * this.normalDirection.x, this._position.y + 2 * this.normalDirection.y, this._position.z + 2 * this.normalDirection.z);
-            //this._object.position.set(this._position.x, this._position.y, this._position.z);
-            this._realArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._realArrow.setDirection(this._velocity);
-            this._normalArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._normalArrow.setDirection(this._normalDirection);
-            this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._gradientArrow.setDirection(this._gradientDirection);
-            this._gradientArrow.setLength(this._gradientDirection.length() * 10);
-            this._directionArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._directionArrow.setDirection(this._desiredDirection);
             this._vert1.position.set(vert1.x, vert1.y, vert1.z);
             this._vert2.position.set(vert2.x, vert2.y, vert2.z);
             this._vert3.position.set(vert3.x, vert3.y, vert3.z);
@@ -110,6 +93,23 @@ var PhysicsObject3d = (function () {
                 this._isColliding = false;
             }
         }
+        this._gradientDirection.set(0, -1, 0);
+        this._gradientDirection.projectOnPlane(this._normalDirection);
+        if (this._gradientDirection.length() < 0.01)
+            this._gradientDirection.set(0, 0, 0);
+        //this._realDirection.set(this._desiredDirection.x, this._desiredDirection.y, this._desiredDirection.z);
+        //this._realDirection.projectOnPlane(this._normalDirection);
+        //this._realDirection.normalize();
+        this._realArrow.position.set(this._position.x, this._position.y, this._position.z);
+        this._realArrow.setDirection(this.velocity);
+        //this._realArrow.setLength(this.realDirection.length()*2);
+        this._normalArrow.position.set(this._position.x, this._position.y, this._position.z);
+        this._normalArrow.setDirection(this._normalDirection);
+        this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z);
+        this._gradientArrow.setDirection(this._gradientDirection);
+        this._gradientArrow.setLength(this._gradientDirection.length() * 10);
+        this._directionArrow.position.set(this._position.x, this._position.y, this._position.z);
+        this._directionArrow.setDirection(this._desiredDirection);
     };
     PhysicsObject3d.prototype.updateVelocity = function (newVelocity) {
         this._velocity.set(newVelocity.x, newVelocity.y, newVelocity.z);

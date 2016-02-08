@@ -7,15 +7,15 @@ var Spring = (function () {
     function Spring(renderer, car) {
         this.a = 0;
         this.v = 0;
-        this.k = 10000;
-        this.c = 1500;
+        this.k = 1000;
+        this.c = 800;
         this._car = car;
         this._renderer = renderer;
+        this._position = new THREE.Vector3(0, 0, 0);
         this._springGroup = new THREE.Group();
-        this._springGroup.position.set(0, 0.2, 1.0);
-        this._springGroup.rotateX(Math.PI / 9);
+        this._springGroup.position.set(0, 2.0, 1.0);
+        this._renderer.scene.add(this._springGroup);
         this._spring = new THREE.Object3D();
-        this._spring.position.set(0, 0, 0);
         this._springGroup.add(this._spring);
         this._wheelConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.5, 10), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }));
         this._wheelConnectorMesh.position.set(0, 0, 0);
@@ -30,11 +30,12 @@ var Spring = (function () {
     Spring.prototype.loadSpringModel = function () {
         var self = this;
         var loader = new THREE.OBJLoader();
-        loader.load('./models/spring.obj', function (object) {
+        loader.load('./models/spring2.obj', function (object) {
+            console.log("success");
             var material1 = new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true });
             self._springMesh = object.clone();
-            self._springMesh.scale.set(0.4, 0.4, 0.4);
-            self._springMesh.position.set(0, 0, 0);
+            self._springMesh.scale.set(0.38, 0.4, 0.38);
+            self._springMesh.position.set(0, 1.2, 0);
             //self._springMesh.position.set(self._wheelConnectorMesh.position.x, self._wheelConnectorMesh.position.y, self._wheelConnectorMesh.position.z);
             self._spring.add(self._springMesh);
         }, function (xhr) {
@@ -44,9 +45,10 @@ var Spring = (function () {
     Spring.prototype.update = function (time, delta) {
         if (this._springMesh) {
             var dampConst = 5000;
-            this.a = -(this._car.acceleration.y / 0.003 + 9.82) - (this.k * (this._carBodyConnectorMesh.position.y - 4.5) + this.c * this.v) / 500;
+            console.log(this._car.acceleration.y);
+            this.a = -((this._car.acceleration.y / 0.003 + 9.82) - (this.k * (this._carBodyConnectorMesh.position.y - 4.5) + this.c * this.v) / 500);
             this._carBodyConnectorMesh.position.y += this.v * 0.03;
-            this._spring.scale.y = this._carBodyConnectorMesh.position.y * 0.26 - 0.16;
+            this._spring.scale.y = this._carBodyConnectorMesh.position.y * 0.3 + 0.2;
             this.v += this.a * 0.03;
         }
     };
@@ -60,7 +62,7 @@ var Spring = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Spring.prototype, "springObject", {
+    Object.defineProperty(Spring.prototype, "springGroup", {
         get: function () {
             return this._springGroup;
         },

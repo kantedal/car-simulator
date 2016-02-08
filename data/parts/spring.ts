@@ -9,6 +9,7 @@ class Spring {
     private _car : Car;
     private _renderer : Renderer;
     private _springGroup : THREE.Group;
+    private _position : THREE.Vector3;
     private _spring : THREE.Object3D;
     private _springMesh : THREE.Mesh;
     private _wheelConnectorMesh : THREE.Mesh;
@@ -20,12 +21,12 @@ class Spring {
     constructor(renderer: Renderer, car: Car){
         this._car = car;
         this._renderer = renderer;
+        this._position = new THREE.Vector3(0,0,0);
         this._springGroup = new THREE.Group();
-        this._springGroup.position.set(0,0.2,1.0);
-        this._springGroup.rotateX(Math.PI/9);
+        this._springGroup.position.set(0,2.0,1.0);
+        this._renderer.scene.add(this._springGroup);
 
         this._spring = new THREE.Object3D();
-        this._spring.position.set(0,0,0);
         this._springGroup.add(this._spring);
 
         this._wheelConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry( 0.5, 0.5, 0.5, 10 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
@@ -46,36 +47,38 @@ class Spring {
         var self = this;
         var loader = new THREE.OBJLoader();
         loader.load(
-            './models/spring.obj',
+            './models/spring2.obj',
             function(object : THREE.Mesh){
+                console.log("success");
                 var material1 = new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true});
 
                 self._springMesh = object.clone();
-                self._springMesh.scale.set(0.4,0.4,0.4);
-                self._springMesh.position.set(0,0,0);
+                self._springMesh.scale.set(0.38,0.4,0.38);
+                self._springMesh.position.set(0,1.2,0);
                 //self._springMesh.position.set(self._wheelConnectorMesh.position.x, self._wheelConnectorMesh.position.y, self._wheelConnectorMesh.position.z);
                 self._spring.add(self._springMesh);
             },
             function ( xhr ) {
                 console.log( 'An error happened' );
             }
-        )
+        );
     }
 
     private a:number = 0;
     private v:number = 0;
-    private k:number = 10000;
-    private c:number = 1500;
+    private k:number = 1000;
+    private c:number = 800;
     public update(time:number, delta:number) {
         if (this._springMesh) {
             var dampConst = 5000;
-
-            this.a = -(this._car.acceleration.y/0.003+9.82) - (this.k*(this._carBodyConnectorMesh.position.y-4.5) + this.c*this.v)/500;
+            console.log(this._car.acceleration.y);
+            this.a = -((this._car.acceleration.y/0.003+9.82) - (this.k*(this._carBodyConnectorMesh.position.y-4.5) + this.c*this.v)/500);
             this._carBodyConnectorMesh.position.y += this.v*0.03;
-            this._spring.scale.y = this._carBodyConnectorMesh.position.y*0.26-0.16;
+            this._spring.scale.y = this._carBodyConnectorMesh.position.y*0.3+0.2;
             this.v += this.a*0.03;
             //this._carBodyConnectorMesh.position.y = 8-(500*(this._car.force.y+9.82))/dampConst;
 
+           // this._springGroup.position.set(this._position.x,this._position.y,this._position.z);
         }
     }
 
@@ -88,7 +91,7 @@ class Spring {
         this._position = value;
     }
 
-    get springObject():THREE.Group {
+    get springGroup():THREE.Group {
         return this._springGroup;
     }
 }

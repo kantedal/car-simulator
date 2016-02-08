@@ -36,13 +36,15 @@ class Motor {
         this._currentTime = time;
 
         if(this._isAccelerating){
-            this._torque = this._forceConst*(1-Math.exp(-this._accelerationStartTime*(time-this._accelerationStartTime)));
+            this._torque = this._forceConst;
         }
         else
         {
             this._accelerationStartTime = 0;
             this._torque = 0;
         }
+
+       // console.log(this._torque + "  " + this.isAccelerating);
     }
 
     get isAccelerating():boolean {
@@ -50,9 +52,7 @@ class Motor {
     }
 
     set isAccelerating(value:boolean) {
-        if(!this._isAccelerating && value == true)
-            this._accelerationStartTime = this._currentTime;
-
+        console.log("start")
         this._isAccelerating = value;
     }
 
