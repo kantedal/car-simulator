@@ -10,6 +10,7 @@
 ///<reference path="./parts/spring.ts"/>
 ///<reference path="./parts/steering.ts"/>
 ///<reference path="./vehiclesetup.ts"/>
+///<reference path="./dynamic_car_body.ts"/>
 ///<reference path="./car.ts"/>
 
 class Vehicle {
@@ -35,12 +36,11 @@ class Vehicle {
         this._isColliding = false;
 
         this._vehicleGroup = new THREE.Group();
-        this._vehicleSetup = new Car(this._renderer, this);
 
-        this._vehicleBody = new DynamicRigidBody(new THREE.BoxGeometry( 6, 3, 8 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
+        this._vehicleBody = new DynamicCarBody(new THREE.BoxGeometry( 6, 3, 8 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer, 500, this);
         this._vehicleBody.position.set(0,100,0);
-        this._vehicleBody.object.add(this._vehicleSetup.wheels[0].object);
-        this._vehicleBody.object.add(this._vehicleSetup.wheels[1].object);
+
+        this._vehicleSetup = new Car(this._renderer, this);
 
         renderer.scene.add(this._vehicleBody.object);
     }
@@ -58,7 +58,7 @@ class Vehicle {
         this._position.set(this._vehicleBody.position.x, this._vehicleBody.position.y, this._vehicleBody.position.z);
     }
 
-    connectCollisionSurface(groundPlanes: GroundPlane[]): number{
+    public connectCollisionSurface(groundPlanes: GroundPlane[]): number{
         var surfaceIndex = 0;
         for(var g=0; g<groundPlanes.length; g++){
             for(var i=0; i<this._vehicleSetup.wheels.length; i++) {
@@ -71,6 +71,10 @@ class Vehicle {
             }
         }
         return surfaceIndex;
+    }
+
+    public add(object){
+        this._vehicleBody.object.add(object);
     }
 
     get position():THREE.Vector3 {
@@ -111,5 +115,13 @@ class Vehicle {
 
     set rotation(value:THREE.Vector3) {
         this._rotation = value;
+    }
+
+    get vehicleSetup():VehicleSetup {
+        return this._vehicleSetup;
+    }
+
+    set vehicleSetup(value:VehicleSetup) {
+        this._vehicleSetup = value;
     }
 }

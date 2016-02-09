@@ -21,7 +21,8 @@ class Spring {
         this._vehicle = vehicle;
         this._renderer = renderer;
         this._springGroup = new THREE.Group();
-        this._springGroup.rotateX(startRot);
+        this._springGroup.rotateZ(startRot);
+        this._springGroup.position.set(0,0,0);
 
         this._spring = new THREE.Object3D();
         this._spring.position.set(0,0,0);
@@ -37,6 +38,8 @@ class Spring {
 
         this._springDirection = new THREE.Vector3(0,1,0);
         this._springArrow = new THREE.ArrowHelper( this._springDirection, new THREE.Vector3(0,0,0), 10, 0x00ffff );
+
+        this._vehicle.add(this._springGroup);
 
         this.loadSpringModel();
     }

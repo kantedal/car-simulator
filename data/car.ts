@@ -10,11 +10,16 @@ class Car extends VehicleSetup {
     constructor(renderer : Renderer, vehicle : Vehicle){
         super(renderer, vehicle);
 
-        this.wheels = [new Wheel(renderer), new Wheel(renderer)];
+        this.wheels = [
+            new Wheel(renderer, this.vehicle, new THREE.Vector3(5,0,0)),
+            new Wheel(renderer, this.vehicle, new THREE.Vector3(-5,0,0))
+        ];
+
         this.springs = [
             new Spring(renderer, this.vehicle, Math.PI/9),
             new Spring(renderer, this.vehicle, -Math.PI/9)
         ];
+
         this.motor = new Motor(20000, 100);
         this.steering = new Steering(Math.PI/2);
 

@@ -10,6 +10,7 @@
 ///<reference path="./parts/spring.ts"/>
 ///<reference path="./parts/steering.ts"/>
 ///<reference path="./vehiclesetup.ts"/>
+///<reference path="./dynamic_car_body.ts"/>
 ///<reference path="./car.ts"/>
 var Vehicle = (function () {
     function Vehicle(renderer) {
@@ -20,11 +21,9 @@ var Vehicle = (function () {
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._isColliding = false;
         this._vehicleGroup = new THREE.Group();
-        this._vehicleSetup = new Car(this._renderer, this);
-        this._vehicleBody = new DynamicRigidBody(new THREE.BoxGeometry(6, 3, 8), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }), renderer);
+        this._vehicleBody = new DynamicCarBody(new THREE.BoxGeometry(6, 3, 8), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }), renderer, 500, this);
         this._vehicleBody.position.set(0, 100, 0);
-        this._vehicleBody.object.add(this._vehicleSetup.wheels[0].object);
-        this._vehicleBody.object.add(this._vehicleSetup.wheels[1].object);
+        this._vehicleSetup = new Car(this._renderer, this);
         renderer.scene.add(this._vehicleBody.object);
     }
     Vehicle.prototype.update = function (time, delta) {
@@ -50,6 +49,9 @@ var Vehicle = (function () {
             }
         }
         return surfaceIndex;
+    };
+    Vehicle.prototype.add = function (object) {
+        this._vehicleBody.object.add(object);
     };
     Object.defineProperty(Vehicle.prototype, "position", {
         get: function () {
@@ -97,6 +99,16 @@ var Vehicle = (function () {
         },
         set: function (value) {
             this._rotation = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vehicle.prototype, "vehicleSetup", {
+        get: function () {
+            return this._vehicleSetup;
+        },
+        set: function (value) {
+            this._vehicleSetup = value;
         },
         enumerable: true,
         configurable: true

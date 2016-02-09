@@ -12,12 +12,15 @@ var __extends = (this && this.__extends) || function (d, b) {
 ///<reference path="./spring.ts"/>
 var Wheel = (function (_super) {
     __extends(Wheel, _super);
-    function Wheel(renderer) {
+    function Wheel(renderer, vehicle, startPosition) {
         _super.call(this, new THREE.CylinderGeometry(2, 2, 1).rotateX(Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }), renderer);
         this._wheelRotation = 0;
+        this._vehicle = vehicle;
         this.collisionRadius = 0;
         this._rotation = 0;
-        this.position.set(5, 0, 0);
+        this._forwardForce = 0;
+        this.position = startPosition;
+        this._vehicle.add(this.object);
     }
     Wheel.prototype.update = function (time, delta) {
         var normalizedGradient = this.velocity.clone().normalize();
@@ -32,10 +35,10 @@ var Wheel = (function (_super) {
             var frictionCoeff = 0.1;
             this._frictionalMomentum = Math.abs((1 - Math.acos(this.normalDirection.dot(new THREE.Vector3(0, 1, 0)))) * 500 * (9.82) * frictionCoeff);
             var totalTorque = Math.abs(this._connectedMotor.torque - this._frictionalMomentum);
-            this.forwardForce = totalTorque;
+            this._forwardForce = totalTorque;
         }
         else {
-            this.forwardForce = 0;
+            this._forwardForce = 0;
         }
         if (this._steering) {
             this.desiredDirection.applyAxisAngle(new THREE.Vector3(0, 1, 0), this._steering.steeringAngle - this._rotation);
@@ -49,8 +52,7 @@ var Wheel = (function (_super) {
     };
     Wheel.prototype.connectSpring = function (spring) {
         this._connectedSpring = spring;
-        this._connectedSpring.position.set(1, 0, 0);
-        this.object.add(spring.springObject);
+        this._connectedSpring.position.set(this.position.x * 0.8, this.position.y * 0.8, this.position.z * 0.8);
     };
     Wheel.prototype.connectSteering = function (steering) {
         this._steering = steering;
@@ -58,6 +60,16 @@ var Wheel = (function (_super) {
     Object.defineProperty(Wheel.prototype, "rotation", {
         get: function () {
             return this._rotation;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Wheel.prototype, "forwardForce", {
+        get: function () {
+            return this._forwardForce;
+        },
+        set: function (value) {
+            this._forwardForce = value;
         },
         enumerable: true,
         configurable: true

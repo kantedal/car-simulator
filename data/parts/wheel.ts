@@ -10,17 +10,23 @@
 class Wheel extends PhysicsObject3d {
     private _rotation : number;
     private _wheelRotation : number = 0;
+    private _vehicle : Vehicle;
     private _connectedMotor : Motor;
     private _connectedSpring : Spring;
     private _steering : Steering;
     private _frictionalMomentum : number;
+    private _forwardForce : number;
 
-    constructor(renderer: Renderer){
+    constructor(renderer: Renderer, vehicle : Vehicle, startPosition : THREE.Vector3){
         super(new THREE.CylinderGeometry(2,2,1).rotateX(Math.PI/2), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
 
+        this._vehicle = vehicle;
         this.collisionRadius = 0;
         this._rotation = 0;
-        this.position.set(5,0,0);
+        this._forwardForce = 0;
+        this.position = startPosition;
+
+        this._vehicle.add(this.object);
     }
 
     public update(time: number, delta: number){
@@ -45,9 +51,9 @@ class Wheel extends PhysicsObject3d {
 
             var totalTorque = Math.abs(this._connectedMotor.torque-this._frictionalMomentum);
 
-            this.forwardForce = totalTorque;
+            this._forwardForce = totalTorque;
         }else{
-            this.forwardForce = 0;
+            this._forwardForce = 0;
         }
 
         if(this._steering){
@@ -65,8 +71,7 @@ class Wheel extends PhysicsObject3d {
 
     public connectSpring(spring:Spring):void {
         this._connectedSpring = spring;
-        this._connectedSpring.position.set(1,0,0);
-        this.object.add(spring.springObject);
+        this._connectedSpring.position.set(this.position.x*0.8, this.position.y*0.8, this.position.z*0.8);
     }
 
     public connectSteering(steering:Steering):void {
@@ -77,4 +82,11 @@ class Wheel extends PhysicsObject3d {
         return this._rotation;
     }
 
+    get forwardForce():number {
+        return this._forwardForce;
+    }
+
+    set forwardForce(value:number) {
+        this._forwardForce = value;
+    }
 }

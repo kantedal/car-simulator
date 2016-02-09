@@ -12,7 +12,10 @@ var Car = (function (_super) {
     __extends(Car, _super);
     function Car(renderer, vehicle) {
         _super.call(this, renderer, vehicle);
-        this.wheels = [new Wheel(renderer), new Wheel(renderer)];
+        this.wheels = [
+            new Wheel(renderer, this.vehicle, new THREE.Vector3(5, 0, 0)),
+            new Wheel(renderer, this.vehicle, new THREE.Vector3(-5, 0, 0))
+        ];
         this.springs = [
             new Spring(renderer, this.vehicle, Math.PI / 9),
             new Spring(renderer, this.vehicle, -Math.PI / 9)
