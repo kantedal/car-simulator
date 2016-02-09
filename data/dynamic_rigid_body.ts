@@ -37,9 +37,6 @@ class DynamicRigidBody extends PhysicsObject3d {
             if(!gravityInterpolation)
                 gravityInterpolation = 0;
 
-
-            //console.log(this.surfaceDistance)
-
             if (this.isColliding){
 
                 this.force = new THREE.Vector3(
@@ -63,7 +60,8 @@ class DynamicRigidBody extends PhysicsObject3d {
 
             }else{
                 this.force = new THREE.Vector3(
-                    0, this._gravity,
+                    0,
+                    this._gravity,
                     0
                 );
 

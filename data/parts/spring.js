@@ -2,18 +2,17 @@
  * Created by filles-dator on 2016-02-03.
  */
 ///<reference path="../../renderer.ts"/>
-///<reference path="../car.ts"/>
+///<reference path="../vehicle.ts"/>
 var Spring = (function () {
-    function Spring(renderer, car) {
+    function Spring(renderer, vehicle, startRot) {
         this.a = 0;
         this.v = 0;
         this.k = 10000;
         this.c = 1500;
-        this._car = car;
+        this._vehicle = vehicle;
         this._renderer = renderer;
         this._springGroup = new THREE.Group();
-        this._springGroup.position.set(0, 0.2, 1.0);
-        this._springGroup.rotateX(Math.PI / 9);
+        this._springGroup.rotateX(startRot);
         this._spring = new THREE.Object3D();
         this._spring.position.set(0, 0, 0);
         this._springGroup.add(this._spring);
@@ -44,7 +43,7 @@ var Spring = (function () {
     Spring.prototype.update = function (time, delta) {
         if (this._springMesh) {
             var dampConst = 5000;
-            this.a = -(this._car.acceleration.y / 0.003 + 9.82) - (this.k * (this._carBodyConnectorMesh.position.y - 4.5) + this.c * this.v) / 500;
+            this.a = -(this._vehicle.acceleration.y / 0.003 + 9.82) - (this.k * (this._carBodyConnectorMesh.position.y - 4.5) + this.c * this.v) / 500;
             this._carBodyConnectorMesh.position.y += this.v * 0.03;
             this._spring.scale.y = this._carBodyConnectorMesh.position.y * 0.35 + 0.2;
             this.v += this.a * 0.03;
@@ -52,10 +51,10 @@ var Spring = (function () {
     };
     Object.defineProperty(Spring.prototype, "position", {
         get: function () {
-            return this._position;
+            return this._springGroup.position;
         },
         set: function (value) {
-            this._position = value;
+            this._springGroup.position = value;
         },
         enumerable: true,
         configurable: true

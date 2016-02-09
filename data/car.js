@@ -1,146 +1,36 @@
 /**
- * Created by filles-dator on 2016-01-26.
+ * Created by filles-dator on 2016-02-08.
  */
-///<reference path="./physics_object3d.ts"/>
-///<reference path="../renderer.ts"/>
-///<reference path="./parts/wheel.ts"/>
-///<reference path="./ground_plane.ts"/>
-///<reference path="../carsimulator.ts"/>
-///<reference path="./parts/motor.ts"/>
-///<reference path="./parts/spring.ts"/>
-///<reference path="./parts/steering.ts"/>
-var Car = (function () {
-    function Car(renderer) {
-        var _this = this;
-        this._steeringAngle = 0;
-        this.pressedKeys = [];
-        this.onKeyDown = function (e) {
-            if (e) {
-                _this.pressedKeys[e.keyCode] = true;
-                if (_this.pressedKeys[37]) {
-                    _this._steeringAngle += 0.35;
-                    _this._wheels[0].rotation = _this._steeringAngle;
-                }
-                if (_this.pressedKeys[38]) {
-                    _this._motor.isAccelerating = true;
-                }
-                if (_this.pressedKeys[39]) {
-                    _this._steeringAngle -= 0.35;
-                    _this._wheels[0].rotation = _this._steeringAngle;
-                }
-                if (_this.pressedKeys[40]) {
-                }
-            }
-        };
-        this.onKeyUp = function (e) {
-            if (e) {
-                _this.pressedKeys[e.keyCode] = false;
-                switch (e.which) {
-                    case 37:
-                        break;
-                    case 38:
-                        _this._motor.isAccelerating = false;
-                        break;
-                    case 39:
-                        break;
-                    case 40:
-                        break;
-                }
-            }
-        };
-        this._renderer = renderer;
-        this._motor = new Motor(20000, 3);
-        this._wheels = [new Wheel(renderer)];
-        this._springs = [new Spring(renderer, this)];
-        this._steering = new Steering(Math.PI / 2);
-        this._wheels[0].connectMotor(this._motor);
-        this._wheels[0].connectSpring(this._springs[0]);
-        this._wheels[0].connectS;
-        this._velocity = this._wheels[0].velocity;
-        this._acceleration = this._wheels[0].acceleration;
-        this._isColliding = this._wheels[0].isColliding;
-        this._position = new THREE.Vector3(0, 0, 0);
-        renderer.scene.add(this._wheels[0].object);
-        window.addEventListener('keydown', this.onKeyDown, false);
-        window.addEventListener('keyup', this.onKeyUp, false);
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+///<reference path="./vehiclesetup.ts"/>
+///<reference path="./vehicle.ts"/>
+var Car = (function (_super) {
+    __extends(Car, _super);
+    function Car(renderer, vehicle) {
+        _super.call(this, renderer, vehicle);
+        this.wheels = [new Wheel(renderer), new Wheel(renderer)];
+        this.springs = [
+            new Spring(renderer, this.vehicle, Math.PI / 9),
+            new Spring(renderer, this.vehicle, -Math.PI / 9)
+        ];
+        this.motor = new Motor(20000, 100);
+        this.steering = new Steering(Math.PI / 2);
+        this.setupWheels();
     }
-    Car.prototype.update = function (time, delta) {
-        this._motor.update(time, delta);
-        for (var i = 0; i < this._wheels.length; i++) {
-            this._springs[i].update(time, delta);
-            this._wheels[i].update(time, delta);
-        }
-        this._acceleration = this._wheels[0].acceleration;
-        this._velocity = this._wheels[0].velocity;
-        this._rotation = this._wheels[0].rotation;
-        this._isColliding = this._wheels[0].isColliding;
-        this._renderer.camera.lookAt(this._wheels[0].object.position);
-        this._renderer.camera.position.set(this._wheels[0].position.x, this._wheels[0].position.y + 10, this._wheels[0].position.z + 15);
-        this._position.set(this._wheels[0].position.x, this._wheels[0].position.y, this._wheels[0].position.z);
+    Car.prototype.setupWheels = function () {
+        this.wheels[0].object.position.set(-5, 0, 0);
+        this.wheels[0].connectSpring(this.springs[0]);
+        this.wheels[0].connectMotor(this.motor);
+        this.wheels[0].connectSteering(this.steering);
+        this.wheels[1].object.position.set(5, 0, 0);
+        this.wheels[1].connectSpring(this.springs[1]);
+        this.wheels[1].connectMotor(this.motor);
+        this.wheels[1].connectSteering(this.steering);
     };
-    Car.prototype.connectCollisionSurface = function (groundPlanes) {
-        var surfaceIndex = 0;
-        for (var g = 0; g < groundPlanes.length; g++) {
-            for (var i = 0; i < this._wheels.length; i++) {
-                if (Math.abs(this._wheels[i].position.x - groundPlanes[g].mesh.position.x) < CarSimulator.ground_width / 2 && Math.abs(this._wheels[i].position.z - groundPlanes[g].mesh.position.z) < CarSimulator.ground_width / 2) {
-                    this._wheels[i].connectCollisionSurface(groundPlanes[g].geometry);
-                    surfaceIndex = g;
-                    break;
-                }
-            }
-        }
-        return surfaceIndex;
-    };
-    Object.defineProperty(Car.prototype, "position", {
-        get: function () {
-            return this._position;
-        },
-        set: function (value) {
-            this._position = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Car.prototype, "acceleration", {
-        get: function () {
-            return this._acceleration;
-        },
-        set: function (value) {
-            this._acceleration = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Car.prototype, "isColliding", {
-        get: function () {
-            return this._isColliding;
-        },
-        set: function (value) {
-            this._isColliding = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Car.prototype, "velocity", {
-        get: function () {
-            return this._velocity;
-        },
-        set: function (value) {
-            this._velocity = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Car.prototype, "rotation", {
-        get: function () {
-            return this._rotation;
-        },
-        set: function (value) {
-            this._rotation = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
     return Car;
-})();
+})(VehicleSetup);
 //# sourceMappingURL=car.js.map

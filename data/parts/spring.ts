@@ -3,10 +3,10 @@
  */
 
 ///<reference path="../../renderer.ts"/>
-///<reference path="../car.ts"/>
+///<reference path="../vehicle.ts"/>
 
 class Spring {
-    private _car : Car;
+    private _vehicle : Vehicle;
     private _renderer : Renderer;
     private _springGroup : THREE.Group;
     private _spring : THREE.Object3D;
@@ -17,12 +17,11 @@ class Spring {
     private _springDirection : THREE.Vector3;
     private _springArrow : THREE.ArrowHelper;
 
-    constructor(renderer: Renderer, car: Car){
-        this._car = car;
+    constructor(renderer: Renderer, vehicle: Vehicle, startRot: number){
+        this._vehicle = vehicle;
         this._renderer = renderer;
         this._springGroup = new THREE.Group();
-        this._springGroup.position.set(0,0.2,1.0);
-        this._springGroup.rotateX(Math.PI/9);
+        this._springGroup.rotateX(startRot);
 
         this._spring = new THREE.Object3D();
         this._spring.position.set(0,0,0);
@@ -70,7 +69,7 @@ class Spring {
         if (this._springMesh) {
             var dampConst = 5000;
 
-            this.a = -(this._car.acceleration.y/0.003+9.82) - (this.k*(this._carBodyConnectorMesh.position.y-4.5) + this.c*this.v)/500;
+            this.a = -(this._vehicle.acceleration.y/0.003+9.82) - (this.k*(this._carBodyConnectorMesh.position.y-4.5) + this.c*this.v)/500;
             this._carBodyConnectorMesh.position.y += this.v*0.03;
             this._spring.scale.y = this._carBodyConnectorMesh.position.y*0.35+0.2;
             this.v += this.a*0.03;
@@ -81,11 +80,11 @@ class Spring {
 
 
     get position():THREE.Vector3 {
-        return this._position;
+        return this._springGroup.position;
     }
 
     set position(value:THREE.Vector3) {
-        this._position = value;
+        this._springGroup.position = value;
     }
 
     get springObject():THREE.Group {

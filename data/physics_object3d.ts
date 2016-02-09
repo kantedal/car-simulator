@@ -161,6 +161,7 @@ class PhysicsObject3d {
             this._realDirection.projectOnPlane(this._normalDirection);
             this._realDirection.normalize();
 
+            console.log(this._position.x + "   " + this._position.y + "  " + this._position.z)
             this._object.position.set(this._position.x+2*this.normalDirection.x, this._position.y+2*this.normalDirection.y, this._position.z+2*this.normalDirection.z);
             //this._object.position.set(this._position.x, this._position.y, this._position.z);
 

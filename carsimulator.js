@@ -5,7 +5,7 @@
 ///<reference path="./data/ground_plane.ts"/>
 ///<reference path="./data/parts/wheel.ts"/>
 ///<reference path="./data/physics_object3d.ts"/>
-///<reference path="./data/car.ts"/>
+///<reference path="./data/vehicle.ts"/>
 var CarSimulator = (function () {
     function CarSimulator() {
         this._surfaceIndex = 0;
@@ -18,7 +18,7 @@ var CarSimulator = (function () {
         var self = this;
         self._renderer.start();
         //self._wheel = new Wheel(self._renderer);
-        self._car = new Car(self._renderer);
+        self._vehicle = new Vehicle(self._renderer);
         var ground_plane = new GroundPlane(this._renderer);
         var groundCallback = {
             planeLoaded: function (groundPlane) {
@@ -73,7 +73,7 @@ var CarSimulator = (function () {
     CarSimulator.prototype.update = function () {
         var delta = this._clock.getElapsedTime() - this._time;
         this._time = this._clock.getElapsedTime();
-        var currentSurfaceIndex = this._car.connectCollisionSurface(this._groundPlanes);
+        var currentSurfaceIndex = this._vehicle.connectCollisionSurface(this._groundPlanes);
         if (currentSurfaceIndex != this._surfaceIndex) {
             var xMove = this._groundPlanes[currentSurfaceIndex].mesh.position.x - this._groundPlanes[this._surfaceIndex].mesh.position.x;
             var zMove = this._groundPlanes[currentSurfaceIndex].mesh.position.z - this._groundPlanes[this._surfaceIndex].mesh.position.z;
@@ -114,7 +114,7 @@ var CarSimulator = (function () {
             }
             this._surfaceIndex = currentSurfaceIndex;
         }
-        this._car.update(this._time, delta);
+        this._vehicle.update(this._time, delta);
         this._renderer.render(this._time);
         var self = this;
         setTimeout(function () {

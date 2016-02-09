@@ -7,7 +7,7 @@
 ///<reference path="./motor.ts"/>
 ///<reference path="./spring.ts"/>
 
-class Wheel extends DynamicRigidBody {
+class Wheel extends PhysicsObject3d {
     private _rotation : number;
     private _wheelRotation : number = 0;
     private _connectedMotor : Motor;
@@ -20,7 +20,7 @@ class Wheel extends DynamicRigidBody {
 
         this.collisionRadius = 0;
         this._rotation = 0;
-        this.position.set(0,100,0);
+        this.position.set(5,0,0);
     }
 
     public update(time: number, delta: number){
@@ -49,26 +49,12 @@ class Wheel extends DynamicRigidBody {
         }else{
             this.forwardForce = 0;
         }
-        //////////******************************************/////////////////
 
-        var norm = this.realNormalDirection.clone();
-        var normYZ = new THREE.Vector2(norm.y, norm.x);
-        var rotZ = Math.acos(normYZ.dot(new THREE.Vector2(1,0))/(normYZ.length()));
-        if(!rotZ)
-            rotZ = 0;
-        else if(norm.x > 0)
-            rotZ = -rotZ;
-
-        var normXY = new THREE.Vector2(norm.y, norm.z);
-        var rotX = Math.acos(normXY.dot(new THREE.Vector2(1,0))/(normXY.length()));
-        if(!rotX)
-            rotX = 0;
-        else if(norm.z < 0)
-            rotX = -rotX;
-
-        this.object.rotation.set(rotX,0,rotZ);
-        this.object.rotateOnAxis(new THREE.Vector3(0,1,0), this._rotation);
-        this._wheelRotation += 0.05;
+        if(this._steering){
+            this.desiredDirection.applyAxisAngle(new THREE.Vector3(0,1,0), this._steering.steeringAngle-this._rotation);
+            this._rotation = this._steering.steeringAngle;
+            this.object.rotation.set(0,this._rotation,0);
+        }
 
         this.geometry.rotateZ(-0.2*this.velocity.length());
     }
@@ -79,6 +65,7 @@ class Wheel extends DynamicRigidBody {
 
     public connectSpring(spring:Spring):void {
         this._connectedSpring = spring;
+        this._connectedSpring.position.set(1,0,0);
         this.object.add(spring.springObject);
     }
 
@@ -90,9 +77,4 @@ class Wheel extends DynamicRigidBody {
         return this._rotation;
     }
 
-    set rotation(value:number) {
-        this.object.rotateOnAxis(new THREE.Vector3(0,1,0), value-this._rotation);
-        this.desiredDirection.applyAxisAngle(new THREE.Vector3(0,1,0), value-this._rotation);
-        this._rotation = value;
-    }
 }
