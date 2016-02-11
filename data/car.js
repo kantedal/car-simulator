@@ -18,14 +18,16 @@ var Car = (function () {
             if (e) {
                 _this.pressedKeys[e.keyCode] = true;
                 if (_this.pressedKeys[37]) {
-                    _this._steeringAngle += 0.35;
+                    _this._steeringAngle += 0.2;
+                    //this._steering.steeringAcceleration = 5;
                     _this._wheels[0].rotation = _this._steeringAngle;
                 }
                 if (_this.pressedKeys[38]) {
                     _this._motor.isAccelerating = true;
                 }
                 if (_this.pressedKeys[39]) {
-                    _this._steeringAngle -= 0.35;
+                    _this._steeringAngle -= 0.2;
+                    //this._steering.steeringAcceleration = -5;
                     _this._wheels[0].rotation = _this._steeringAngle;
                 }
                 if (_this.pressedKeys[40]) {
@@ -55,7 +57,7 @@ var Car = (function () {
         this._steering = new Steering(Math.PI / 2);
         this._wheels[0].connectMotor(this._motor);
         this._wheels[0].connectSpring(this._springs[0]);
-        this._wheels[0].connectS;
+        this._wheels[0].connectSteering(this._steering);
         this._velocity = this._wheels[0].velocity;
         this._acceleration = this._wheels[0].acceleration;
         this._isColliding = this._wheels[0].isColliding;
@@ -66,6 +68,8 @@ var Car = (function () {
     }
     Car.prototype.update = function (time, delta) {
         this._motor.update(time, delta);
+        this._steering.update(time, delta);
+        console.log(this._steering.steeringAngle);
         for (var i = 0; i < this._wheels.length; i++) {
             this._springs[i].update(time, delta);
             this._wheels[i].update(time, delta);

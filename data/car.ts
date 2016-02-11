@@ -39,7 +39,7 @@ class Car {
 
         this._wheels[0].connectMotor(this._motor);
         this._wheels[0].connectSpring(this._springs[0]);
-        this._wheels[0].connectS
+        this._wheels[0].connectSteering(this._steering)
 
         this._velocity = this._wheels[0].velocity;
         this._acceleration = this._wheels[0].acceleration;
@@ -54,6 +54,9 @@ class Car {
 
     public update(time:number, delta:number):void {
         this._motor.update(time,delta);
+        this._steering.update(time,delta);
+
+        console.log(this._steering.steeringAngle)
 
         for(var i=0; i<this._wheels.length; i++){
             this._springs[i].update(time, delta);
@@ -91,7 +94,8 @@ class Car {
             this.pressedKeys[e.keyCode] = true;
 
             if(this.pressedKeys[37]) {
-                this._steeringAngle += 0.35;
+                this._steeringAngle += 0.2;
+                //this._steering.steeringAcceleration = 5;
                 this._wheels[0].rotation = this._steeringAngle;
             }
 
@@ -100,14 +104,16 @@ class Car {
             }
 
             if(this.pressedKeys[39]) {
-                this._steeringAngle -= 0.35;
-                this._wheels[0].rotation = this._steeringAngle;
+                this._steeringAngle -= 0.2;
+                //this._steering.steeringAcceleration = -5;
+                this._wheels[0].rotation = this._steeringAngle
             }
 
             if(this.pressedKeys[40]) {
             }
         }
     }
+    
     onKeyUp = (e) => {
         if (e) {
             this.pressedKeys[e.keyCode] = false;
