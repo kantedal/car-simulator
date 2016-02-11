@@ -93,6 +93,7 @@ class PhysicsObject3d {
 
             this.forceRadius.set(0,0,0);
             this.isColliding = false;
+            var collisionPoints = 0;
             for (var i = 0; i < this._collisionSurface.faces.length; i++) {
                 //if (this.pointInTriangle(vertexPosition, vert1, vert2, vert3)) {
 
@@ -100,12 +101,10 @@ class PhysicsObject3d {
                 var vert2:THREE.Vector3 = this._collisionSurface.vertices[this._collisionSurface.faces[i].b];
                 var vert3:THREE.Vector3 = this._collisionSurface.vertices[this._collisionSurface.faces[i].c];
 
-                //if(this.distanceToFace(vert1, vert2, vert3) < 5){
-
                 for (var vertexIdx = 0; vertexIdx < this._vertexTracker.vertices.length; vertexIdx++) {
                     var vertPos:THREE.Vector3 = this._vertexTracker.vertices[vertexIdx].clone();
 
-                    if (this.checkCollision(vertPos.clone().add(this.position), vert1, vert2, vert3)) {
+                    if (this.checkCollision(vertPos.clone().add(this.position), vert1, vert2, vert3) && this.pointInTriangle(vertPos.clone().add(this.position), vert1, vert2, vert3)) {
                         var vertexNormals = this._collisionSurface.faces[i].vertexNormals;
 
                         var areaT = this.triangleArea(vert1, vert2, vert3);
@@ -140,8 +139,8 @@ class PhysicsObject3d {
                         this.velocity.y = 0;
                     }
                 }
-                //}
             }
+
 
             this._centerOfMassPoint.position.set(this._position.x, this._position.y, this._position.z);
             this._object.position.set(this._position.x, this._position.y, this._position.z);
@@ -157,10 +156,9 @@ class PhysicsObject3d {
             this._realDirection.projectOnPlane(this._normalDirection);
             this._realDirection.normalize()
 
-            this._forceRadiusArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._forceRadiusArrow.setDirection(this._forceRadius);
-            this._forceRadiusArrow.setLength(this._forceRadius.length());
-            //console.log(this.forceRadius.x + "  " + this.forceRadius.y + "  " + this.forceRadius.z);
+            //this._forceRadiusArrow.position.set(this._position.x, this._position.y, this._position.z);
+            //this._forceRadiusArrow.setDirection(this._forceRadius);
+            //this._forceRadiusArrow.setLength(this._forceRadius.length());
 
             //this._normalArrow.position.set(this._position.x, this._position.y, this._position.z)
             //this._normalArrow.setDirection(this._normalDirection);
@@ -169,9 +167,9 @@ class PhysicsObject3d {
         //this._object.rotation.set(this._rotation.x, this._rotation.z, this._rotation.z);
         //this._object.position.set(this._position.x, this._position.y, this._position.z);
 
-        this._realArrow.position.set(this._position.x, this._position.y, this._position.z);
-        this._realArrow.setDirection(this._velocity);
-        this._realArrow.setLength(this._velocity.length()/5);
+        //this._realArrow.position.set(this._position.x, this._position.y, this._position.z);
+        //this._realArrow.setDirection(this._velocity);
+        //this._realArrow.setLength(this._velocity.length()/5);
 
         //this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z)
         //this._gradientArrow.setDirection(this._gradientDirection);

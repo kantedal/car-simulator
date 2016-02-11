@@ -47,15 +47,15 @@ var PhysicsObject3d = (function () {
         if (this._hasCollisionSurface) {
             this.forceRadius.set(0, 0, 0);
             this.isColliding = false;
+            var collisionPoints = 0;
             for (var i = 0; i < this._collisionSurface.faces.length; i++) {
                 //if (this.pointInTriangle(vertexPosition, vert1, vert2, vert3)) {
                 var vert1 = this._collisionSurface.vertices[this._collisionSurface.faces[i].a];
                 var vert2 = this._collisionSurface.vertices[this._collisionSurface.faces[i].b];
                 var vert3 = this._collisionSurface.vertices[this._collisionSurface.faces[i].c];
-                //if(this.distanceToFace(vert1, vert2, vert3) < 5){
                 for (var vertexIdx = 0; vertexIdx < this._vertexTracker.vertices.length; vertexIdx++) {
                     var vertPos = this._vertexTracker.vertices[vertexIdx].clone();
-                    if (this.checkCollision(vertPos.clone().add(this.position), vert1, vert2, vert3)) {
+                    if (this.checkCollision(vertPos.clone().add(this.position), vert1, vert2, vert3) && this.pointInTriangle(vertPos.clone().add(this.position), vert1, vert2, vert3)) {
                         var vertexNormals = this._collisionSurface.faces[i].vertexNormals;
                         var areaT = this.triangleArea(vert1, vert2, vert3);
                         var areaB = this.triangleArea(vert1, this._position, vert3);
@@ -82,15 +82,12 @@ var PhysicsObject3d = (function () {
             this._realDirection.set(this._desiredDirection.x, this._desiredDirection.y, this._desiredDirection.z);
             this._realDirection.projectOnPlane(this._normalDirection);
             this._realDirection.normalize();
-            this._forceRadiusArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._forceRadiusArrow.setDirection(this._forceRadius);
-            this._forceRadiusArrow.setLength(this._forceRadius.length());
         }
         //this._object.rotation.set(this._rotation.x, this._rotation.z, this._rotation.z);
         //this._object.position.set(this._position.x, this._position.y, this._position.z);
-        this._realArrow.position.set(this._position.x, this._position.y, this._position.z);
-        this._realArrow.setDirection(this._velocity);
-        this._realArrow.setLength(this._velocity.length() / 5);
+        //this._realArrow.position.set(this._position.x, this._position.y, this._position.z);
+        //this._realArrow.setDirection(this._velocity);
+        //this._realArrow.setLength(this._velocity.length()/5);
         //this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z)
         //this._gradientArrow.setDirection(this._gradientDirection);
         //this._gradientArrow.setLength(this._gradientDirection.length()*10);

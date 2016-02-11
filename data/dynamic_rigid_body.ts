@@ -16,6 +16,7 @@ class DynamicRigidBody extends PhysicsObject3d {
     private inverseInertiaTensor : THREE.Matrix3;
 
     private _renderer : Renderer;
+    private _dt : number = 0.03;
 
     private testVertex : THREE.Mesh;
     constructor(geometry: THREE.Geometry, material: THREE.Material, renderer: Renderer){
@@ -32,8 +33,8 @@ class DynamicRigidBody extends PhysicsObject3d {
         this.calculateInertiaTensor();
         renderer.scene.add(this.object);
 
-        this.force.set(100000,100000,10000);
-        this.forceRadius.set(1,1,0);
+        this.force.set(100000,100000,0);
+        this.forceRadius.set(-1,1,0);
 
         this.testVertex = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
         renderer.scene.add(this.testVertex);
@@ -48,44 +49,44 @@ class DynamicRigidBody extends PhysicsObject3d {
         this.angularAcceleration = torque.applyMatrix3(this.inverseInertiaTensor);
 
         if(this.isColliding){
-            this.velocity.y *= 0.5;
-            this.velocity.x *= 0.95;
-            this.velocity.z *= 0.95;
+            this._frictionForce.x = -this.velocity.x*0.7*500;
+            this._frictionForce.z = -this.velocity.z*0.7*500;
+
         }
 
         this.acceleration.set(
-            this.force.x,
+            this.force.x + this._frictionForce.x,
             this.force.y + this._gravity*this._mass,
-            this.force.z
+            this.force.z + this._frictionForce.z
         ).multiplyScalar(1/this._mass);
 
         this.velocity.set(
-            this.velocity.x + this.acceleration.x*0.03,
-            this.velocity.y + this.acceleration.y*0.03,
-            this.velocity.z + this.acceleration.z*0.03
+            this.velocity.x + this.acceleration.x*this._dt,
+            this.velocity.y + this.acceleration.y*this._dt,
+            this.velocity.z + this.acceleration.z*this._dt
         );
 
         this.position.set(
-            this.position.x + this.velocity.x*0.03,
-            this.position.y + this.velocity.y*0.03,
-            this.position.z + this.velocity.z*0.03
+            this.position.x + this.velocity.x*this._dt,
+            this.position.y + this.velocity.y*this._dt,
+            this.position.z + this.velocity.z*this._dt
         );
 
         this.angularVelocity.set(
-            this.angularVelocity.x + this.angularAcceleration.x*0.03,
-            this.angularVelocity.y + this.angularAcceleration.y*0.03,
-            this.angularVelocity.z + this.angularAcceleration.z*0.03
+            this.angularVelocity.x + this.angularAcceleration.x*this._dt,
+            this.angularVelocity.y + this.angularAcceleration.y*this._dt,
+            this.angularVelocity.z + this.angularAcceleration.z*this._dt
         );
 
         this.rotation.set(
-            this.rotation.x + this.angularVelocity.x*0.03,
-            this.rotation.y + this.angularVelocity.y*0.03,
-            this.rotation.z + this.angularVelocity.z*0.03
+            this.rotation.x + this.angularVelocity.x*this._dt,
+            this.rotation.y + this.angularVelocity.y*this._dt,
+            this.rotation.z + this.angularVelocity.z*this._dt
         );
 
-        this.object.rotateX(this.angularVelocity.x*0.03);
-        this.object.rotateY(this.angularVelocity.y*0.03);
-        this.object.rotateZ(this.angularVelocity.z*0.03);
+        this.object.rotateX(this.angularVelocity.x*this._dt);
+        this.object.rotateY(this.angularVelocity.y*this._dt);
+        this.object.rotateZ(this.angularVelocity.z*this._dt);
 
         this.trackVertices(this.angularVelocity);
 
