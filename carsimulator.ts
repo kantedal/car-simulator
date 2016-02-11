@@ -15,6 +15,7 @@ class CarSimulator {
     private _surfaceIndex : number = 0;
 
     private _vehicle : Vehicle;
+    private _dynamicBody : DynamicRigidBody;
     private _groundPlanes : GroundPlane[];
     private _baseGroundPlane : GroundPlane;
 
@@ -31,8 +32,9 @@ class CarSimulator {
         var self = this;
         self._renderer.start();
 
-        //self._wheel = new Wheel(self._renderer);
-        self._vehicle = new Vehicle(self._renderer);
+        this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry(2,2,2), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}), this._renderer);
+        this._dynamicBody.position.set(0,25,0);
+
 
         var ground_plane = new GroundPlane(this._renderer);
         var groundCallback: PlaneLoadedListener = {
@@ -89,6 +91,8 @@ class CarSimulator {
                 newground_backwards_right.geometry.translate(-CarSimulator.ground_width,0,-CarSimulator.ground_width);
                 self._groundPlanes.push(newground_backwards_right)
                 self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
+
+                self._dynamicBody.connectCollisionSurface(self._groundPlanes[0].geometry);
             }
         };
         ground_plane.loadPlane(groundCallback, this._renderer);
@@ -100,58 +104,18 @@ class CarSimulator {
         var delta = this._clock.getElapsedTime()-this._time;
         this._time = this._clock.getElapsedTime();
 
-        var currentSurfaceIndex = this._vehicle.connectCollisionSurface(this._groundPlanes);
-        if(currentSurfaceIndex != this._surfaceIndex){
-            var xMove = this._groundPlanes[currentSurfaceIndex].mesh.position.x - this._groundPlanes[this._surfaceIndex].mesh.position.x;
-            var zMove = this._groundPlanes[currentSurfaceIndex].mesh.position.z - this._groundPlanes[this._surfaceIndex].mesh.position.z;
+        this._dynamicBody.update(this._time,delta);
+        this._renderer.camera.position.set(this._dynamicBody.position.x,this._dynamicBody.position.y+3,this._dynamicBody.position.z-7);
+        this._renderer.camera.lookAt(this._dynamicBody.position);
 
-            var oldSurfacePos : THREE.Vector3 = this._groundPlanes[this._surfaceIndex].mesh.position.clone();
-            var surfacePos : THREE.Vector3 = this._groundPlanes[currentSurfaceIndex].mesh.position.clone();
-            var surfaceScale : THREE.Vector3 = this._groundPlanes[this._surfaceIndex].scale.clone();
-
-            if(xMove < 0){
-                for(var i=0; i<this._groundPlanes.length; i++){
-                    if(this._groundPlanes[i].mesh.position.x > oldSurfacePos.x){
-                        this._groundPlanes[i].mesh.position.set(this._groundPlanes[i].mesh.position.x-CarSimulator.ground_width*3, this._groundPlanes[i].mesh.position.y, this._groundPlanes[i].mesh.position.z);
-                        this._groundPlanes[i].geometry.translate(-CarSimulator.ground_width*3, 0, 0);
-                    }
-                }
-            }else if(xMove > 0){
-                for(var i=0; i<this._groundPlanes.length; i++){
-                    if(this._groundPlanes[i].mesh.position.x < oldSurfacePos.x){
-                        this._groundPlanes[i].mesh.position.set(this._groundPlanes[i].mesh.position.x+CarSimulator.ground_width*3, this._groundPlanes[i].mesh.position.y, this._groundPlanes[i].mesh.position.z);
-                        this._groundPlanes[i].geometry.translate(CarSimulator.ground_width*3, 0, 0);
-                    }
-                }
-            }
-
-            if(zMove < 0){
-                for(var i=0; i<this._groundPlanes.length; i++){
-                    if(this._groundPlanes[i].mesh.position.z > oldSurfacePos.z){
-                        this._groundPlanes[i].mesh.translateZ(-CarSimulator.ground_width*3)
-                        this._groundPlanes[i].geometry.translate(0, 0, -CarSimulator.ground_width*3);
-                    }
-                }
-            }else if(zMove > 0){
-                for(var i=0; i<this._groundPlanes.length; i++){
-                    if(this._groundPlanes[i].mesh.position.z < oldSurfacePos.z){
-                        this._groundPlanes[i].mesh.translateZ(CarSimulator.ground_width*3)
-                        this._groundPlanes[i].geometry.translate(0, 0, CarSimulator.ground_width*3);
-                    }
-                }
-            }
-
-            this._surfaceIndex = currentSurfaceIndex;
-        }
-
-        this._vehicle.update(this._time,delta);
+        //this._vehicle.update(this._time,delta);
 
         this._renderer.render(this._time);
 
         var self = this;
         setTimeout( function() {
             requestAnimationFrame(() => self.update());
-        }, 1000 / 60 );
+        }, 1000 / 30 );
 
     }
 

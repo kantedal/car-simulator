@@ -11,52 +11,100 @@ var DynamicRigidBody = (function (_super) {
     __extends(DynamicRigidBody, _super);
     function DynamicRigidBody(geometry, material, renderer) {
         _super.call(this, geometry, material, renderer);
+        this.xLim = [-1, 1];
+        this.yLim = [-1, 1];
+        this.zLim = [-1, 1];
+        this._renderer = renderer;
         this._gravity = -9.82;
         this._mass = 500;
-        this._forwardForce = 0;
         this._frictionConst = 0.99;
         this._inclineForce = new Vector3(0, 0, 0);
         this._frictionForce = new Vector3(0, 0, 0);
+        this.calculateInertiaTensor();
+        renderer.scene.add(this.object);
+        this.force.set(100000, 100000, 10000);
+        this.forceRadius.set(1, 1, 0);
+        this.testVertex = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }));
+        renderer.scene.add(this.testVertex);
     }
     DynamicRigidBody.prototype.update = function (time, delta) {
-        if (this.hasCollisionSurface) {
-            var gradientMagnitude = -Math.abs(Math.PI / 2 - this.gradientDirection.angleTo(new THREE.Vector3(0, -1, 0))) / (Math.PI / 2);
-            var normalMagnitude = -Math.abs(this.gradientDirection.angleTo(new THREE.Vector3(0, -1, 0))) / (Math.PI / 2);
-            this._inclineForce.set(this.gradientDirection.x, this.gradientDirection.y, this.gradientDirection.z).multiplyScalar(this._mass * this._gravity * gradientMagnitude);
-            var newVelocity = new THREE.Vector3(0, 0, 0);
-            var gravityInterpolation = Math.pow(10, this.surfaceDistance / 10) / 10;
-            if (!gravityInterpolation)
-                gravityInterpolation = 0;
-            if (this.isColliding) {
-                this.force = new THREE.Vector3((this._inclineForce.x + this.realDirection.x * this._forwardForce) / this._mass, (this._inclineForce.y + this.realDirection.y * this._forwardForce) / this._mass + this._gravity, (this._inclineForce.z + this.realDirection.z * this._forwardForce) / this._mass);
-                newVelocity = new THREE.Vector3(this.velocity.x + this.force.x * 0.003, this.velocity.y + this.force.y * 0.003, this.velocity.z + this.force.z * 0.003).multiplyScalar(this._frictionConst);
-                var projectedDir = newVelocity.clone().projectOnPlane(this.normalDirection);
-                var yDiff = (newVelocity.y - projectedDir.y) * this.velocity.length();
-                if (yDiff < 0.1)
-                    newVelocity = projectedDir;
-            }
-            else {
-                this.force = new THREE.Vector3(0, this._gravity, 0);
-                newVelocity = new THREE.Vector3(this.velocity.x + this.force.x * 0.003, this.velocity.y + this.force.y * 0.003, this.velocity.z + this.force.z * 0.003);
-            }
-            this.acceleration = new THREE.Vector3(newVelocity.x - this.velocity.x, newVelocity.y - this.velocity.y, newVelocity.z - this.velocity.z);
-            this.updateVelocity(new THREE.Vector3(newVelocity.x, newVelocity.y, newVelocity.z));
-            this.position.setX(this.position.x + this.velocity.x); // + this.velocity.x); //this.realDirection.x * this.velocity.length());
-            this.position.setY(this.position.y + this.velocity.y); // + this.velocity.y); //this.realDirection.y * this.velocity.length());
-            this.position.setZ(this.position.z + this.velocity.z); // + this.velocity.z); //this.realDirection.z * this.velocity.length());
-        }
         _super.prototype.update.call(this, time, delta);
+        //calculate forces
+        var appliedForce = this.forceRadius.clone().cross(this.force);
+        var inertia = this.angularAcceleration.applyMatrix3(this.inertiaTensor);
+        var torque = appliedForce.add(inertia);
+        this.angularAcceleration = torque.applyMatrix3(this.inverseInertiaTensor);
+        if (this.isColliding) {
+            this.velocity.y *= 0.5;
+            this.velocity.x *= 0.95;
+            this.velocity.z *= 0.95;
+        }
+        this.acceleration.set(this.force.x, this.force.y + this._gravity * this._mass, this.force.z).multiplyScalar(1 / this._mass);
+        this.velocity.set(this.velocity.x + this.acceleration.x * 0.03, this.velocity.y + this.acceleration.y * 0.03, this.velocity.z + this.acceleration.z * 0.03);
+        this.position.set(this.position.x + this.velocity.x * 0.03, this.position.y + this.velocity.y * 0.03, this.position.z + this.velocity.z * 0.03);
+        this.angularVelocity.set(this.angularVelocity.x + this.angularAcceleration.x * 0.03, this.angularVelocity.y + this.angularAcceleration.y * 0.03, this.angularVelocity.z + this.angularAcceleration.z * 0.03);
+        this.rotation.set(this.rotation.x + this.angularVelocity.x * 0.03, this.rotation.y + this.angularVelocity.y * 0.03, this.rotation.z + this.angularVelocity.z * 0.03);
+        this.object.rotateX(this.angularVelocity.x * 0.03);
+        this.object.rotateY(this.angularVelocity.y * 0.03);
+        this.object.rotateZ(this.angularVelocity.z * 0.03);
+        this.trackVertices(this.angularVelocity);
+        this.force.set(0, 0, 0);
+        //this.forceRadius.set(0,0,0);
     };
-    Object.defineProperty(DynamicRigidBody.prototype, "forwardForce", {
-        get: function () {
-            return this._forwardForce;
-        },
-        set: function (value) {
-            this._forwardForce = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
+    DynamicRigidBody.prototype.calculateInertiaTensor = function () {
+        var dV = 0.1 * 0.1;
+        var raycaster = new THREE.Raycaster();
+        var Ixx = 0;
+        raycaster.set(this.object.position.clone().sub(new Vector3(0, -5, 0)), new Vector3(0, 1, 0));
+        var intersects = raycaster.intersectObject(this.object, false);
+        console.log(intersects);
+        for (var y = this.yLim[0]; y <= this.yLim[1]; y += 0.1) {
+            for (var z = this.zLim[0]; z <= this.zLim[1]; z += 0.1) {
+                Ixx += (Math.pow(y, 2) + Math.pow(z, 2)) * dV;
+            }
+        }
+        Ixx *= 500;
+        var Iyy = 0;
+        for (var x = this.xLim[0]; x <= this.xLim[1]; x += 0.1) {
+            for (var z = this.zLim[0]; z <= this.zLim[1]; z += 0.1) {
+                Iyy += (Math.pow(x, 2) + Math.pow(z, 2)) * dV;
+            }
+        }
+        Iyy *= 500;
+        var Izz = 0;
+        for (var x = this.xLim[0]; x <= this.xLim[1]; x += 0.1) {
+            for (var y = this.yLim[0]; y <= this.yLim[1]; y += 0.1) {
+                Izz += (Math.pow(x, 2) + Math.pow(y, 2)) * dV;
+            }
+        }
+        Izz *= 500;
+        var Ixy = 0;
+        for (var x = this.xLim[0]; x <= this.xLim[1]; x += 0.1) {
+            for (var y = this.yLim[0]; y <= this.yLim[1]; y += 0.1) {
+                Ixy += (x * y) * dV;
+            }
+        }
+        Ixy *= -500;
+        var Iyz = 0;
+        for (var y = this.yLim[0]; y <= this.yLim[1]; y += 0.1) {
+            for (var z = this.zLim[0]; z <= this.zLim[1]; z += 0.1) {
+                Iyz += (y * z) * dV;
+            }
+        }
+        Iyz *= -500;
+        var Ixz = 0;
+        for (var x = this.xLim[0]; x <= this.xLim[1]; x += 0.1) {
+            for (var z = this.zLim[0]; z <= this.zLim[1]; z += 0.1) {
+                Ixz += (x * z) * dV;
+            }
+        }
+        Ixz *= -500;
+        this.inertiaTensor = new THREE.Matrix3;
+        this.inertiaTensor.set(Ixx, Ixy, Ixz, Ixy, Iyy, Iyz, Ixz, Iyz, Izz);
+        var m4 = new THREE.Matrix4();
+        m4.set(this.inertiaTensor.elements[0], this.inertiaTensor.elements[1], this.inertiaTensor.elements[2], 0, this.inertiaTensor.elements[3], this.inertiaTensor.elements[4], this.inertiaTensor.elements[5], 0, this.inertiaTensor.elements[6], this.inertiaTensor.elements[7], this.inertiaTensor.elements[8], 0, 0, 0, 0, 1);
+        this.inverseInertiaTensor = this.inertiaTensor.getInverse(m4);
+    };
     Object.defineProperty(DynamicRigidBody.prototype, "frictionConst", {
         get: function () {
             return this._frictionConst;
