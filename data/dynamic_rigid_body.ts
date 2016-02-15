@@ -15,8 +15,15 @@ class DynamicRigidBody extends PhysicsObject3d {
     private inertiaTensor : THREE.Matrix3;
     private inverseInertiaTensor : THREE.Matrix3;
 
+    //private _inertiaTensor : number;
+    //private _inverseInertiaTensor : number;
+    private _orientation : THREE.Quaternion;
+    private _spin : THREE.Quaternion;
+
     private _renderer : Renderer;
-    private _dt : number = 0.03;
+    private _dt : number = 0.07;
+
+    public _dir : THREE.Vector3 = new THREE.Vector3(1,0,0);
 
     private testVertex : THREE.Mesh;
     constructor(geometry: THREE.Geometry, material: THREE.Material, renderer: Renderer){
@@ -30,18 +37,21 @@ class DynamicRigidBody extends PhysicsObject3d {
         this._inclineForce = new Vector3(0,0,0);
         this._frictionForce = new Vector3(0,0,0);
 
+        this._orientation = new THREE.Quaternion();
+        this._spin = new THREE.Quaternion();
+
         this.calculateInertiaTensor();
-        renderer.scene.add(this.object);
+       // renderer.scene.add(this.object);
 
-        this.force.set(100000,100000,0);
-        this.forceRadius.set(-1,1,0);
+        this.force.set(0,0,0);
+        this.forceRadius.set(0,0,0);
 
-        this.testVertex = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
-        renderer.scene.add(this.testVertex);
+        window.addEventListener( 'keydown', this.onKeyDown, false );
+        window.addEventListener( 'keyup', this.onKeyUp, false );
     }
 
     public update(time:number, delta:number):void{
-        super.update(time,delta);
+
         //calculate forces
         var appliedForce : THREE.Vector3 = this.forceRadius.clone().cross(this.force);
         var inertia : THREE.Vector3 = this.angularAcceleration.applyMatrix3(this.inertiaTensor);
@@ -49,14 +59,13 @@ class DynamicRigidBody extends PhysicsObject3d {
         this.angularAcceleration = torque.applyMatrix3(this.inverseInertiaTensor);
 
         if(this.isColliding){
-            this._frictionForce.x = -this.velocity.x*0.7*500;
-            this._frictionForce.z = -this.velocity.z*0.7*500;
-
+            this.velocity.multiplyScalar(0.95);
+            this.angularVelocity.multiplyScalar(0.95);
         }
 
         this.acceleration.set(
             this.force.x + this._frictionForce.x,
-            this.force.y + this._gravity*this._mass,
+            this.force.y + this._frictionForce.y +this._gravity*this._mass,
             this.force.z + this._frictionForce.z
         ).multiplyScalar(1/this._mass);
 
@@ -64,13 +73,13 @@ class DynamicRigidBody extends PhysicsObject3d {
             this.velocity.x + this.acceleration.x*this._dt,
             this.velocity.y + this.acceleration.y*this._dt,
             this.velocity.z + this.acceleration.z*this._dt
-        );
+        ).multiplyScalar(1);
 
         this.position.set(
             this.position.x + this.velocity.x*this._dt,
             this.position.y + this.velocity.y*this._dt,
             this.position.z + this.velocity.z*this._dt
-        );
+        ).multiplyScalar(1);
 
         this.angularVelocity.set(
             this.angularVelocity.x + this.angularAcceleration.x*this._dt,
@@ -90,23 +99,81 @@ class DynamicRigidBody extends PhysicsObject3d {
 
         this.trackVertices(this.angularVelocity);
 
+        //this._orientation.normalize();
+        //
+        //this._spin = new THREE.Quaternion(
+        //    this.angularVelocity.x,
+        //    this.angularVelocity.y,
+        //    this.angularVelocity.z,
+        //    0
+        //).multiply(this._orientation);
+        //
+        //this._orientation.set(
+        //    this._orientation.x + this._spin.x*this._dt,
+        //    this._orientation.y + this._spin.y*this._dt,
+        //    this._orientation.z + this._spin.z*this._dt,
+        //    0
+        //);
+        //
+        //
+        //this.rotation.applyQuaternion(this._orientation);
+        //console.log(this.rotation.x + "  " + this.rotation.y + "  " + this.rotation.z);
+
+        //console.log(this._spin.x + "  " + this._spin.y + "  " + this._spin.z);
+        //this.object.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
+
+
         this.force.set(0,0,0);
+        super.update(time,delta);
         //this.forceRadius.set(0,0,0);
     }
 
-    private xLim :number[] = [-1,1];
+    private pressedKeys = [];
+    private angle = 0
+    onKeyDown = (e) => {
+        if (e) {
+            console.log("PReSS")
+            this.pressedKeys[e.keyCode] = true;
+
+            if(this.pressedKeys[37]) {
+                this._dir.applyAxisAngle(new Vector3(0,1,0), 0.2);
+            }
+
+            if(this.pressedKeys[38]) {
+                this.force = this._dir.clone().multiplyScalar(100000);
+            }
+
+            if(this.pressedKeys[39]) {
+                this._dir.applyAxisAngle(new Vector3(0,1,0), -0.2);
+            }
+
+            if(this.pressedKeys[40]) {
+            }
+        }
+    }
+    onKeyUp = (e) => {
+        if (e) {
+            this.pressedKeys[e.keyCode] = false;
+            switch (e.which) {
+                case 37: //Left
+                    break;
+                case 38: //Up
+                    break;
+                case 39: //Right
+                    break;
+                case 40: //Down
+                    break;
+            }
+        }
+    }
+
+    private xLim :number[] = [-4,4];
     private yLim :number[] = [-1,1];
-    private zLim :number[] = [-1,1];
+    private zLim :number[] = [-2,2];
     private calculateInertiaTensor():void {
         var dV = 0.1*0.1;
 
-        var raycaster = new THREE.Raycaster();
         var Ixx = 0;
-
-        raycaster.set(this.object.position.clone().sub(new Vector3(0,-5,0)), new Vector3(0,1,0));
-        var intersects = raycaster.intersectObject(this.object, false);
-        console.log(intersects);
-
         for(var y=this.yLim[0]; y<=this.yLim[1]; y+=0.1){
             for(var z=this.zLim[0]; z<=this.zLim[1]; z+=0.1){
                 Ixx += (Math.pow(y,2) + Math.pow(z,2))*dV;

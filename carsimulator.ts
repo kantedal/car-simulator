@@ -32,8 +32,9 @@ class CarSimulator {
         var self = this;
         self._renderer.start();
 
-        this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry(2,2,2), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}), this._renderer);
+        this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry(8,2,4), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}), this._renderer);
         this._dynamicBody.position.set(0,25,0);
+        this._dynamicBody.object.position.set(0,25,0);
 
 
         var ground_plane = new GroundPlane(this._renderer);
