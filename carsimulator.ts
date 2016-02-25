@@ -7,6 +7,7 @@
 ///<reference path="./data/parts/wheel.ts"/>
 ///<reference path="./data/physics_object3d.ts"/>
 ///<reference path="./data/vehicle.ts"/>
+///<reference path="./data/dynamic_rigid_body_test.ts"/>
 
 class CarSimulator {
     private _renderer : Renderer;
@@ -15,27 +16,31 @@ class CarSimulator {
     private _surfaceIndex : number = 0;
 
     private _vehicle : Vehicle;
-    private _dynamicBody : DynamicRigidBody;
+    private _dynamicBody : DynamicRigidBodyTest;
     private _groundPlanes : GroundPlane[];
     private _baseGroundPlane : GroundPlane;
 
     public static ground_width : number = 248.25;
+    //private _testObject : THREE.Mesh;
+    //private _velocity : THREE.Vector3;
 
     constructor(){
         this._renderer = new Renderer();
         this._clock = new THREE.Clock();
         this._time = 0;
         this._groundPlanes = [];
+
+        //this._velocity = new THREE.Vector3(0,0,0);
+        //this._testObject = new THREE.Mesh(new THREE.BoxGeometry(8,2,4), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}));
+        //this._testObject.position.set(0,100,0);
+        //this.renderer.scene.add(this._testObject);
     }
 
     start(){
         var self = this;
         self._renderer.start();
 
-        this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry(8,2,4), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}), this._renderer);
-        this._dynamicBody.position.set(0,25,0);
-        this._dynamicBody.object.position.set(0,25,0);
-
+        this._dynamicBody = new DynamicRigidBodyTest(new THREE.BoxGeometry(8,2,4), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}), this._renderer);
 
         var ground_plane = new GroundPlane(this._renderer);
         var groundCallback: PlaneLoadedListener = {
@@ -105,18 +110,22 @@ class CarSimulator {
         var delta = this._clock.getElapsedTime()-this._time;
         this._time = this._clock.getElapsedTime();
 
+        //this._velocity.set(this._velocity.x, this._velocity.y - 9.82*delta, this._velocity.z);
+        //this._testObject.position.set(this._testObject.position.x + this._velocity.x*delta, this._testObject.position.y + this._velocity.y*delta, this._testObject.position.z + this._velocity.z*delta);
+        //console.log(this._velocity.y);
+
         this._dynamicBody.update(this._time,delta);
-        this._renderer.camera.position.set(this._dynamicBody.position.x,this._dynamicBody.position.y+3,this._dynamicBody.position.z-7);
-        this._renderer.camera.lookAt(this._dynamicBody.position);
+        this._renderer.camera.position.set(this._dynamicBody.state.valueOf()[0], this._dynamicBody.state.valueOf()[1]+3, this._dynamicBody.state.valueOf()[2]-10);
+        this._renderer.camera.lookAt(this._dynamicBody.object.position);
 
         //this._vehicle.update(this._time,delta);
 
-        this._renderer.render(this._time);
+        this._renderer.render();
 
         var self = this;
         setTimeout( function() {
             requestAnimationFrame(() => self.update());
-        }, 1000 / 30 );
+        }, 1000 / 60 );
 
     }
 

@@ -1,12 +1,14 @@
 /**
  * Created by filles-dator on 2016-01-28.
  */
+///<reference path="../threejs/three.d.ts"/>
+///<reference path="./physics_object3d.ts"/>
+///<reference path="./constraints/collision_constraint.ts"/>
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-///<reference path="./physics_object3d.ts"/>
 var DynamicRigidBody = (function (_super) {
     __extends(DynamicRigidBody, _super);
     function DynamicRigidBody(geometry, material, renderer) {
@@ -18,7 +20,6 @@ var DynamicRigidBody = (function (_super) {
         this.angle = 0;
         this.onKeyDown = function (e) {
             if (e) {
-                console.log("PReSS");
                 _this.pressedKeys[e.keyCode] = true;
                 if (_this.pressedKeys[37]) {
                     _this._dir.applyAxisAngle(new Vector3(0, 1, 0), 0.2);
@@ -55,14 +56,15 @@ var DynamicRigidBody = (function (_super) {
         this._gravity = -9.82;
         this._mass = 500;
         this._frictionConst = 0.99;
-        this._inclineForce = new Vector3(0, 0, 0);
-        this._frictionForce = new Vector3(0, 0, 0);
+        this._inclineForce = new THREE.Vector3(0, 0, 0);
+        this._frictionForce = new THREE.Vector3(0, 0, 0);
+        this._collisionConstraint = new CollisionConstraint(200, 1);
         this._orientation = new THREE.Quaternion();
         this._spin = new THREE.Quaternion();
         this.calculateInertiaTensor();
-        // renderer.scene.add(this.object);
-        this.force.set(0, 0, 0);
-        this.forceRadius.set(0, 0, 0);
+        //renderer.scene.add(this.object);
+        this.force.set(0, 50000, 50000);
+        this.forceRadius.set(4, 0, 0);
         window.addEventListener('keydown', this.onKeyDown, false);
         window.addEventListener('keyup', this.onKeyUp, false);
     }
@@ -78,6 +80,15 @@ var DynamicRigidBody = (function (_super) {
         }
         this.acceleration.set(this.force.x + this._frictionForce.x, this.force.y + this._frictionForce.y + this._gravity * this._mass, this.force.z + this._frictionForce.z).multiplyScalar(1 / this._mass);
         this.velocity.set(this.velocity.x + this.acceleration.x * this._dt, this.velocity.y + this.acceleration.y * this._dt, this.velocity.z + this.acceleration.z * this._dt).multiplyScalar(1);
+        if (this.isColliding) {
+            this.velocity = this._collisionConstraint.update(this.velocity, //this.velocity.clone().add(this.angularVelocity.clone().multiplyScalar(this.forceRadius.length())),
+            new THREE.Vector3(0, 1, 0), this.collisionPoint.y, time, delta);
+            var appliedForce = this.forceRadius.clone().cross(new THREE.Vector3(0, 30000, //5000*this.velocity.clone().add(this.angularVelocity.clone().multiplyScalar(this.forceRadius.length())).length(),
+            0));
+            var inertia = this.angularAcceleration.applyMatrix3(this.inertiaTensor);
+            var torque = appliedForce.add(inertia);
+            this.angularAcceleration = torque.applyMatrix3(this.inverseInertiaTensor);
+        }
         this.position.set(this.position.x + this.velocity.x * this._dt, this.position.y + this.velocity.y * this._dt, this.position.z + this.velocity.z * this._dt).multiplyScalar(1);
         this.angularVelocity.set(this.angularVelocity.x + this.angularAcceleration.x * this._dt, this.angularVelocity.y + this.angularAcceleration.y * this._dt, this.angularVelocity.z + this.angularAcceleration.z * this._dt);
         this.rotation.set(this.rotation.x + this.angularVelocity.x * this._dt, this.rotation.y + this.angularVelocity.y * this._dt, this.rotation.z + this.angularVelocity.z * this._dt);

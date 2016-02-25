@@ -34,12 +34,7 @@ class Renderer {
         window.addEventListener( 'resize', this.onWindowResize, false );
     }
 
-    animate(time){
-        //this.camera.position.z = -200*Math.sin(time)-200;
-    }
-
-    render(time) {
-        this.animate(time);
+    render() {
         this.renderer.render(this._scene,this._camera);
     }
 

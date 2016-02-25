@@ -1,8 +1,9 @@
 /**
  * Created by filles-dator on 2016-01-28.
  */
-
+///<reference path="../threejs/three.d.ts"/>
 ///<reference path="./physics_object3d.ts"/>
+///<reference path="./constraints/collision_constraint.ts"/>
 
 class DynamicRigidBody extends PhysicsObject3d {
     private _gravity : number;
@@ -14,6 +15,7 @@ class DynamicRigidBody extends PhysicsObject3d {
 
     private inertiaTensor : THREE.Matrix3;
     private inverseInertiaTensor : THREE.Matrix3;
+    private _collisionConstraint : CollisionConstraint;
 
     //private _inertiaTensor : number;
     //private _inverseInertiaTensor : number;
@@ -34,24 +36,24 @@ class DynamicRigidBody extends PhysicsObject3d {
         this._mass = 500;
         this._frictionConst = 0.99;
 
-        this._inclineForce = new Vector3(0,0,0);
-        this._frictionForce = new Vector3(0,0,0);
+        this._inclineForce = new THREE.Vector3(0,0,0);
+        this._frictionForce = new THREE.Vector3(0,0,0);
+        this._collisionConstraint = new CollisionConstraint(200, 1);
 
         this._orientation = new THREE.Quaternion();
         this._spin = new THREE.Quaternion();
 
         this.calculateInertiaTensor();
-       // renderer.scene.add(this.object);
+        //renderer.scene.add(this.object);
 
-        this.force.set(0,0,0);
-        this.forceRadius.set(0,0,0);
+        this.force.set(0,50000,50000);
+        this.forceRadius.set(4,0,0);
 
         window.addEventListener( 'keydown', this.onKeyDown, false );
         window.addEventListener( 'keyup', this.onKeyUp, false );
     }
 
     public update(time:number, delta:number):void{
-
         //calculate forces
         var appliedForce : THREE.Vector3 = this.forceRadius.clone().cross(this.force);
         var inertia : THREE.Vector3 = this.angularAcceleration.applyMatrix3(this.inertiaTensor);
@@ -59,8 +61,8 @@ class DynamicRigidBody extends PhysicsObject3d {
         this.angularAcceleration = torque.applyMatrix3(this.inverseInertiaTensor);
 
         if(this.isColliding){
-            this.velocity.multiplyScalar(0.95);
-            this.angularVelocity.multiplyScalar(0.95);
+           this.velocity.multiplyScalar(0.95);
+           this.angularVelocity.multiplyScalar(0.95);
         }
 
         this.acceleration.set(
@@ -74,6 +76,25 @@ class DynamicRigidBody extends PhysicsObject3d {
             this.velocity.y + this.acceleration.y*this._dt,
             this.velocity.z + this.acceleration.z*this._dt
         ).multiplyScalar(1);
+
+        if(this.isColliding){
+            this.velocity = this._collisionConstraint.update(
+                this.velocity,//this.velocity.clone().add(this.angularVelocity.clone().multiplyScalar(this.forceRadius.length())),
+                new THREE.Vector3(0,1,0),
+                this.collisionPoint.y,
+                time, delta);
+
+            var appliedForce : THREE.Vector3 = this.forceRadius.clone().cross(
+                new THREE.Vector3(
+                    0,
+                    30000,//5000*this.velocity.clone().add(this.angularVelocity.clone().multiplyScalar(this.forceRadius.length())).length(),
+                    0
+                )
+            );
+            var inertia : THREE.Vector3 = this.angularAcceleration.applyMatrix3(this.inertiaTensor);
+            var torque : THREE.Vector3 = appliedForce.add(inertia);
+            this.angularAcceleration = torque.applyMatrix3(this.inverseInertiaTensor);
+        }
 
         this.position.set(
             this.position.x + this.velocity.x*this._dt,
@@ -132,7 +153,6 @@ class DynamicRigidBody extends PhysicsObject3d {
     private angle = 0
     onKeyDown = (e) => {
         if (e) {
-            console.log("PReSS")
             this.pressedKeys[e.keyCode] = true;
 
             if(this.pressedKeys[37]) {

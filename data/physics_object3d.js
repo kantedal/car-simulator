@@ -1,5 +1,6 @@
 ///<reference path="../threejs/three.d.ts"/>
 ///<reference path="../renderer.ts"/>
+///<reference path="../math/mathjs.d.ts"/>
 var Vector3 = THREE.Vector3;
 var PhysicsObject3d = (function () {
     function PhysicsObject3d(geometry, material, renderer) {
@@ -7,11 +8,12 @@ var PhysicsObject3d = (function () {
         this._isColliding = false;
         this._collisionRadius = 0;
         this._surfaceDistance = 0;
+        this._velocity = math.transpose(math.matrix([1, 20, 0, 0, 0, 2]));
+        this._state = math.transpose(math.matrix([0, 40, 0, 0, 0, Math.PI / 4]));
         this._renderer = renderer;
         this._geometry = geometry;
         this._material = material;
         this._object = new THREE.Mesh(this._geometry, this._material);
-        this._velocity = new THREE.Vector3(0, 0, 0);
         this._acceleration = new THREE.Vector3(0, 0, 0);
         this._force = new THREE.Vector3(0, 0, 0);
         this._forceRadius = new THREE.Vector3(0, 0, 0);
@@ -26,48 +28,48 @@ var PhysicsObject3d = (function () {
         this._gradientDirection = new THREE.Vector3(0, 0, 0);
         this._realDirection = new THREE.Vector3(0, 0, 0);
         this._moveDirection = new THREE.Vector3(0, 0, 0);
+        this._collisionPoint = new THREE.Vector3(0, 0, 0);
         var dir = new THREE.Vector3(0, 1, 0);
         var origin = new THREE.Vector3(0, 0, 0);
         var length = 10;
         this._normalArrow = new THREE.ArrowHelper(dir, origin, length, 0xff0000);
         this._directionArrow = new THREE.ArrowHelper(dir, origin, length, 0x00ff00);
         this._gradientArrow = new THREE.ArrowHelper(dir, origin, length, 0xff00ff);
-        this._forceArrow = new THREE.ArrowHelper(dir, origin, length, 0x0000ff);
+        this._rotationArrow = new THREE.ArrowHelper(dir, origin, length, 0x0000ff);
         this._forceRadiusArrow = new THREE.ArrowHelper(dir, origin, length, 0xff00ff);
         renderer.scene.add(this._normalArrow);
         renderer.scene.add(this._gradientArrow);
         renderer.scene.add(this._directionArrow);
-        renderer.scene.add(this._forceArrow);
+        renderer.scene.add(this._rotationArrow);
         renderer.scene.add(this._forceRadiusArrow);
         this._vertTest = [];
         for (var i = 0; i < this.object.geometry.vertices.length; i++) {
             this._vertTest[i] = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshBasicMaterial({ color: 0xffff00 }));
+            renderer.scene.add(this._vertTest[i]);
         }
+        this._vertTest[this._vertTest.length] = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
+        renderer.scene.add(this._vertTest[this._vertTest.length - 1]);
         this._centerOfMassPoint = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true }));
         renderer.scene.add(this._centerOfMassPoint);
     }
-    PhysicsObject3d.prototype.update = function (time, delta) {
+    PhysicsObject3d.prototype.checkCollisions = function () {
+        var collisions = [];
         if (this._hasCollisionSurface) {
-            this._object.updateMatrixWorld(true);
-            var vertPos1 = this._object.geometry.vertices[0].clone();
-            vertPos1.applyQuaternion(this._object.getWorldQuaternion());
-            var vertPos2 = this._object.geometry.vertices[1].clone();
-            vertPos2.applyQuaternion(this._object.getWorldQuaternion());
-            this.forceRadius = new THREE.Vector3((vertPos2.x + vertPos1.x), (0), (vertPos2.z + vertPos1.z)).normalize().multiplyScalar(4);
-            this.isColliding = true;
-            for (var i = 0; i < this.object.geometry.vertices.length; i++) {
-                var vertPos2 = this._object.geometry.vertices[i].clone();
-                vertPos2.applyQuaternion(this._object.getWorldQuaternion());
+            this.forceRadius.set(0, 0, 0);
+            for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
+                //var vertPos:THREE.Vector3 = this._object.geometry.vertices[vertexIdx].clone();
+                //vertPos.applyQuaternion(this._object.getWorldQuaternion());
+                var vertPos = this._vertexTracker.vertices[vertexIdx].clone().add(this._position);
+                this._vertTest[vertexIdx].position.set(vertPos.x, vertPos.y, vertPos.z);
             }
             for (var i = 0; i < this._collisionSurface.faces.length; i++) {
                 var vert1 = this._collisionSurface.vertices[this._collisionSurface.faces[i].a];
                 var vert2 = this._collisionSurface.vertices[this._collisionSurface.faces[i].b];
                 var vert3 = this._collisionSurface.vertices[this._collisionSurface.faces[i].c];
                 for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
-                    var vertPos = this._vertexTracker.vertices[vertexIdx].clone();
-                    //var vertPos:THREE.Vector3 = this._object.geometry.vertices[vertexIdx].clone();
-                    //vertPos.applyQuaternion(this._object.getWorldQuaternion());
-                    if (this.checkCollision(vertPos.clone().add(this.object.position), vert1, vert2, vert3) && this.pointInTriangle(vertPos.clone().add(this.position), vert1, vert2, vert3)) {
+                    var vertPos = this._vertexTracker.vertices[vertexIdx].clone().add(this._position);
+                    //var vertPos:THREE.Vector3 = this._vertTest[vertexIdx].position.clone();
+                    if (this.checkCollision(vertPos.clone(), vert1, vert2, vert3) && this.pointInTriangle(vertPos.clone(), vert1, vert2, vert3)) {
                         var vertexNormals = this._collisionSurface.faces[i].vertexNormals;
                         var areaT = this.triangleArea(vert1, vert2, vert3);
                         var areaB = this.triangleArea(vert1, this._position, vert3);
@@ -78,43 +80,54 @@ var PhysicsObject3d = (function () {
                         var c3 = areaC / areaT;
                         this._normalDirection = new THREE.Vector3(vertexNormals[0].x * c1 + vertexNormals[1].x * c2 + vertexNormals[2].x * c3, vertexNormals[0].y * c1 + vertexNormals[1].y * c2 + vertexNormals[2].y * c3, vertexNormals[0].z * c1 + vertexNormals[1].z * c2 + vertexNormals[2].z * c3);
                         this.isColliding = true;
-                        this.forceRadius.set(vertPos.x, vertPos.y, vertPos.z);
-                        this.force.set(0, 1, 0).multiplyScalar(Math.abs((9.82 + this._angularVelocity.length() * this.forceRadius.length() + this.velocity.length()) * 2000));
-                        this.velocity.y = 0;
+                        collisions.push([
+                            vertPos.x - this._object.position.x,
+                            vertPos.y - this._object.position.y,
+                            vertPos.z - this._object.position.z,
+                            this._normalDirection.x,
+                            this._normalDirection.y,
+                            this._normalDirection.z,
+                            vertPos.x,
+                            vertPos.y,
+                            vertPos.z
+                        ]);
                     }
                 }
             }
-            // console.log(this.forceRadius);
-            for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
-                var vertPos = this._object.geometry.vertices[vertexIdx].clone();
-                vertPos.applyQuaternion(this._object.getWorldQuaternion());
-                this._vertTest[vertexIdx].position.set(vertPos.x + this._position.x, vertPos.y + this._position.y, vertPos.z + this._position.z);
-            }
-            this._centerOfMassPoint.position.set(this._position.x, this._position.y, this._position.z);
-            this._object.position.set(this._position.x, this._position.y, this._position.z);
-            this._normalDirection.normalize();
-            this._gradientDirection.set(0, -1, 0);
-            this._gradientDirection.projectOnPlane(this._normalDirection);
-            if (this._gradientDirection.length() < 0.01)
-                this._gradientDirection.set(0, 0, 0);
-            this._realDirection.set(this._desiredDirection.x, this._desiredDirection.y, this._desiredDirection.z);
-            this._realDirection.projectOnPlane(this._normalDirection);
-            this._realDirection.normalize();
-            this._forceRadiusArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._forceRadiusArrow.setDirection(this._forceRadius);
-            this._forceRadiusArrow.setLength(6);
-            this._forceArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._forceArrow.setDirection(this.force);
-            this._forceArrow.setLength(10);
-            this._normalArrow.position.set(this._position.x, this._position.y, this._position.z);
-            this._normalArrow.setDirection(this._rotation);
-            this._normalArrow.setLength(6);
         }
+        return collisions;
+    };
+    PhysicsObject3d.prototype.update = function (time, delta) {
+        //this.object.rotation.set(this._state.valueOf()[3], this._state.valueOf()[4], this._state.valueOf()[5]);
+        this.object.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
+        this._object.updateMatrixWorld(true);
+        this.isColliding = false;
+        //for(var i=0; i<this.object.geometry.vertices.length; i++) {
+        //    var vertPos2:THREE.Vector3 = this._object.geometry.vertices[i].clone();
+        //    vertPos2.applyQuaternion(this._object.getWorldQuaternion());
+        //}
+        //
+        //for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
+        //    var vertPos:THREE.Vector3 = this._object.geometry.vertices[vertexIdx].clone();
+        //    vertPos.applyQuaternion(this._object.getWorldQuaternion());
+        //    this._vertTest[vertexIdx].position.set(vertPos.x + this._object.position.x, vertPos.y + this._object.position.y, vertPos.z + this._object.position.z);
+        //}
+        this._centerOfMassPoint.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
+        this._normalDirection.normalize();
+        this._realDirection.set(this._desiredDirection.x, this._desiredDirection.y, this._desiredDirection.z);
+        this._realDirection.projectOnPlane(this._normalDirection);
+        this._realDirection.normalize();
+        this._forceRadiusArrow.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
+        this._forceRadiusArrow.setDirection(this._forceRadius);
+        this._forceRadiusArrow.setLength(6);
+        //this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z)
+        //this._gradientArrow.setDirection(new THREE.Vector3(this._velocity.valueOf()[0], this._velocity.valueOf()[1], this._velocity.valueOf()[2]));
+        //this._gradientArrow.setLength(Math.sqrt(Math.pow(this.velocity.valueOf()[0],2) + Math.pow(this.velocity.valueOf()[1],2) + Math.pow(this.velocity.valueOf()[2],2));
         //this._object.rotation.set(this._rotation.x, this._rotation.z, this._rotation.z);
         //this._object.position.set(this._position.x, this._position.y, this._position.z);
-        //this._realArrow.position.set(this._position.x, this._position.y, this._position.z);
-        //this._realArrow.setDirection(this._velocity);
-        //this._realArrow.setLength(this._velocity.length()/5);
+        this._rotationArrow.position.set(this.position.x, this.position.y, this.position.z);
+        this._rotationArrow.setDirection(new THREE.Vector3(this._vertexTracker.vertices[0].clone().x, this._vertexTracker.vertices[0].clone().y * 0.2, this._vertexTracker.vertices[0].clone().z));
+        this._rotationArrow.setLength(this._vertexTracker.vertices[0].clone().length());
         //this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z)
         //this._gradientArrow.setDirection(this._gradientDirection);
         //this._gradientArrow.setLength(this._gradientDirection.length()*10);
@@ -122,20 +135,17 @@ var PhysicsObject3d = (function () {
         //this._directionArrow.position.set(this._position.x, this._position.y, this._position.z)
         //this._directionArrow.setDirection(this._desiredDirection);
     };
-    PhysicsObject3d.prototype.trackVertices = function (angVel) {
+    PhysicsObject3d.prototype.trackVertices = function (delta) {
         if (!this._vertexTracker) {
             this._vertexTracker = this.object.geometry.clone();
             this.testMesh = new THREE.Mesh(this._vertexTracker, new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true }));
             this._renderer.scene.add(this.testMesh);
         }
-        this._vertexTracker.rotateX(angVel.x * 0.05);
-        this._vertexTracker.rotateY(angVel.y * 0.05);
-        this._vertexTracker.rotateZ(angVel.z * 0.05);
+        this._vertexTracker.rotateX(this._velocity.valueOf()[3] * delta);
+        this._vertexTracker.rotateY(this._velocity.valueOf()[4] * delta);
+        this._vertexTracker.rotateZ(this._velocity.valueOf()[5] * delta);
         this.testMesh.position.set(this._position.x, this._position.y, this._position.z);
         return this._vertexTracker.vertices[0];
-    };
-    PhysicsObject3d.prototype.updateVelocity = function (newVelocity) {
-        this._velocity.set(newVelocity.x, newVelocity.y, newVelocity.z);
     };
     PhysicsObject3d.prototype.connectCollisionSurface = function (surface) {
         this._collisionSurface = surface;
@@ -148,7 +158,7 @@ var PhysicsObject3d = (function () {
         var l3 = 1.0 - l1 - l2;
         var height = l1 * p1.y + l2 * p2.y + l3 * p3.y;
         this._surfaceDistance = Math.min(Math.max(vertPos.y - height, 0.0001), 10.0) / 10;
-        if (vertPos.y <= height) {
+        if (vertPos.y - 1 <= height) {
             return true;
         }
         else {
@@ -244,16 +254,6 @@ var PhysicsObject3d = (function () {
         },
         set: function (value) {
             this._normalDirection = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsObject3d.prototype, "velocity", {
-        get: function () {
-            return this._velocity;
-        },
-        set: function (value) {
-            this._velocity = value;
         },
         enumerable: true,
         configurable: true
@@ -394,6 +394,56 @@ var PhysicsObject3d = (function () {
         },
         set: function (value) {
             this._angularVelocity = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PhysicsObject3d.prototype, "collisionPoint", {
+        get: function () {
+            return this._collisionPoint;
+        },
+        set: function (value) {
+            this._collisionPoint = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PhysicsObject3d.prototype, "vertTest", {
+        get: function () {
+            return this._vertTest;
+        },
+        set: function (value) {
+            this._vertTest = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PhysicsObject3d.prototype, "velocity", {
+        get: function () {
+            return this._velocity;
+        },
+        set: function (value) {
+            this._velocity = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PhysicsObject3d.prototype, "state", {
+        get: function () {
+            return this._state;
+        },
+        set: function (value) {
+            this._state = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(PhysicsObject3d.prototype, "vertexTracker", {
+        get: function () {
+            return this._vertexTracker;
+        },
+        set: function (value) {
+            this._vertexTracker = value;
         },
         enumerable: true,
         configurable: true

@@ -26,11 +26,7 @@ var Renderer = (function () {
         container.appendChild(this.renderer.domElement);
         window.addEventListener('resize', this.onWindowResize, false);
     }
-    Renderer.prototype.animate = function (time) {
-        //this.camera.position.z = -200*Math.sin(time)-200;
-    };
-    Renderer.prototype.render = function (time) {
-        this.animate(time);
+    Renderer.prototype.render = function () {
         this.renderer.render(this._scene, this._camera);
     };
     Renderer.prototype.start = function () {
