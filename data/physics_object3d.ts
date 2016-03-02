@@ -39,7 +39,6 @@ class PhysicsObject3d {
 
     private _hasCollisionSurface : boolean = false;
     private _isColliding : boolean = false;
-    private _collisionRadius : number = 0;
     private _surfaceDistance : number = 0;
     private _collisionPosition : THREE.Vector3;
     private _collisionSurface : THREE.Geometry;
@@ -199,13 +198,7 @@ class PhysicsObject3d {
         //this._object.rotation.set(this._rotation.x, this._rotation.z, this._rotation.z);
         //this._object.position.set(this._position.x, this._position.y, this._position.z);
 
-        this._rotationArrow.position.set(this.position.x, this.position.y, this.position.z);
-        this._rotationArrow.setDirection(new THREE.Vector3(
-            this._vertexTracker.vertices[0].clone().x,
-            this._vertexTracker.vertices[0].clone().y*0.2,
-            this._vertexTracker.vertices[0].clone().z
-        ));
-        this._rotationArrow.setLength(this._vertexTracker.vertices[0].clone().length());
+        //this._rotationArrow.setLength(this._vertexTracker.vertices[0].clone().length());
         //this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z)
         //this._gradientArrow.setDirection(this._gradientDirection);
         //this._gradientArrow.setLength(this._gradientDirection.length()*10);
@@ -357,14 +350,6 @@ class PhysicsObject3d {
 
     set realDirection(value:THREE.Vector3) {
         this._realDirection = value;
-    }
-
-    get collisionRadius():number {
-        return this._collisionRadius;
-    }
-
-    set collisionRadius(value:number) {
-        this._collisionRadius = value;
     }
 
     get hasCollisionSurface():boolean {

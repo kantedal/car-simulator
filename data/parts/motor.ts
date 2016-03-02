@@ -36,7 +36,7 @@ class Motor {
         this._currentTime = time;
 
         if(this._isAccelerating){
-            this._torque = this._forceConst*(1-Math.exp(-this._accelerationStartTime*(time-this._accelerationStartTime)));
+            this._torque = 500; //this._forceConst*(1-Math.exp(-this._accelerationStartTime*(time-this._accelerationStartTime)));
         }
         else
         {

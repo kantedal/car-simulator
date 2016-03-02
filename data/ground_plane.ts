@@ -18,7 +18,7 @@ class GroundPlane {
         var self = this;
         var loader = new THREE.OBJLoader();
         loader.load(
-            './models/ground_model3.obj',
+            './models/ground_model4.obj',
             function(object){
 
                 var textureLoader : THREE.TextureLoader = new THREE.TextureLoader();

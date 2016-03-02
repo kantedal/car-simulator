@@ -21,14 +21,17 @@ var Vehicle = (function () {
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._isColliding = false;
         this._vehicleGroup = new THREE.Group();
-        this._vehicleBody = new DynamicCarBody(new THREE.BoxGeometry(6, 3, 8), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }), renderer, 500, this);
-        this._vehicleBody.position.set(0, 100, 0);
+        //this._vehicleBody = new DynamicRigidBody(new THREE.BoxGeometry( 6, 3, 8 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
+        //this._vehicleBody.position.set(0,30,0);
         this._vehicleSetup = new Car(this._renderer, this);
-        renderer.scene.add(this._vehicleBody.object);
+        //renderer.scene.add(this._vehicleBody.object);
     }
     Vehicle.prototype.update = function (time, delta) {
-        this._vehicleSetup.update(time, delta);
+        //this._vehicleSetup.update(time,delta);
         this._vehicleBody.update(time, delta);
+        for (var i = 0; i < this._vehicleSetup.wheels.length; i++) {
+            this._vehicleSetup.wheels[i].position.set(this.vehicleBody.vertexTracker.vertices[i].x, this.vehicleBody.vertexTracker.vertices[i].y, this.vehicleBody.vertexTracker.vertices[i].z);
+        }
         this._acceleration = this._vehicleBody.acceleration;
         this._velocity = this._vehicleBody.velocity;
         this._isColliding = this._vehicleBody.isColliding;
@@ -109,6 +112,16 @@ var Vehicle = (function () {
         },
         set: function (value) {
             this._vehicleSetup = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Vehicle.prototype, "vehicleBody", {
+        get: function () {
+            return this._vehicleBody;
+        },
+        set: function (value) {
+            this._vehicleBody = value;
         },
         enumerable: true,
         configurable: true

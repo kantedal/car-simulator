@@ -6,16 +6,17 @@
 ///<reference path="./data/parts/wheel.ts"/>
 ///<reference path="./data/physics_object3d.ts"/>
 ///<reference path="./data/vehicle.ts"/>
-///<reference path="./data/dynamic_rigid_body_test.ts"/>
+///<reference path="./data/dynamic_rigid_body.ts"/>
+///<reference path="./data/car_test.ts"/>
 var CarSimulator = (function () {
-    //private _testObject : THREE.Mesh;
-    //private _velocity : THREE.Vector3;
     function CarSimulator() {
         this._surfaceIndex = 0;
         this._renderer = new Renderer();
         this._clock = new THREE.Clock();
         this._time = 0;
         this._groundPlanes = [];
+        //this._car = new Vehicle(this._renderer),
+        //this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry( 6, 3, 8 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), this._renderer, 500, this);
         //this._velocity = new THREE.Vector3(0,0,0);
         //this._testObject = new THREE.Mesh(new THREE.BoxGeometry(8,2,4), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}));
         //this._testObject.position.set(0,100,0);
@@ -24,7 +25,8 @@ var CarSimulator = (function () {
     CarSimulator.prototype.start = function () {
         var self = this;
         self._renderer.start();
-        this._dynamicBody = new DynamicRigidBodyTest(new THREE.BoxGeometry(8, 2, 4), new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true }), this._renderer);
+        self._carTest = new CarTest(this._renderer);
+        //this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry(8,2,4), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}), this._renderer);
         var ground_plane = new GroundPlane(this._renderer);
         var groundCallback = {
             planeLoaded: function (groundPlane) {
@@ -71,7 +73,9 @@ var CarSimulator = (function () {
                 newground_backwards_right.geometry.translate(-CarSimulator.ground_width, 0, -CarSimulator.ground_width);
                 self._groundPlanes.push(newground_backwards_right);
                 self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length - 1].mesh);
-                self._dynamicBody.connectCollisionSurface(self._groundPlanes[0].geometry);
+                //self._car.connectCollisionSurface(self._groundPlanes);
+                //self._dynamicBody.connectCollisionSurface(self._groundPlanes[0].geometry);
+                self._carTest.connectCollisionSurface(self._groundPlanes[0].geometry);
             }
         };
         ground_plane.loadPlane(groundCallback, this._renderer);
@@ -80,12 +84,13 @@ var CarSimulator = (function () {
     CarSimulator.prototype.update = function () {
         var delta = this._clock.getElapsedTime() - this._time;
         this._time = this._clock.getElapsedTime();
+        //var delta = 0.03;
         //this._velocity.set(this._velocity.x, this._velocity.y - 9.82*delta, this._velocity.z);
         //this._testObject.position.set(this._testObject.position.x + this._velocity.x*delta, this._testObject.position.y + this._velocity.y*delta, this._testObject.position.z + this._velocity.z*delta);
         //console.log(this._velocity.y);
-        this._dynamicBody.update(this._time, delta);
-        this._renderer.camera.position.set(this._dynamicBody.state.valueOf()[0], this._dynamicBody.state.valueOf()[1] + 3, this._dynamicBody.state.valueOf()[2] - 10);
-        this._renderer.camera.lookAt(this._dynamicBody.object.position);
+        this._carTest.update(this._time, delta);
+        this._renderer.camera.position.set(this._carTest.vehicleBody.state.valueOf()[0], this._carTest.vehicleBody.state.valueOf()[1] + 7, this._carTest.vehicleBody.state.valueOf()[2] - 14);
+        this._renderer.camera.lookAt(this._carTest.vehicleBody.object.position);
         //this._vehicle.update(this._time,delta);
         this._renderer.render();
         var self = this;

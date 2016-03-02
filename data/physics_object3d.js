@@ -6,7 +6,6 @@ var PhysicsObject3d = (function () {
     function PhysicsObject3d(geometry, material, renderer) {
         this._hasCollisionSurface = false;
         this._isColliding = false;
-        this._collisionRadius = 0;
         this._surfaceDistance = 0;
         this._velocity = math.transpose(math.matrix([1, 20, 0, 0, 0, 2]));
         this._state = math.transpose(math.matrix([0, 40, 0, 0, 0, Math.PI / 4]));
@@ -125,9 +124,7 @@ var PhysicsObject3d = (function () {
         //this._gradientArrow.setLength(Math.sqrt(Math.pow(this.velocity.valueOf()[0],2) + Math.pow(this.velocity.valueOf()[1],2) + Math.pow(this.velocity.valueOf()[2],2));
         //this._object.rotation.set(this._rotation.x, this._rotation.z, this._rotation.z);
         //this._object.position.set(this._position.x, this._position.y, this._position.z);
-        this._rotationArrow.position.set(this.position.x, this.position.y, this.position.z);
-        this._rotationArrow.setDirection(new THREE.Vector3(this._vertexTracker.vertices[0].clone().x, this._vertexTracker.vertices[0].clone().y * 0.2, this._vertexTracker.vertices[0].clone().z));
-        this._rotationArrow.setLength(this._vertexTracker.vertices[0].clone().length());
+        //this._rotationArrow.setLength(this._vertexTracker.vertices[0].clone().length());
         //this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z)
         //this._gradientArrow.setDirection(this._gradientDirection);
         //this._gradientArrow.setLength(this._gradientDirection.length()*10);
@@ -264,16 +261,6 @@ var PhysicsObject3d = (function () {
         },
         set: function (value) {
             this._realDirection = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(PhysicsObject3d.prototype, "collisionRadius", {
-        get: function () {
-            return this._collisionRadius;
-        },
-        set: function (value) {
-            this._collisionRadius = value;
         },
         enumerable: true,
         configurable: true

@@ -15,12 +15,6 @@ class Steering {
     }
 
     public update(time:number, delta:number){
-        if(Math.abs(this._steeringAngle-this._startAngle) > Math.PI/4 && Math.sign(this._steeringAcceleration) == Math.sign(this._steeringAngle-this._startAngle)){
-            this._steeringVelocity = 0;
-            this._steeringAcceleration = 0;
-
-        }
-
         this._steeringVelocity += 0.03*this._steeringAcceleration;
         this._steeringVelocity *= 0.7;
         this._steeringAngle += 0.03*this._steeringVelocity;

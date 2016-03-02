@@ -1,31 +1,29 @@
 /**
+ * Created by filles-dator on 2016-02-18.
+ */
+/**
  * Created by filles-dator on 2016-01-28.
  */
 ///<reference path="../threejs/three.d.ts"/>
 ///<reference path="./physics_object3d.ts"/>
 ///<reference path="./constraints/collision_constraint.ts"/>
+///<reference path="../math/mathjs.d.ts"/>
+///<reference path="./parts/wheel.ts"/>
 
 class DynamicRigidBody extends PhysicsObject3d {
     private _gravity : number;
     private _mass : number;
     private _frictionConst : number;
 
-    private _inclineForce : THREE.Vector3;
-    private _frictionForce : THREE.Vector3;
+    private _inertiaTensor : mathjs.Matrix;
+    private _M : mathjs.Matrix;
 
-    private inertiaTensor : THREE.Matrix3;
-    private inverseInertiaTensor : THREE.Matrix3;
-    private _collisionConstraint : CollisionConstraint;
-
-    //private _inertiaTensor : number;
-    //private _inverseInertiaTensor : number;
-    private _orientation : THREE.Quaternion;
-    private _spin : THREE.Quaternion;
-
-    private _renderer : Renderer;
-    private _dt : number = 0.07;
+    private _forceExternal : mathjs.Matrix;
+    private _forceConstraints : mathjs.Matrix;
+    private _forceTotal : mathjs.Matrix;
 
     public _dir : THREE.Vector3 = new THREE.Vector3(1,0,0);
+
 
     private testVertex : THREE.Mesh;
     constructor(geometry: THREE.Geometry, material: THREE.Material, renderer: Renderer){
@@ -36,155 +34,88 @@ class DynamicRigidBody extends PhysicsObject3d {
         this._mass = 500;
         this._frictionConst = 0.99;
 
-        this._inclineForce = new THREE.Vector3(0,0,0);
-        this._frictionForce = new THREE.Vector3(0,0,0);
-        this._collisionConstraint = new CollisionConstraint(200, 1);
-
-        this._orientation = new THREE.Quaternion();
-        this._spin = new THREE.Quaternion();
-
         this.calculateInertiaTensor();
+        super.trackVertices(0);
+
+        this._forceExternal = math.multiply(math.matrix([0,this._gravity,0,0,0,0]), this._mass);
+        this._forceConstraints = math.matrix([0,0,0,0,0,0]);
+        this._forceTotal = math.add(this._forceExternal, this._forceConstraints);
+
+        this._M = math.matrix([
+            [this._mass, 0, 0, 0, 0, 0],
+            [0, this._mass, 0, 0, 0, 0],
+            [0, 0, this._mass, 0, 0, 0],
+            [0, 0, 0, 500, 0, -40],
+            [0, 0, 0, 0, 500, 0],
+            [0, 0, 0, -40, 0, 500],
+        ]);
+        this._M.subset(math.index(math.range(3,6),math.range(3,6)), math.multiply(this._inertiaTensor, 0.2));
+        //console.log(this._M.valueOf());
+
+        this.velocity = math.transpose(math.matrix([0,0,0,0,0,1]));
+        this.state = math.transpose(math.matrix([0,20,0,0,0,0]));
+
         //renderer.scene.add(this.object);
-
-        this.force.set(0,50000,50000);
-        this.forceRadius.set(4,0,0);
-
-        window.addEventListener( 'keydown', this.onKeyDown, false );
-        window.addEventListener( 'keyup', this.onKeyUp, false );
     }
 
     public update(time:number, delta:number):void{
-        //calculate forces
-        var appliedForce : THREE.Vector3 = this.forceRadius.clone().cross(this.force);
-        var inertia : THREE.Vector3 = this.angularAcceleration.applyMatrix3(this.inertiaTensor);
-        var torque : THREE.Vector3 = appliedForce.add(inertia);
-        this.angularAcceleration = torque.applyMatrix3(this.inverseInertiaTensor);
+        this._forceTotal = math.add(this._forceExternal, this._forceConstraints); //Combine external and constraint forces
+        this.velocity = math.add(this._velocity, math.multiply(math.multiply(math.inv(this._M), this._forceTotal), delta));
+        this.state = math.add(this._state, math.multiply(this._velocity, delta));
+        this._forceConstraints = math.matrix([0,0,0,0,0,0]);
 
-        if(this.isColliding){
-           this.velocity.multiplyScalar(0.95);
-           this.angularVelocity.multiplyScalar(0.95);
-        }
-
-        this.acceleration.set(
-            this.force.x + this._frictionForce.x,
-            this.force.y + this._frictionForce.y +this._gravity*this._mass,
-            this.force.z + this._frictionForce.z
-        ).multiplyScalar(1/this._mass);
-
-        this.velocity.set(
-            this.velocity.x + this.acceleration.x*this._dt,
-            this.velocity.y + this.acceleration.y*this._dt,
-            this.velocity.z + this.acceleration.z*this._dt
-        ).multiplyScalar(1);
-
-        if(this.isColliding){
-            this.velocity = this._collisionConstraint.update(
-                this.velocity,//this.velocity.clone().add(this.angularVelocity.clone().multiplyScalar(this.forceRadius.length())),
-                new THREE.Vector3(0,1,0),
-                this.collisionPoint.y,
-                time, delta);
-
-            var appliedForce : THREE.Vector3 = this.forceRadius.clone().cross(
-                new THREE.Vector3(
-                    0,
-                    30000,//5000*this.velocity.clone().add(this.angularVelocity.clone().multiplyScalar(this.forceRadius.length())).length(),
-                    0
-                )
-            );
-            var inertia : THREE.Vector3 = this.angularAcceleration.applyMatrix3(this.inertiaTensor);
-            var torque : THREE.Vector3 = appliedForce.add(inertia);
-            this.angularAcceleration = torque.applyMatrix3(this.inverseInertiaTensor);
-        }
-
-        this.position.set(
-            this.position.x + this.velocity.x*this._dt,
-            this.position.y + this.velocity.y*this._dt,
-            this.position.z + this.velocity.z*this._dt
-        ).multiplyScalar(1);
-
-        this.angularVelocity.set(
-            this.angularVelocity.x + this.angularAcceleration.x*this._dt,
-            this.angularVelocity.y + this.angularAcceleration.y*this._dt,
-            this.angularVelocity.z + this.angularAcceleration.z*this._dt
-        );
-
-        this.rotation.set(
-            this.rotation.x + this.angularVelocity.x*this._dt,
-            this.rotation.y + this.angularVelocity.y*this._dt,
-            this.rotation.z + this.angularVelocity.z*this._dt
-        );
-
-        this.object.rotateX(this.angularVelocity.x*this._dt);
-        this.object.rotateY(this.angularVelocity.y*this._dt);
-        this.object.rotateZ(this.angularVelocity.z*this._dt);
-
-        this.trackVertices(this.angularVelocity);
-
-        //this._orientation.normalize();
-        //
-        //this._spin = new THREE.Quaternion(
-        //    this.angularVelocity.x,
-        //    this.angularVelocity.y,
-        //    this.angularVelocity.z,
-        //    0
-        //).multiply(this._orientation);
-        //
-        //this._orientation.set(
-        //    this._orientation.x + this._spin.x*this._dt,
-        //    this._orientation.y + this._spin.y*this._dt,
-        //    this._orientation.z + this._spin.z*this._dt,
-        //    0
-        //);
-        //
-        //
-        //this.rotation.applyQuaternion(this._orientation);
-        //console.log(this.rotation.x + "  " + this.rotation.y + "  " + this.rotation.z);
-
-        //console.log(this._spin.x + "  " + this._spin.y + "  " + this._spin.z);
-        //this.object.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
-
-
-        this.force.set(0,0,0);
+        super.trackVertices(delta);
         super.update(time,delta);
-        //this.forceRadius.set(0,0,0);
+        var collisions = super.checkCollisions();
+
+        for(var colNum=0; colNum<collisions.length; colNum++){
+            this.velocity = this.collision(collisions[colNum]);
+            //this.friction(collisions[colNum]);
+        }
+
+        this.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
+        this.rotation.set(this._state.valueOf()[3], this._state.valueOf()[4], this._state.valueOf()[5]);
     }
 
-    private pressedKeys = [];
-    private angle = 0
-    onKeyDown = (e) => {
-        if (e) {
-            this.pressedKeys[e.keyCode] = true;
+    public collision(collision:number[]):mathjs.Matrix {
+        var force_radius = math.matrix([collision[0], collision[1], collision[2]]);
+        var normal = math.matrix([collision[3], collision[4], collision[5]]);
+        var penetration = collision[1];
 
-            if(this.pressedKeys[37]) {
-                this._dir.applyAxisAngle(new Vector3(0,1,0), 0.2);
-            }
+        var J = math.matrix([
+            normal.valueOf()[0],
+            normal.valueOf()[1],
+            normal.valueOf()[2],
+            math.cross(force_radius,normal).valueOf()[0],
+            math.cross(force_radius,normal).valueOf()[1],
+            math.cross(force_radius,normal).valueOf()[2]
+        ]);
 
-            if(this.pressedKeys[38]) {
-                this.force = this._dir.clone().multiplyScalar(100000);
-            }
+        var mc = 1/math.multiply( math.multiply(J, math.inv(this._M)), math.transpose(J));
+        var lagrange = -mc*(math.multiply(J,this._velocity)-0.8)*1.1;
 
-            if(this.pressedKeys[39]) {
-                this._dir.applyAxisAngle(new Vector3(0,1,0), -0.2);
-            }
+        var Pc = math.multiply(math.transpose(J),lagrange);
 
-            if(this.pressedKeys[40]) {
-            }
-        }
+        var newVelocity : mathjs.Matrix = math.add(this._velocity, math.multiply(math.inv(this._M),Pc));
+
+        return newVelocity;
     }
-    onKeyUp = (e) => {
-        if (e) {
-            this.pressedKeys[e.keyCode] = false;
-            switch (e.which) {
-                case 37: //Left
-                    break;
-                case 38: //Up
-                    break;
-                case 39: //Right
-                    break;
-                case 40: //Down
-                    break;
-            }
-        }
+
+    public friction(collision:number[]) {
+        var force_radius = math.matrix([collision[0], collision[1], collision[2]]);
+        var normal = math.matrix([collision[3], collision[4], collision[5]]);
+
+        var J = math.matrix([
+            -this.velocity.valueOf()[0],
+            -this.velocity.valueOf()[1],
+            -this.velocity.valueOf()[2],
+            0,0,0
+        ]);
+        J.subset(math.index(3), -math.cross(force_radius,normal).valueOf()[0]);
+        J.subset(math.index(4), -math.cross(force_radius,normal).valueOf()[1]);
+        J.subset(math.index(5), -math.cross(force_radius,normal).valueOf()[2]);
+
+        this.velocity = math.add(this.velocity, math.multiply(J,0.01));
     }
 
     private xLim :number[] = [-4,4];
@@ -241,22 +172,11 @@ class DynamicRigidBody extends PhysicsObject3d {
         }
         Ixz *= -500;
 
-        this.inertiaTensor = new THREE.Matrix3;
-        this.inertiaTensor.set(
-            Ixx, Ixy, Ixz,
-            Ixy, Iyy, Iyz,
-            Ixz, Iyz, Izz
-        );
-
-        var m4: THREE.Matrix4 = new THREE.Matrix4();
-        m4.set(
-            this.inertiaTensor.elements[0], this.inertiaTensor.elements[1], this.inertiaTensor.elements[2], 0,
-            this.inertiaTensor.elements[3], this.inertiaTensor.elements[4], this.inertiaTensor.elements[5], 0,
-            this.inertiaTensor.elements[6], this.inertiaTensor.elements[7], this.inertiaTensor.elements[8], 0,
-            0, 0, 0, 1
-        );
-
-        this.inverseInertiaTensor = this.inertiaTensor.getInverse(m4);
+        this._inertiaTensor = math.matrix([
+            [Ixx, Ixy, Ixz],
+            [Ixy, Iyy, Iyz],
+            [Ixz, Iyz, Izz]
+        ]);
     }
 
     get frictionConst():number {
@@ -265,5 +185,13 @@ class DynamicRigidBody extends PhysicsObject3d {
 
     set frictionConst(value:number) {
         this._frictionConst = value;
+    }
+
+    get forceExternal():mathjs.Matrix {
+        return this._forceExternal;
+    }
+
+    set forceExternal(value:mathjs.Matrix) {
+        this._forceExternal = value;
     }
 }
