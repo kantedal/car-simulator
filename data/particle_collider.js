@@ -34,23 +34,19 @@ var ParticleCollider = (function (_super) {
             [0, 0, 0, 0, 1, 0],
             [0, 0, 0, 0, 0, 1],
         ]);
-        this.velocity = math.transpose(math.matrix([0, 0, 0, 0, 0, 0]));
-        this.state = math.transpose(math.matrix([0, 20, 0, 0, 0, Math.PI / 4]));
+        //this.velocity = math.transpose(math.matrix([0,0,0,0,0,0]));
+        //this.state = math.transpose(math.matrix([0,20,0,0,0,Math.PI/4]));
         //renderer.scene.add(this.object);
     }
     ParticleCollider.prototype.update = function (time, delta) {
-        this._forceTotal = math.add(this._forceExternal, this._forceConstraints); //Combine external and constraint forces
-        this.velocity = math.add(this._velocity, math.multiply(math.multiply(math.inv(this._M), this._forceTotal), delta));
-        this.state = math.add(this._state, math.multiply(this._velocity, delta));
-        this._forceConstraints = math.matrix([0, 0, 0, 0, 0, 0]);
+        //this._forceTotal = math.add(this._forceExternal, this._forceConstraints); //Combine external and constraint forces
+        //this.velocity = math.add(this._velocity, math.multiply(math.multiply(math.inv(this._M), this._forceTotal), delta));
+        //this.state = math.add(this._state, math.multiply(this._velocity, delta));
+        //this._forceConstraints = math.matrix([0,0,0,0,0,0]);
         //super.trackVertices(delta);
         _super.prototype.update.call(this, time, delta);
-        if (this.state.valueOf()[1] - this._collisionRadius <= 0) {
-            this.velocity = this.collision();
-        }
-        this.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
     };
-    ParticleCollider.prototype.collision = function () {
+    ParticleCollider.prototype.collision = function (velocity) {
         var force_radius = math.matrix([0, -1, 0]);
         var normal = math.matrix([0, 1, 0]);
         //var penetration = collision[1];
@@ -63,9 +59,9 @@ var ParticleCollider = (function (_super) {
             math.cross(force_radius, normal).valueOf()[2]
         ]);
         var mc = 1 / math.multiply(math.multiply(J, math.inv(this._M)), math.transpose(J));
-        var lagrange = -mc * (math.multiply(J, this._velocity) - 1) * 1.1;
+        var lagrange = -mc * (math.multiply(J, velocity) - 1) * 1.1;
         var Pc = math.multiply(math.transpose(J), lagrange);
-        var newVelocity = math.add(this._velocity, math.multiply(math.inv(this._M), Pc));
+        var newVelocity = math.add(velocity, math.multiply(math.inv(this._M), Pc));
         return newVelocity;
     };
     Object.defineProperty(ParticleCollider.prototype, "isColliding", {

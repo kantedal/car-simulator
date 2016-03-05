@@ -1,6 +1,8 @@
 ///<reference path="../threejs/three.d.ts"/>
 ///<reference path="../renderer.ts"/>
 ///<reference path="../math/mathjs.d.ts"/>
+///<reference path="./ground_plane.ts"/>
+///<reference path="../carsimulator.ts"/>
 
 import Vector3 = THREE.Vector3;
 class PhysicsObject3d {
@@ -12,42 +14,42 @@ class PhysicsObject3d {
     private _geometry : THREE.Geometry;
     private _material : THREE.Material;
 
-    private _acceleration : THREE.Vector3;
-    private _force : THREE.Vector3;
     private _forceRadius : THREE.Vector3;
-    private _boundingRadius : THREE.Vector3;
 
-    private _angularAcceleration : THREE.Vector3;
-    private _angularVelocity : THREE.Vector3;
-
-    private _position : THREE.Vector3;
-    private _rotation : THREE.Vector3;
     private _desiredDirection : THREE.Vector3;
     private _normalDirection : THREE.Vector3;
-    private _realNormalDirection : THREE.Vector3;
-    private _gradientDirection : THREE.Vector3;
     private _realDirection : THREE.Vector3;
-    private _moveDirection : THREE.Vector3;
+    private _velocityDirection : THREE.Vector3;
+    private _angularVelocityDirection : THREE.Vector3;
 
     private _normalArrow : THREE.ArrowHelper;
     private _gradientArrow : THREE.ArrowHelper;
-    private _directionArrow : THREE.ArrowHelper;
-    private _rotationArrow : THREE.ArrowHelper;
-    private _forceRadiusArrow : THREE.ArrowHelper;
+    private _velocityDirectionArrow : THREE.ArrowHelper;
+
+    private _localXDirection : THREE.Vector3;
+    private _localYDirection : THREE.Vector3;
+    private _localZDirection : THREE.Vector3;
+    private _localXDirectionArrow : THREE.ArrowHelper;
+    private _localYDirectionArrow : THREE.ArrowHelper;
+    private _localZDirectionArrow : THREE.ArrowHelper;
 
     private _centerOfMassPoint : THREE.Mesh;
 
-    private _hasCollisionSurface : boolean = false;
     private _isColliding : boolean = false;
     private _surfaceDistance : number = 0;
     private _collisionPosition : THREE.Vector3;
-    private _collisionSurface : THREE.Geometry;
 
-    private _vertTest : THREE.Mesh[];
-    private _collisionPoint : THREE.Vector3;
+    private _collisionSurfaceIndices:number[];
+    private _lastSurfaceIndex:number = 0;
+    private _collisionSurfaces : GroundPlane[];
+
+    private _collisionPoints : THREE.Mesh[];
+    private _externalCollisionPoints : THREE.Mesh[];
+    private _externalCollisionPositions : THREE.Vector3[];
+    private _externalCollision : boolean[];
 
     constructor(geometry: THREE.Geometry, material: THREE.Material, renderer: Renderer){
-        this._velocity = math.transpose(math.matrix([1,20,0,0,0,2]));
+        this._velocity = math.transpose(math.matrix([1,20,0,0,0,0]));
         this._state = math.transpose(math.matrix([0,40,0,0,0,Math.PI/4]));
 
         this._renderer = renderer;
@@ -55,105 +57,222 @@ class PhysicsObject3d {
         this._material = material;
         this._object = new THREE.Mesh(this._geometry, this._material);
 
-        this._acceleration = new THREE.Vector3(0,0,0);
-        this._force = new THREE.Vector3(0,0,0);
-        this._forceRadius = new THREE.Vector3(0,0,0);
+        this._collisionSurfaceIndices = [];
+        this._collisionSurfaces = [];
 
-        this._angularAcceleration = new THREE.Vector3(0,0,0);
-        this._angularVelocity = new THREE.Vector3(0,0,0);
-
-        this._position = new THREE.Vector3(0,0,0);
-        this._rotation = new THREE.Vector3(0,1,0);
         this._collisionPosition = new THREE.Vector3(0,0,0);
-        this._desiredDirection = new THREE.Vector3(1,0,0);
+        this._desiredDirection = new THREE.Vector3(0,0,0);
         this._normalDirection = new THREE.Vector3(0,0,0);
-        this._realNormalDirection = new THREE.Vector3(0,0,0);
-        this._gradientDirection = new THREE.Vector3(0,0,0);
         this._realDirection = new THREE.Vector3(0,0,0);
-        this._moveDirection = new THREE.Vector3(0,0,0);
-        this._collisionPoint = new THREE.Vector3(0,0,0);
+        this._forceRadius = new THREE.Vector3(0,0,0);
+        this._velocityDirection  = new THREE.Vector3(0,0,0);
+        this._angularVelocityDirection  = new THREE.Vector3(0,0,0);
+
+        this._localXDirection = new THREE.Vector3(1,0,0);
+        this._localYDirection = new THREE.Vector3(0,1,0);
+        this._localZDirection = new THREE.Vector3(0,0,1);
 
         var dir = new THREE.Vector3( 0, 1, 0 );
         var origin = new THREE.Vector3( 0, 0, 0 );
         var length = 10;
 
         this._normalArrow = new THREE.ArrowHelper( dir, origin, length, 0xff0000 );
-        this._directionArrow = new THREE.ArrowHelper( dir, origin, length, 0x00ff00 );
+        this._velocityDirectionArrow = new THREE.ArrowHelper( dir, origin, 6, 0x00ff00 );
         this._gradientArrow = new THREE.ArrowHelper( dir, origin, length, 0xff00ff );
-        this._rotationArrow = new THREE.ArrowHelper( dir, origin, length, 0x0000ff );
-        this._forceRadiusArrow = new THREE.ArrowHelper( dir, origin, length, 0xff00ff );
+        this._localXDirectionArrow = new THREE.ArrowHelper( dir, origin, 4, 0xff0000 );
+        this._localYDirectionArrow = new THREE.ArrowHelper( dir, origin, 4, 0x00ff00 );
+        this._localZDirectionArrow = new THREE.ArrowHelper( dir, origin, 4, 0x0000ff );
 
-        renderer.scene.add( this._normalArrow );
-        renderer.scene.add( this._gradientArrow );
-        renderer.scene.add( this._directionArrow );
-        renderer.scene.add( this._rotationArrow );
-        renderer.scene.add( this._forceRadiusArrow );
+        //renderer.scene.add( this._normalArrow );
+        //renderer.scene.add( this._gradientArrow );
+        //renderer.scene.add( this._velocityDirectionArrow );
+        renderer.scene.add( this._localXDirectionArrow );
+        renderer.scene.add( this._localYDirectionArrow );
+        renderer.scene.add( this._localZDirectionArrow );
 
-        this._vertTest = [];
+
+        this._externalCollisionPoints = [];
+        this._externalCollisionPositions = [];
+        this._externalCollision = [];
+
+        this._collisionPoints = [];
         for(var i=0; i<this.object.geometry.vertices.length; i++) {
-            this._vertTest[i] = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshBasicMaterial({color: 0xffff00}))
-            renderer.scene.add(this._vertTest[i]);
+            this._collisionPoints[i] = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshBasicMaterial({color: 0xffff00}))
+            renderer.scene.add(this._collisionPoints[i]);
         }
 
-        this._vertTest[this._vertTest.length] = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshBasicMaterial({color: 0xff0000}))
-        renderer.scene.add(this._vertTest[this._vertTest.length-1]);
+        this._collisionPoints[this._collisionPoints.length] = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshBasicMaterial({color: 0xff0000}))
+        renderer.scene.add(this._collisionPoints[this._collisionPoints.length-1]);
 
         this._centerOfMassPoint = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true}));
         renderer.scene.add( this._centerOfMassPoint );
     }
 
+    public update(time:number, delta:number):void {
+        this.rotateAroundWorldAxis(this.object, new THREE.Vector3(1,0,0), delta*this.velocity.valueOf()[3]);
+        this.rotateAroundWorldAxis(this.object, new THREE.Vector3(0,1,0), delta*this.velocity.valueOf()[4]);
+        this.rotateAroundWorldAxis(this.object, new THREE.Vector3(0,0,1), delta*this.velocity.valueOf()[5]);
+
+        this.object.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
+        this._object.updateMatrixWorld(true);
+
+        this.isColliding = false;
+
+        this._centerOfMassPoint.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
+        this._normalDirection.normalize();
+
+        this._realDirection.set(this._desiredDirection.x, this._desiredDirection.y, this._desiredDirection.z);
+        this._realDirection.projectOnPlane(this._normalDirection);
+        this._realDirection.normalize();
+
+        this._velocityDirection.set(this.velocity.valueOf()[0], this.velocity.valueOf()[1], this.velocity.valueOf()[2]);
+        this._angularVelocityDirection.set(this.velocity.valueOf()[3], this.velocity.valueOf()[4], this.velocity.valueOf()[5]);
+
+        this._velocityDirectionArrow.position.set(this.object.position.x, this.object.position.y, this.object.position.z);
+        this._velocityDirectionArrow.setDirection(this._velocityDirection);
+
+        this._localXDirection = new THREE.Vector3(1,0,0).applyQuaternion(this.object.getWorldQuaternion());
+        this._localYDirection = new THREE.Vector3(0,1,0).applyQuaternion(this.object.getWorldQuaternion());
+        this._localZDirection = new THREE.Vector3(0,0,1).applyQuaternion(this.object.getWorldQuaternion());
+
+        this._localXDirectionArrow.setDirection(this._localXDirection);
+        this._localYDirectionArrow.setDirection(this._localYDirection);
+        this._localZDirectionArrow.setDirection(this._localZDirection);
+
+        this._localXDirectionArrow.position.set(this.object.position.x, this.object.position.y, this.object.position.z);
+        this._localYDirectionArrow.position.set(this.object.position.x, this.object.position.y, this.object.position.z);
+        this._localZDirectionArrow.position.set(this.object.position.x, this.object.position.y, this.object.position.z);
+
+        this.setCollisionSurfaceIndices();
+    }
+
+    public rotateAroundWorldAxis( object:THREE.Mesh, axis:THREE.Vector3, radians:number ) {
+        var rotationMatrix = new THREE.Matrix4();
+
+        rotationMatrix.makeRotationAxis( axis.normalize(), radians );
+        rotationMatrix.multiply( object.matrix );
+        object.matrix = rotationMatrix;
+        object.rotation.setFromRotationMatrix( object.matrix );
+    }
+
+    public addCollisionPoint(position: THREE.Vector3){
+        this._externalCollisionPositions[this._externalCollisionPositions.length] = position;
+        this._externalCollision[this._externalCollision.length] = false;
+        this._externalCollisionPoints[this._externalCollisionPoints.length] = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshBasicMaterial({color: 0xffff00}))
+        this._externalCollisionPoints[this._externalCollisionPoints.length-1].position.set(position.x, position.y, position.z);
+        this._renderer.scene.add(this._externalCollisionPoints[this._externalCollisionPoints.length-1]);
+    }
+
+    public connectCollisionSurfaces(surfaces : GroundPlane[]){
+        this._collisionSurfaces = surfaces;
+    }
+
+    public setCollisionSurfaceIndices(){
+        this._collisionSurfaceIndices = [];
+
+        for(var g=0; g<this._collisionSurfaces.length; g++){
+            for(var i=0; i<this._collisionPoints.length-1; i++) {
+                if(Math.abs(this._collisionPoints[i].position.x - this._collisionSurfaces[g].mesh.position.x) < CarSimulator.ground_width/2 && Math.abs(this._collisionPoints[i].position.z - this._collisionSurfaces[g].mesh.position.z) < CarSimulator.ground_width/2) {
+                    this._collisionSurfaceIndices.push(g);
+                    break;
+                }
+            }
+        }
+
+        if(this._collisionSurfaceIndices.length == 1)
+        {
+            if(this._lastSurfaceIndex != this._collisionSurfaceIndices[0]){
+                var xMove = this._collisionSurfaces[this._lastSurfaceIndex].mesh.position.x - this._collisionSurfaces[this._collisionSurfaceIndices[0]].mesh.position.x;
+                var zMove = this._collisionSurfaces[this._lastSurfaceIndex].mesh.position.z - this._collisionSurfaces[this._collisionSurfaceIndices[0]].mesh.position.z;
+
+                var oldSurfacePos : THREE.Vector3 = this._collisionSurfaces[this._lastSurfaceIndex].mesh.position.clone();
+                var surfacePos : THREE.Vector3 = this._collisionSurfaces[this._lastSurfaceIndex].mesh.position.clone();
+                var surfaceScale : THREE.Vector3 = this._collisionSurfaces[this._collisionSurfaceIndices[0]].scale.clone();
+
+                if(xMove > 0){
+                    for(var i=0; i<this._collisionSurfaces.length; i++){
+                        if(this._collisionSurfaces[i].mesh.position.x > oldSurfacePos.x){
+                            this._collisionSurfaces[i].mesh.position.set(this._collisionSurfaces[i].mesh.position.x-CarSimulator.ground_width*3, this._collisionSurfaces[i].mesh.position.y, this._collisionSurfaces[i].mesh.position.z);
+                            this._collisionSurfaces[i].geometry.translate(-CarSimulator.ground_width*3, 0, 0);
+                        }
+                    }
+                }else if(xMove < 0){
+                    for(var i=0; i<this._collisionSurfaces.length; i++){
+                        if(this._collisionSurfaces[i].mesh.position.x < oldSurfacePos.x){
+                            this._collisionSurfaces[i].mesh.position.set(this._collisionSurfaces[i].mesh.position.x+CarSimulator.ground_width*3, this._collisionSurfaces[i].mesh.position.y, this._collisionSurfaces[i].mesh.position.z);
+                            this._collisionSurfaces[i].geometry.translate(CarSimulator.ground_width*3, 0, 0);
+                        }
+                    }
+                }
+
+                if(zMove > 0){
+                    for(var i=0; i<this._collisionSurfaces.length; i++){
+                        if(this._collisionSurfaces[i].mesh.position.z > oldSurfacePos.z){
+                            this._collisionSurfaces[i].mesh.translateZ(-CarSimulator.ground_width*3)
+                            this._collisionSurfaces[i].geometry.translate(0, 0, -CarSimulator.ground_width*3);
+                        }
+                    }
+                }else if(zMove < 0){
+                    for(var i=0; i<this._collisionSurfaces.length; i++){
+                        if(this._collisionSurfaces[i].mesh.position.z < oldSurfacePos.z){
+                            this._collisionSurfaces[i].mesh.translateZ(CarSimulator.ground_width*3)
+                            this._collisionSurfaces[i].geometry.translate(0, 0, CarSimulator.ground_width*3);
+                        }
+                    }
+                }
+
+                this._lastSurfaceIndex = this._collisionSurfaceIndices[0];
+            }
+        }
+    }
+
+    public connectCollisionSurface(surface : THREE.Geometry):void {
+        this._collisionSurface = surface;
+    }
+
     public checkCollisions():number[][] {
         var collisions:number[] = [];
-        if(this._hasCollisionSurface) {
+        if(this._collisionSurfaces.length > 0) {
             this.forceRadius.set(0,0,0);
 
             for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
-                //var vertPos:THREE.Vector3 = this._object.geometry.vertices[vertexIdx].clone();
-                //vertPos.applyQuaternion(this._object.getWorldQuaternion());
-                var vertPos:THREE.Vector3 = this._vertexTracker.vertices[vertexIdx].clone().add(this._position);
-                this._vertTest[vertexIdx].position.set(vertPos.x, vertPos.y, vertPos.z);
+                var vertPos:THREE.Vector3 = this._object.geometry.vertices[vertexIdx].clone();
+                vertPos.applyQuaternion(this._object.getWorldQuaternion());
+                this._collisionPoints[vertexIdx].position.set(vertPos.x, vertPos.y, vertPos.z).add(this._object.position);
             }
 
-            for (var i = 0; i < this._collisionSurface.faces.length; i++) {
-                var vert1:THREE.Vector3 = this._collisionSurface.vertices[this._collisionSurface.faces[i].a];
-                var vert2:THREE.Vector3 = this._collisionSurface.vertices[this._collisionSurface.faces[i].b];
-                var vert3:THREE.Vector3 = this._collisionSurface.vertices[this._collisionSurface.faces[i].c];
+            for(var extColIdx = 0; extColIdx < this._externalCollisionPoints.length; extColIdx++){
+                var vertPos:THREE.Vector3 = this._externalCollisionPositions[extColIdx].clone();
+                vertPos.applyQuaternion(this._object.getWorldQuaternion());
+                this._externalCollisionPoints[extColIdx].position.set(vertPos.x, vertPos.y, vertPos.z).add(this._object.position);
+            }
 
-                for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
-                    var vertPos:THREE.Vector3 = this._vertexTracker.vertices[vertexIdx].clone().add(this._position);
-                    //var vertPos:THREE.Vector3 = this._vertTest[vertexIdx].position.clone();
+            for (var vertexIdx = 0; vertexIdx < this._externalCollisionPoints.length; vertexIdx++) {
+                this._externalCollision[vertexIdx] = false;
+            }
 
-                    if (this.checkCollision(vertPos.clone(), vert1, vert2, vert3) && this.pointInTriangle(vertPos.clone(), vert1, vert2, vert3)) {
-                        var vertexNormals = this._collisionSurface.faces[i].vertexNormals;
+            for(var c=0; c<this._collisionSurfaceIndices.length; c++){
+                for (var i = 0; i < this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.faces.length; i++) {
+                    var vert1:THREE.Vector3 = this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.vertices[this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.faces[i].a];
+                    var vert2:THREE.Vector3 = this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.vertices[this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.faces[i].b];
+                    var vert3:THREE.Vector3 = this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.vertices[this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.faces[i].c];
 
-                        var areaT = this.triangleArea(vert1, vert2, vert3);
-                        var areaB = this.triangleArea(vert1, this._position, vert3);
-                        var areaC = this.triangleArea(vert1, this._position, vert2);
-                        var areaA = areaT - areaB - areaC;
+                    var vertexNormals = this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.faces[i].vertexNormals;
 
-                        var c1 = areaA / areaT;
-                        var c2 = areaB / areaT;
-                        var c3 = areaC / areaT;
+                    for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
+                        var vertPos:THREE.Vector3 = this._collisionPoints[vertexIdx].position.clone();
+                        var collision = this.handleCollision(vertPos, vert1, vert2, vert3, vertexNormals);
+                        if(collision!=0)
+                            collisions.push(collision);
+                    }
 
-                        this._normalDirection = new THREE.Vector3(
-                            vertexNormals[0].x * c1 + vertexNormals[1].x * c2 + vertexNormals[2].x * c3,
-                            vertexNormals[0].y * c1 + vertexNormals[1].y * c2 + vertexNormals[2].y * c3,
-                            vertexNormals[0].z * c1 + vertexNormals[1].z * c2 + vertexNormals[2].z * c3
-                        );
-
-                        this.isColliding = true;
-
-                        collisions.push([
-                            vertPos.x - this._object.position.x,
-                            vertPos.y - this._object.position.y,
-                            vertPos.z - this._object.position.z,
-                            this._normalDirection.x,
-                            this._normalDirection.y,
-                            this._normalDirection.z,
-                            vertPos.x,
-                            vertPos.y,
-                            vertPos.z
-                        ]);
+                    for (var vertexIdx = 0; vertexIdx < this._externalCollisionPoints.length; vertexIdx++) {
+                        var vertPos:THREE.Vector3 = this._externalCollisionPoints[vertexIdx].position.clone();
+                        var collision = this.handleCollision(vertPos, vert1, vert2, vert3, vertexNormals);
+                        if(collision!=0) {
+                            this._externalCollision[vertexIdx] = true;
+                            collisions.push(collision);
+                        }
                     }
                 }
             }
@@ -161,78 +280,38 @@ class PhysicsObject3d {
         return collisions;
     }
 
-    public update(time:number, delta:number):void {
-        //this.object.rotation.set(this._state.valueOf()[3], this._state.valueOf()[4], this._state.valueOf()[5]);
-        this.object.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
-        this._object.updateMatrixWorld(true);
+    private handleCollision(vertPos:THREE.Vector3, vert1:THREE.Vector3, vert2:THREE.Vector3, vert3:THREE.Vector3, vertexNormals:THREE.Vector3[]){
+        if (this.checkCollision(vertPos.clone(), vert1, vert2, vert3) && this.pointInTriangle(vertPos.clone(), vert1, vert2, vert3)) {
+            var areaT = this.triangleArea(vert1, vert2, vert3);
+            var areaB = this.triangleArea(vert1, this.object.position, vert3);
+            var areaC = this.triangleArea(vert1, this.object.position, vert2);
+            var areaA = areaT - areaB - areaC;
 
-        this.isColliding = false;
+            var c1 = areaA / areaT;
+            var c2 = areaB / areaT;
+            var c3 = areaC / areaT;
 
-        //for(var i=0; i<this.object.geometry.vertices.length; i++) {
-        //    var vertPos2:THREE.Vector3 = this._object.geometry.vertices[i].clone();
-        //    vertPos2.applyQuaternion(this._object.getWorldQuaternion());
-        //}
-        //
-        //for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
-        //    var vertPos:THREE.Vector3 = this._object.geometry.vertices[vertexIdx].clone();
-        //    vertPos.applyQuaternion(this._object.getWorldQuaternion());
-        //    this._vertTest[vertexIdx].position.set(vertPos.x + this._object.position.x, vertPos.y + this._object.position.y, vertPos.z + this._object.position.z);
-        //}
+            this._normalDirection = new THREE.Vector3(
+                vertexNormals[0].x * c1 + vertexNormals[1].x * c2 + vertexNormals[2].x * c3,
+                vertexNormals[0].y * c1 + vertexNormals[1].y * c2 + vertexNormals[2].y * c3,
+                vertexNormals[0].z * c1 + vertexNormals[1].z * c2 + vertexNormals[2].z * c3
+            );
 
-        this._centerOfMassPoint.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
-        this._normalDirection.normalize();
+            this.isColliding = true;
 
-
-        this._realDirection.set(this._desiredDirection.x, this._desiredDirection.y, this._desiredDirection.z);
-        this._realDirection.projectOnPlane(this._normalDirection);
-        this._realDirection.normalize()
-
-        this._forceRadiusArrow.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
-        this._forceRadiusArrow.setDirection(this._forceRadius);
-        this._forceRadiusArrow.setLength(6);
-
-        //this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z)
-        //this._gradientArrow.setDirection(new THREE.Vector3(this._velocity.valueOf()[0], this._velocity.valueOf()[1], this._velocity.valueOf()[2]));
-        //this._gradientArrow.setLength(Math.sqrt(Math.pow(this.velocity.valueOf()[0],2) + Math.pow(this.velocity.valueOf()[1],2) + Math.pow(this.velocity.valueOf()[2],2));
-
-        //this._object.rotation.set(this._rotation.x, this._rotation.z, this._rotation.z);
-        //this._object.position.set(this._position.x, this._position.y, this._position.z);
-
-        //this._rotationArrow.setLength(this._vertexTracker.vertices[0].clone().length());
-        //this._gradientArrow.position.set(this._position.x, this._position.y, this._position.z)
-        //this._gradientArrow.setDirection(this._gradientDirection);
-        //this._gradientArrow.setLength(this._gradientDirection.length()*10);
-        //
-        //this._directionArrow.position.set(this._position.x, this._position.y, this._position.z)
-        //this._directionArrow.setDirection(this._desiredDirection);
-    }
-
-    //Vertex tracker to handle vertices positions when colliding
-    private _vertexTracker : THREE.Geometry;
-    private testMesh : THREE.Mesh;
-    public trackVertices(delta:number) : THREE.Vector3{
-        if(!this._vertexTracker) {
-            this._vertexTracker = this.object.geometry.clone();
-            this.testMesh = new THREE.Mesh(this._vertexTracker , new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}));
-            this._renderer.scene.add(this.testMesh);
+            return [
+                vertPos.x - this._object.position.x,
+                vertPos.y - this._object.position.y,
+                vertPos.z - this._object.position.z,
+                this._normalDirection.x,
+                this._normalDirection.y,
+                this._normalDirection.z,
+                vertPos.x,
+                vertPos.y,
+                vertPos.z
+            ];
         }
-
-        this._vertexTracker.rotateX(this._velocity.valueOf()[3]*delta);
-        this._vertexTracker.rotateY(this._velocity.valueOf()[4]*delta);
-        this._vertexTracker.rotateZ(this._velocity.valueOf()[5]*delta);
-
-        this.testMesh.position.set(
-            this._position.x,
-            this._position.y,
-            this._position.z
-        );
-
-        return this._vertexTracker.vertices[0];
-    }
-
-    public connectCollisionSurface(surface : THREE.Geometry):void {
-        this._collisionSurface = surface;
-        this._hasCollisionSurface = true;
+        return 0;
     }
 
     private checkCollision(vertPos:THREE.Vector3, p1:THREE.Vector3, p2:THREE.Vector3, p3:THREE.Vector3) : boolean{
@@ -265,15 +344,6 @@ class PhysicsObject3d {
         var s =(1/2)*(a+b+c);
 
         return Math.sqrt(s*(s-a)*(s-b)*(s-c))
-    }
-
-    private distanceToFace(p1:THREE.Vector3, p2:THREE.Vector3, p3:THREE.Vector3) : number {
-        var avgPos:THREE.Vector3 = new Vector3(
-            (p1.x + p2.x + p3.x)/3,
-            (p1.y + p2.z + p3.y)/3,
-            (p1.x + p2.x + p3.z)/3
-        );
-        return Math.sqrt(Math.pow(this.position.x-avgPos.x, 2) + Math.pow(this.position.y-avgPos.y, 2) + Math.pow(this.position.z-avgPos.z, 2));
     }
 
     private sign(p1:THREE.Vector3, p2:THREE.Vector3, p3:THREE.Vector3) : number {
@@ -320,14 +390,6 @@ class PhysicsObject3d {
         this._collisionSurface = value;
     }
 
-    get position():THREE.Vector3 {
-        return this._position;
-    }
-
-    set position(value:THREE.Vector3) {
-        this._position = value;
-    }
-
     get desiredDirection():THREE.Vector3 {
         return this._desiredDirection;
     }
@@ -342,6 +404,14 @@ class PhysicsObject3d {
 
     set normalDirection(value:THREE.Vector3) {
         this._normalDirection = value;
+    }
+
+    get velocityDirection():THREE.Vector3 {
+        return this._velocityDirection;
+    }
+
+    set velocityDirection(value:THREE.Vector3) {
+        this._velocityDirection = value;
     }
 
     get realDirection():THREE.Vector3 {
@@ -360,22 +430,6 @@ class PhysicsObject3d {
         this._hasCollisionSurface = value;
     }
 
-    get gradientDirection():THREE.Vector3 {
-        return this._gradientDirection;
-    }
-
-    set gradientDirection(value:THREE.Vector3) {
-        this._gradientDirection = value;
-    }
-
-    get force():THREE.Vector3 {
-        return this._force;
-    }
-
-    set force(value:THREE.Vector3) {
-        this._force = value;
-    }
-
     get isColliding():boolean {
         return this._isColliding;
     }
@@ -384,28 +438,12 @@ class PhysicsObject3d {
         this._isColliding = value;
     }
 
-    get realNormalDirection():THREE.Vector3 {
-        return this._realNormalDirection;
-    }
-
-    set realNormalDirection(value:THREE.Vector3) {
-        this._realNormalDirection = value;
-    }
-
     get surfaceDistance():number {
         return this._surfaceDistance;
     }
 
     set surfaceDistance(value:number) {
         this._surfaceDistance = value;
-    }
-
-    get acceleration():THREE.Vector3 {
-        return this._acceleration;
-    }
-
-    set acceleration(value:THREE.Vector3) {
-        this._acceleration = value;
     }
 
     get rotation():THREE.Vector3 {
@@ -424,43 +462,12 @@ class PhysicsObject3d {
         this._forceRadius = value;
     }
 
-    get boundingRadius():THREE.Vector3 {
-        return this._boundingRadius;
+    get collisionPoints():THREE.Mesh[] {
+        return this._collisionPoints;
     }
 
-    set boundingRadius(value:THREE.Vector3) {
-        this._boundingRadius = value;
-    }
-
-    get angularAcceleration():THREE.Vector3 {
-        return this._angularAcceleration;
-    }
-
-    set angularAcceleration(value:THREE.Vector3) {
-        this._angularAcceleration = value;
-    }
-    get angularVelocity():THREE.Vector3 {
-        return this._angularVelocity;
-    }
-
-    set angularVelocity(value:THREE.Vector3) {
-        this._angularVelocity = value;
-    }
-
-    get collisionPoint():THREE.Vector3 {
-        return this._collisionPoint;
-    }
-
-    set collisionPoint(value:THREE.Vector3) {
-        this._collisionPoint = value;
-    }
-
-    get vertTest():THREE.Mesh[] {
-        return this._vertTest;
-    }
-
-    set vertTest(value:Array) {
-        this._vertTest = value;
+    set collisionPoints(value:Array) {
+        this._collisionPoints = value;
     }
 
     get velocity():mathjs.Matrix {
@@ -479,11 +486,24 @@ class PhysicsObject3d {
         this._state = value;
     }
 
-    get vertexTracker():THREE.Geometry {
-        return this._vertexTracker;
+    get localYDirection():THREE.Vector3 {
+        return this._localYDirection;
     }
 
-    set vertexTracker(value:THREE.Geometry) {
-        this._vertexTracker = value;
+    get localXDirection():THREE.Vector3 {
+        return this._localXDirection;
     }
+
+    get localZDirection():THREE.Vector3 {
+        return this._localZDirection;
+    }
+
+    get externalCollision():boolean[] {
+        return this._externalCollision;
+    }
+
+    get angularVelocityDirection():THREE.Vector3 {
+        return this._angularVelocityDirection;
+    }
+
 }

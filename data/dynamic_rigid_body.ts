@@ -24,18 +24,15 @@ class DynamicRigidBody extends PhysicsObject3d {
 
     public _dir : THREE.Vector3 = new THREE.Vector3(1,0,0);
 
-
-    private testVertex : THREE.Mesh;
     constructor(geometry: THREE.Geometry, material: THREE.Material, renderer: Renderer){
         super(geometry, material, renderer);
         this._renderer = renderer;
 
-        this._gravity = -9.82;
+        this._gravity = -9.82*1.7;
         this._mass = 500;
         this._frictionConst = 0.99;
 
         this.calculateInertiaTensor();
-        super.trackVertices(0);
 
         this._forceExternal = math.multiply(math.matrix([0,this._gravity,0,0,0,0]), this._mass);
         this._forceConstraints = math.matrix([0,0,0,0,0,0]);
@@ -45,26 +42,27 @@ class DynamicRigidBody extends PhysicsObject3d {
             [this._mass, 0, 0, 0, 0, 0],
             [0, this._mass, 0, 0, 0, 0],
             [0, 0, this._mass, 0, 0, 0],
-            [0, 0, 0, 500, 0, -40],
-            [0, 0, 0, 0, 500, 0],
-            [0, 0, 0, -40, 0, 500],
+            [0, 0, 0, 5000, 0, -400],
+            [0, 0, 0, 0, 5000, 0],
+            [0, 0, 0, -400, 0, 5000],
         ]);
-        this._M.subset(math.index(math.range(3,6),math.range(3,6)), math.multiply(this._inertiaTensor, 0.2));
+        this._M.subset(math.index(math.range(3,6),math.range(3,6)), math.multiply(this._inertiaTensor, 0.5));
         //console.log(this._M.valueOf());
 
-        this.velocity = math.transpose(math.matrix([0,0,0,0,0,1]));
-        this.state = math.transpose(math.matrix([0,20,0,0,0,0]));
+        this.velocity = math.transpose(math.matrix([0,0,0,0,0,0]));
+        this.state = math.transpose(math.matrix([0,30,0,0,0,0]));
 
-        //renderer.scene.add(this.object);
+        renderer.scene.add(this.object);
     }
 
     public update(time:number, delta:number):void{
         this._forceTotal = math.add(this._forceExternal, this._forceConstraints); //Combine external and constraint forces
         this.velocity = math.add(this._velocity, math.multiply(math.multiply(math.inv(this._M), this._forceTotal), delta));
         this.state = math.add(this._state, math.multiply(this._velocity, delta));
+
         this._forceConstraints = math.matrix([0,0,0,0,0,0]);
 
-        super.trackVertices(delta);
+
         super.update(time,delta);
         var collisions = super.checkCollisions();
 
@@ -72,9 +70,6 @@ class DynamicRigidBody extends PhysicsObject3d {
             this.velocity = this.collision(collisions[colNum]);
             //this.friction(collisions[colNum]);
         }
-
-        this.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
-        this.rotation.set(this._state.valueOf()[3], this._state.valueOf()[4], this._state.valueOf()[5]);
     }
 
     public collision(collision:number[]):mathjs.Matrix {
@@ -92,7 +87,7 @@ class DynamicRigidBody extends PhysicsObject3d {
         ]);
 
         var mc = 1/math.multiply( math.multiply(J, math.inv(this._M)), math.transpose(J));
-        var lagrange = -mc*(math.multiply(J,this._velocity)-0.8)*1.1;
+        var lagrange = -mc*(math.multiply(J,this._velocity)-1)*1;
 
         var Pc = math.multiply(math.transpose(J),lagrange);
 
@@ -118,9 +113,9 @@ class DynamicRigidBody extends PhysicsObject3d {
         this.velocity = math.add(this.velocity, math.multiply(J,0.01));
     }
 
-    private xLim :number[] = [-4,4];
+    private xLim :number[] = [-2,2];
     private yLim :number[] = [-1,1];
-    private zLim :number[] = [-2,2];
+    private zLim :number[] = [-4,4];
     private calculateInertiaTensor():void {
         var dV = 0.1*0.1;
 
@@ -183,15 +178,20 @@ class DynamicRigidBody extends PhysicsObject3d {
         return this._frictionConst;
     }
 
-    set frictionConst(value:number) {
-        this._frictionConst = value;
-    }
-
     get forceExternal():mathjs.Matrix {
         return this._forceExternal;
     }
 
-    set forceExternal(value:mathjs.Matrix) {
-        this._forceExternal = value;
+    get forceConstraints():mathjs.Matrix {
+        return this._forceConstraints;
     }
+
+    set forceConstraints(value:mathjs.Matrix) {
+        this._forceConstraints = value;
+    }
+
+    get M():mathjs.Matrix {
+        return this._M;
+    }
+
 }

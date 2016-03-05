@@ -9,6 +9,7 @@
 ///<reference path="./parts/wheel.ts"/>
 
 class ParticleCollider extends PhysicsObject3d {
+    private _renderer : Renderer;
     private _gravity : number;
     private _mass : number;
     private _frictionConst : number;
@@ -17,6 +18,7 @@ class ParticleCollider extends PhysicsObject3d {
     private _forceConstraints : mathjs.Matrix;
     private _forceTotal : mathjs.Matrix;
     private _collisionRadius : number
+    private _isColliding : boolean;
 
     public _dir : THREE.Vector3 = new THREE.Vector3(1,0,0);
 
@@ -44,30 +46,23 @@ class ParticleCollider extends PhysicsObject3d {
             [0, 0, 0, 0, 0, 1],
         ]);
 
-        this.velocity = math.transpose(math.matrix([0,0,0,0,0,0]));
-        this.state = math.transpose(math.matrix([0,20,0,0,0,Math.PI/4]));
+        //this.velocity = math.transpose(math.matrix([0,0,0,0,0,0]));
+        //this.state = math.transpose(math.matrix([0,20,0,0,0,Math.PI/4]));
 
         //renderer.scene.add(this.object);
     }
 
     public update(time:number, delta:number):void{
-        this._forceTotal = math.add(this._forceExternal, this._forceConstraints); //Combine external and constraint forces
-        this.velocity = math.add(this._velocity, math.multiply(math.multiply(math.inv(this._M), this._forceTotal), delta));
-        this.state = math.add(this._state, math.multiply(this._velocity, delta));
-        this._forceConstraints = math.matrix([0,0,0,0,0,0]);
+        //this._forceTotal = math.add(this._forceExternal, this._forceConstraints); //Combine external and constraint forces
+        //this.velocity = math.add(this._velocity, math.multiply(math.multiply(math.inv(this._M), this._forceTotal), delta));
+        //this.state = math.add(this._state, math.multiply(this._velocity, delta));
+        //this._forceConstraints = math.matrix([0,0,0,0,0,0]);
 
         //super.trackVertices(delta);
         super.update(time,delta);
-
-
-        if(this.state.valueOf()[1]-this._collisionRadius <= 0) {
-            this.velocity = this.collision();
-        }
-
-        this.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
     }
 
-    public collision():mathjs.Matrix {
+    public collision(velocity : mathjs.Matrix):mathjs.Matrix {
         var force_radius = math.matrix([0, -1, 0]);
         var normal = math.matrix([0, 1, 0]);
         //var penetration = collision[1];
@@ -82,11 +77,11 @@ class ParticleCollider extends PhysicsObject3d {
         ]);
 
         var mc = 1/math.multiply( math.multiply(J, math.inv(this._M)), math.transpose(J));
-        var lagrange = -mc*(math.multiply(J,this._velocity)-1)*1.1;
+        var lagrange = -mc*(math.multiply(J,velocity)-1)*1.1;
 
         var Pc = math.multiply(math.transpose(J),lagrange);
 
-        var newVelocity : mathjs.Matrix = math.add(this._velocity, math.multiply(math.inv(this._M),Pc));
+        var newVelocity : mathjs.Matrix = math.add(velocity, math.multiply(math.inv(this._M),Pc));
 
         return newVelocity;
     }

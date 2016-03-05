@@ -18,23 +18,23 @@ class GroundPlane {
         var self = this;
         var loader = new THREE.OBJLoader();
         loader.load(
-            './models/ground_model4.obj',
+            './models/ground_model3.obj',
             function(object){
 
-                var textureLoader : THREE.TextureLoader = new THREE.TextureLoader();
-                textureLoader.load("./texture/sand.jpg", function(texture){
-                    console.log("success");
-
-                    //var material1 = new THREE.MeshBasicMaterial({map: texture});
-
+                //var textureLoader : THREE.TextureLoader = new THREE.TextureLoader();
+                //textureLoader.load("./texture/sand.jpg", function(texture){
+                //    console.log("success");
+                //
+                //    //var material1 = new THREE.MeshBasicMaterial({map: texture});
+                //
                     self._mesh = object;
-                    var material = new THREE.MeshPhongMaterial( {
-                        color: 0xFFFFFF,
-                        specular: 0xFFDDCC,
-                        shininess: 3,
-                        shading: THREE.SmoothShading,
-                        map: texture
-                    });
+                //    var material = new THREE.MeshPhongMaterial( {
+                //        color: 0xFFFFFF,
+                //        specular: 0xFFDDCC,
+                //        shininess: 3,
+                //        shading: THREE.SmoothShading,
+                //        map: texture
+                //    });
 
                     var material1 = new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true});
 
@@ -46,12 +46,12 @@ class GroundPlane {
                     } );
 
                     listener.planeLoaded(self);
-                });
+                //});
             },
             function ( xhr ) {
                 console.log( 'An error happened' );
             }
-        )
+        );
     }
 
     public addLoadedListener(listener : PlaneLoadedListener):void {

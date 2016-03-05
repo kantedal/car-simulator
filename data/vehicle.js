@@ -20,24 +20,19 @@ var Vehicle = (function () {
         this._acceleration = new THREE.Vector3(0, 0, 0);
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._isColliding = false;
-        this._vehicleGroup = new THREE.Group();
-        //this._vehicleBody = new DynamicRigidBody(new THREE.BoxGeometry( 6, 3, 8 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
+        this._vehicleBody = new DynamicRigidBody(new THREE.BoxGeometry(5, 2, 8), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }), renderer);
         //this._vehicleBody.position.set(0,30,0);
         this._vehicleSetup = new Car(this._renderer, this);
         //renderer.scene.add(this._vehicleBody.object);
     }
     Vehicle.prototype.update = function (time, delta) {
-        //this._vehicleSetup.update(time,delta);
+        this._vehicleSetup.update(time, delta);
         this._vehicleBody.update(time, delta);
-        for (var i = 0; i < this._vehicleSetup.wheels.length; i++) {
-            this._vehicleSetup.wheels[i].position.set(this.vehicleBody.vertexTracker.vertices[i].x, this.vehicleBody.vertexTracker.vertices[i].y, this.vehicleBody.vertexTracker.vertices[i].z);
-        }
-        this._acceleration = this._vehicleBody.acceleration;
         this._velocity = this._vehicleBody.velocity;
         this._isColliding = this._vehicleBody.isColliding;
-        this._renderer.camera.lookAt(this._vehicleBody.position);
-        this._renderer.camera.position.set(this._vehicleBody.position.x, this._vehicleBody.position.y + 10, this._vehicleBody.position.z + 15);
-        this._position.set(this._vehicleBody.position.x, this._vehicleBody.position.y, this._vehicleBody.position.z);
+        this._renderer.camera.lookAt(this._vehicleBody.object.position);
+        this._renderer.camera.position.set(this._vehicleBody.object.position.x, this._vehicleBody.object.position.y + 8, this._vehicleBody.object.position.z + 12);
+        this._position.set(this._vehicleBody.object.position.x, this._vehicleBody.object.position.y, this._vehicleBody.object.position.z);
     };
     Vehicle.prototype.connectCollisionSurface = function (groundPlanes) {
         var surfaceIndex = 0;

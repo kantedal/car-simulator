@@ -56,7 +56,9 @@ var VehicleSetup = (function () {
     VehicleSetup.prototype.update = function (time, delta) {
         if (this._wheels) {
             for (var i = 0; i < this._wheels.length; i++) {
+                this._wheels[i].isColliding = this.vehicle.vehicleBody.externalCollision[i];
                 this._wheels[i].update(time, delta);
+                this._wheels[i].object.position.set(this._wheels[i].object.position.x, this._wheels[i].object.position.y, this._wheels[i].object.position.z);
             }
         }
         if (this._springs) {
@@ -66,6 +68,14 @@ var VehicleSetup = (function () {
         }
         if (this._motor) {
             this._motor.update(time, delta);
+            //this._vehicle.vehicleBody.forceConstraints.valueOf()[0] = this._wheels[0].wheelDirection.x*this._motor.torque*13;
+            //this._vehicle.vehicleBody.forceConstraints.valueOf()[1] = this._wheels[0].wheelDirection.y*this._motor.torque*13;
+            //this._vehicle.vehicleBody.forceConstraints.valueOf()[2] = this._wheels[0].wheelDirection.z*this._motor.torque*13;
+            //this._vehicle.vehicleBody.forceConstraints.valueOf()[0] += -this._vehicle.vehicleBody.localZDirection.x*this._motor.torque*9;
+            //this._vehicle.vehicleBody.forceConstraints.valueOf()[1] += -this._vehicle.vehicleBody.localZDirection.y*this._motor.torque*9;
+            //this._vehicle.vehicleBody.forceConstraints.valueOf()[2] += -this._vehicle.vehicleBody.localZDirection.z*this._motor.torque*9;
+            // this._vehicle.vehicleBody.forceConstraints.valueOf()[3] = this._wheels[0].object.position.x*this._motor.torque*8;
+            this._vehicle.vehicleBody.forceConstraints.valueOf()[4] += this._steering.steeringAngle * this._motor.torque * 70;
         }
         if (this._steering) {
             this._steering.update(time, delta);

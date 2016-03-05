@@ -19,15 +19,14 @@ var DynamicRigidBody = (function (_super) {
     function DynamicRigidBody(geometry, material, renderer) {
         _super.call(this, geometry, material, renderer);
         this._dir = new THREE.Vector3(1, 0, 0);
-        this.xLim = [-4, 4];
+        this.xLim = [-2, 2];
         this.yLim = [-1, 1];
-        this.zLim = [-2, 2];
+        this.zLim = [-4, 4];
         this._renderer = renderer;
-        this._gravity = -9.82;
+        this._gravity = -9.82 * 1.7;
         this._mass = 500;
         this._frictionConst = 0.99;
         this.calculateInertiaTensor();
-        _super.prototype.trackVertices.call(this, 0);
         this._forceExternal = math.multiply(math.matrix([0, this._gravity, 0, 0, 0, 0]), this._mass);
         this._forceConstraints = math.matrix([0, 0, 0, 0, 0, 0]);
         this._forceTotal = math.add(this._forceExternal, this._forceConstraints);
@@ -35,29 +34,26 @@ var DynamicRigidBody = (function (_super) {
             [this._mass, 0, 0, 0, 0, 0],
             [0, this._mass, 0, 0, 0, 0],
             [0, 0, this._mass, 0, 0, 0],
-            [0, 0, 0, 500, 0, -40],
-            [0, 0, 0, 0, 500, 0],
-            [0, 0, 0, -40, 0, 500],
+            [0, 0, 0, 5000, 0, -400],
+            [0, 0, 0, 0, 5000, 0],
+            [0, 0, 0, -400, 0, 5000],
         ]);
-        this._M.subset(math.index(math.range(3, 6), math.range(3, 6)), math.multiply(this._inertiaTensor, 0.2));
+        this._M.subset(math.index(math.range(3, 6), math.range(3, 6)), math.multiply(this._inertiaTensor, 0.5));
         //console.log(this._M.valueOf());
-        this.velocity = math.transpose(math.matrix([0, 0, 0, 0, 0, 1]));
-        this.state = math.transpose(math.matrix([0, 20, 0, 0, 0, 0]));
-        //renderer.scene.add(this.object);
+        this.velocity = math.transpose(math.matrix([0, 0, 0, 0, 0, 0]));
+        this.state = math.transpose(math.matrix([0, 30, 0, 0, 0, 0]));
+        renderer.scene.add(this.object);
     }
     DynamicRigidBody.prototype.update = function (time, delta) {
         this._forceTotal = math.add(this._forceExternal, this._forceConstraints); //Combine external and constraint forces
         this.velocity = math.add(this._velocity, math.multiply(math.multiply(math.inv(this._M), this._forceTotal), delta));
         this.state = math.add(this._state, math.multiply(this._velocity, delta));
         this._forceConstraints = math.matrix([0, 0, 0, 0, 0, 0]);
-        _super.prototype.trackVertices.call(this, delta);
         _super.prototype.update.call(this, time, delta);
         var collisions = _super.prototype.checkCollisions.call(this);
         for (var colNum = 0; colNum < collisions.length; colNum++) {
             this.velocity = this.collision(collisions[colNum]);
         }
-        this.position.set(this._state.valueOf()[0], this._state.valueOf()[1], this._state.valueOf()[2]);
-        this.rotation.set(this._state.valueOf()[3], this._state.valueOf()[4], this._state.valueOf()[5]);
     };
     DynamicRigidBody.prototype.collision = function (collision) {
         var force_radius = math.matrix([collision[0], collision[1], collision[2]]);
@@ -72,7 +68,7 @@ var DynamicRigidBody = (function (_super) {
             math.cross(force_radius, normal).valueOf()[2]
         ]);
         var mc = 1 / math.multiply(math.multiply(J, math.inv(this._M)), math.transpose(J));
-        var lagrange = -mc * (math.multiply(J, this._velocity) - 0.8) * 1.1;
+        var lagrange = -mc * (math.multiply(J, this._velocity) - 1) * 1;
         var Pc = math.multiply(math.transpose(J), lagrange);
         var newVelocity = math.add(this._velocity, math.multiply(math.inv(this._M), Pc));
         return newVelocity;
@@ -145,9 +141,6 @@ var DynamicRigidBody = (function (_super) {
         get: function () {
             return this._frictionConst;
         },
-        set: function (value) {
-            this._frictionConst = value;
-        },
         enumerable: true,
         configurable: true
     });
@@ -155,8 +148,22 @@ var DynamicRigidBody = (function (_super) {
         get: function () {
             return this._forceExternal;
         },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DynamicRigidBody.prototype, "forceConstraints", {
+        get: function () {
+            return this._forceConstraints;
+        },
         set: function (value) {
-            this._forceExternal = value;
+            this._forceConstraints = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DynamicRigidBody.prototype, "M", {
+        get: function () {
+            return this._M;
         },
         enumerable: true,
         configurable: true

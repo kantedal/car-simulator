@@ -17,6 +17,7 @@ var Steering = (function () {
         this._steeringVelocity *= 0.7;
         this._steeringAngle += 0.03 * this._steeringVelocity;
         this._steeringAcceleration *= 0.5;
+        this._steeringAngle = Math.min(Math.PI / 4, Math.max(this._steeringAngle, -Math.PI / 4));
     };
     Object.defineProperty(Steering.prototype, "steeringAcceleration", {
         get: function () {
