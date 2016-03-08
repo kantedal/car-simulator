@@ -8,6 +8,7 @@
 class Spring {
     private _vehicle : Vehicle;
     private _renderer : Renderer;
+    private _object : THREE.Mesh;
     private _springGroup : THREE.Group;
     private _spring : THREE.Object3D;
     private _springMesh : THREE.Mesh;
@@ -17,31 +18,31 @@ class Spring {
     private _springDirection : THREE.Vector3;
     private _springArrow : THREE.ArrowHelper;
 
-    constructor(renderer: Renderer, vehicle: Vehicle, startRot: number){
-        this._vehicle = vehicle;
+    constructor(renderer: Renderer){
+        //this._vehicle = vehicle;
         this._renderer = renderer;
         this._springGroup = new THREE.Group();
-        this._springGroup.rotateZ(startRot);
+        //this._springGroup.rotateZ(startRot);
         this._springGroup.position.set(0,0,0);
 
         this._spring = new THREE.Object3D();
         this._spring.position.set(0,0,0);
         this._springGroup.add(this._spring);
 
-        this._wheelConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry( 0.5, 0.5, 0.5, 10 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
-        this._wheelConnectorMesh.position.set(0,0,0);
-        this._springGroup.add(this._wheelConnectorMesh);
+        //this._wheelConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry( 0.5, 0.5, 0.5, 10 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
+        //this._wheelConnectorMesh.position.set(0,0,0);
+        //this._springGroup.add(this._wheelConnectorMesh);
+        //
+        //this._carBodyConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry( 0.5, 0.5, 0.5, 10 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
+        //this._carBodyConnectorMesh.position.set(0,8,0);
+        //this._springGroup.add(this._carBodyConnectorMesh);
+        //
+        //this._springDirection = new THREE.Vector3(0,1,0);
+        //this._springArrow = new THREE.ArrowHelper( this._springDirection, new THREE.Vector3(0,0,0), 10, 0x00ffff );
 
-        this._carBodyConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry( 0.5, 0.5, 0.5, 10 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
-        this._carBodyConnectorMesh.position.set(0,8,0);
-        this._springGroup.add(this._carBodyConnectorMesh);
+        //this._vehicle.add(this._springGroup);
 
-        this._springDirection = new THREE.Vector3(0,1,0);
-        this._springArrow = new THREE.ArrowHelper( this._springDirection, new THREE.Vector3(0,0,0), 10, 0x00ffff );
-
-        this._vehicle.add(this._springGroup);
-
-        this.loadSpringModel();
+        //this.loadSpringModel();
     }
 
     private loadSpringModel():void {
@@ -64,23 +65,53 @@ class Spring {
         )
     }
 
-    private a:number = 0;
-    private v:number = 0;
-    private k:number = 10000;
-    private c:number = 1500;
-    public update(time:number, delta:number) {
-        if (this._springMesh) {
-            var dampConst = 5000;
+    private _linearSpringAcceleration:number = 0;
+    private _linearSpringVelocity:number = 0;
 
-            this.a = -(this._vehicle.acceleration.y/0.003+9.82) - (this.k*(this._carBodyConnectorMesh.position.y-4.5) + this.c*this.v)/500;
-            this._carBodyConnectorMesh.position.y += this.v*0.03;
-            this._spring.scale.y = this._carBodyConnectorMesh.position.y*0.35+0.2;
-            this.v += this.a*0.03;
-            //this._carBodyConnectorMesh.position.y = 8-(500*(this._car.force.y+9.82))/dampConst;
+    private _linearSpringConst:number = 16000;
+    private _linearDampingConst:number = 1200;
 
-        }
+    private _angularSpringAccelerationX:number = 0;
+    private _angularSpringVelocityX:number = 0;
+    private _angularSpringAccelerationY:number = 0;
+    private _angularSpringVelocityY:number = 0;
+    private _angularSpringAccelerationZ:number = 0;
+    private _angularSpringVelocityZ:number = 0;
+
+    private _angularSpringConst:number = 16000;
+    private _angularDampingConst:number = 1600;
+
+    public update(time:number, delta:number, state:mathjs.Matrix) {
+        this._linearSpringAcceleration = - (this._linearSpringConst*(state.valueOf()[1]-1) + this._linearDampingConst*this._linearSpringVelocity)/300;
+        this._linearSpringVelocity += this._linearSpringAcceleration*delta;
+
+        this._angularSpringAccelerationX = - (this._angularSpringConst*(state.valueOf()[3]) + this._angularDampingConst*this._angularSpringVelocityX)/1400;
+        this._angularSpringVelocityX += this._angularSpringAccelerationX*delta;
+
+        this._angularSpringAccelerationY = - (this._angularSpringConst*(state.valueOf()[4]) + this._angularDampingConst*this._angularSpringVelocityY)/800;
+        this._angularSpringVelocityY += this._angularSpringAccelerationY*delta;
+
+        this._angularSpringAccelerationZ = - (this._angularSpringConst*(state.valueOf()[5]) + this._angularDampingConst*this._angularSpringVelocityZ)/800;
+        this._angularSpringVelocityZ += this._angularSpringAccelerationZ*delta;
     }
 
+    get linearSpringAcceleration():number {
+        return this._linearSpringAcceleration;
+    }
+
+    get linearSpringVelocity():number {
+        return this._linearSpringVelocity;
+    }
+
+    get angularSpringVelocityZ():number {
+        return this._angularSpringVelocityZ;
+    }
+    get angularSpringVelocityY():number {
+        return this._angularSpringVelocityY;
+    }
+    get angularSpringVelocityX():number {
+        return this._angularSpringVelocityX;
+    }
 
     get position():THREE.Vector3 {
         return this._springGroup.position;

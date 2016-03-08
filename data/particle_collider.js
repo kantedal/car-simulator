@@ -74,6 +74,34 @@ var ParticleCollider = (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(ParticleCollider.prototype, "forceTotal", {
+        get: function () {
+            return this._forceTotal;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ParticleCollider.prototype, "forceExternal", {
+        get: function () {
+            return this._forceExternal;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ParticleCollider.prototype, "forceConstraints", {
+        get: function () {
+            return this._forceConstraints;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ParticleCollider.prototype, "M", {
+        get: function () {
+            return this._M;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return ParticleCollider;
 })(PhysicsObject3d);
 //# sourceMappingURL=particle_collider.js.map

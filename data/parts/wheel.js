@@ -13,22 +13,34 @@ var __extends = (this && this.__extends) || function (d, b) {
 ///<reference path="../particle_collider.ts"/>
 var Wheel = (function (_super) {
     __extends(Wheel, _super);
-    function Wheel(renderer) {
-        _super.call(this, new THREE.CylinderGeometry(1.5, 1.5, 0.5), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }), renderer);
+    function Wheel(renderer, pos) {
+        _super.call(this, new THREE.CylinderGeometry(1.6, 1.6, 0.9), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }), renderer);
         this._wheelRotation = 0;
         this._isColliding = false;
         this._wheelDirection = new THREE.Vector3(0, 0, -1);
+        this._relativeVelocity = math.matrix([0, 0, 0, 0, 0, 0]);
+        this.velocity = math.matrix([0, 0, 0, 0, 0, 0]);
+        this.state = math.matrix([pos.x, pos.y, pos.z, 0, 0, 0]);
+        this.object.position.set(pos.x, pos.y, pos.z);
         //this._testArrow = new THREE.ArrowHelper(new THREE.Vector3(0,1,0), new THREE.Vector3(0,0,0), 4, 0xff0000);
         renderer.scene.add(this._testArrow);
     }
     Wheel.prototype.update = function (time, delta) {
         //super.update(time,delta);
+        if (!this.isColliding) {
+            //this._forceTotal = math.add(this.forceExternal, this.forceConstraints); //Combine external and constraint forces
+            //this.velocity = math.add(this.velocity, math.multiply(math.multiply(math.inv(this.M), this.forceTotal), delta));
+            //this._relativeVelocity = math.subtract(this.velocity, this._connectedVehicle.vehicleModel.velocity);
+            this.state = math.add(this.state, math.multiply(this._relativeVelocity, delta));
+        }
+        this._forceConstraints = math.matrix([0, 0, 0, 0, 0, 0]);
+        this.object.position.set(this.object.position.x, this.state.valueOf()[1], this.object.position.z);
         if (this._connectedVehicle) {
-            this._wheelDirection = this._connectedVehicle.vehicleBody.localZDirection.clone().multiplyScalar(-1);
+            this._wheelDirection = this._connectedVehicle.vehicleModel.localZDirection.clone().multiplyScalar(-1);
             if (this._connectedSteering) {
-                this._wheelDirection.applyAxisAngle(this._connectedVehicle.vehicleBody.localYDirection, this._connectedSteering.steeringAngle);
+                this._wheelDirection.applyAxisAngle(this._connectedVehicle.vehicleModel.localYDirection, this._connectedSteering.steeringAngle);
             }
-            var wheelRotation = -this._connectedVehicle.vehicleBody.velocityDirection.clone().dot(this._wheelDirection);
+            var wheelRotation = -this._connectedVehicle.vehicleModel.velocityDirection.clone().dot(this._wheelDirection);
             this.object.geometry.rotateX(wheelRotation * 0.015);
             if (this.isColliding) {
                 this.friction();
@@ -44,15 +56,15 @@ var Wheel = (function (_super) {
         }
     };
     Wheel.prototype.addMotorForce = function () {
-        var position = this.object.position.clone().applyQuaternion(this._connectedVehicle.vehicleBody.object.quaternion);
+        var position = this.object.position.clone().applyQuaternion(this._connectedVehicle.vehicleModel.object.quaternion);
         var force_radius = math.add(math.matrix([position.x, position.y, position.z]), math.multiply(math.matrix([
-            this._connectedVehicle.vehicleBody.localYDirection.x,
-            this._connectedVehicle.vehicleBody.localYDirection.y,
-            this._connectedVehicle.vehicleBody.localYDirection.z
+            this._connectedVehicle.vehicleModel.localYDirection.x,
+            this._connectedVehicle.vehicleModel.localYDirection.y,
+            this._connectedVehicle.vehicleModel.localYDirection.z
         ]), 1));
         force_radius = math.matrix([position.x, position.y, position.z]);
         force_radius = math.matrix([0, 0, -1]);
-        //var forceComp =  math.dot(this._connectedVehicle.vehicleBody.forceTotal, )
+        //var forceComp =  math.dot(this._connectedVehicle.vehicleModel.forceTotal, )
         var force = math.multiply(math.matrix([this._wheelDirection.x, this._wheelDirection.y, this._wheelDirection.z]), this._connectedMotor.torque);
         var J = math.matrix([
             force.valueOf()[0],
@@ -62,28 +74,28 @@ var Wheel = (function (_super) {
             math.cross(force_radius, force).valueOf()[1],
             math.cross(force_radius, force).valueOf()[2]
         ]);
-        var mc = 1 / math.multiply(math.multiply(J, math.inv(this._connectedVehicle.vehicleBody.M)), math.transpose(J));
+        var mc = 1 / math.multiply(math.multiply(J, math.inv(this._connectedVehicle.vehicleModel.M)), math.transpose(J));
         var lagrange = mc * (math.multiply(J, math.matrix([
             this._wheelDirection.x,
             this._wheelDirection.y,
             this._wheelDirection.z,
-            0, 0, 0]))) * 16;
+            0, 0, 0]))) * 12;
         var Fc = math.multiply(math.transpose(J), lagrange);
-        this._connectedVehicle.vehicleBody.forceConstraints = math.add(this._connectedVehicle.vehicleBody.forceConstraints, Fc);
+        this._connectedVehicle.vehicleModel.forceConstraints = math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
     };
     Wheel.prototype.friction = function () {
-        var position = this.object.position.clone().applyQuaternion(this._connectedVehicle.vehicleBody.object.quaternion);
-        var rotation = new THREE.Vector3(this._connectedVehicle.vehicleBody.velocity.valueOf()[3], this._connectedVehicle.vehicleBody.velocity.valueOf()[4], this._connectedVehicle.vehicleBody.velocity.valueOf()[5]);
+        var position = this.object.position.clone().applyQuaternion(this._connectedVehicle.vehicleModel.object.quaternion);
+        var rotation = new THREE.Vector3(this._connectedVehicle.vehicleModel.velocity.valueOf()[3], this._connectedVehicle.vehicleModel.velocity.valueOf()[4], this._connectedVehicle.vehicleModel.velocity.valueOf()[5]);
         var force_radius = math.matrix([
             position.x,
             position.y,
             position.z
         ]);
-        var vel = this._connectedVehicle.vehicleBody.velocityDirection.clone();
-        var forceComp1 = this._wheelDirection.clone().applyAxisAngle(this._connectedVehicle.vehicleBody.localYDirection, -Math.PI / 2);
-        if (vel.clone().add(rotation.clone().multiplyScalar(rotation.length())).normalize().angleTo(forceComp1) > Math.PI / 2)
+        var vel = this._connectedVehicle.vehicleModel.velocityDirection.clone().add(rotation.clone().multiplyScalar(position.length()));
+        var forceComp1 = this._connectedVehicle.vehicleModel.localZDirection.clone().applyAxisAngle(this._connectedVehicle.vehicleModel.localYDirection, -Math.PI / 2);
+        if (vel.clone().normalize().angleTo(forceComp1) > Math.PI / 2)
             forceComp1.multiplyScalar(-1);
-        forceComp1 = forceComp1.multiplyScalar(Math.abs(vel.dot(forceComp1)) * 50);
+        forceComp1 = forceComp1.multiplyScalar(Math.abs(vel.dot(forceComp1)) * 20);
         var totalForce = math.matrix([
             forceComp1.x,
             forceComp1.y,
@@ -98,14 +110,15 @@ var Wheel = (function (_super) {
                 math.cross(force_radius, totalForce).valueOf()[1],
                 math.cross(force_radius, totalForce).valueOf()[2]
             ]);
-            var mc = 1 / math.multiply(math.multiply(J, math.inv(this._connectedVehicle.vehicleBody.M)), math.transpose(J));
+            var mc = 1 / math.multiply(math.multiply(J, math.inv(this._connectedVehicle.vehicleModel.M)), math.transpose(J));
             var lagrange = -mc * (math.multiply(J, this._connectedVehicle.velocity));
             var Fc = math.multiply(math.transpose(J), lagrange);
-            this._connectedVehicle.vehicleBody.forceConstraints = math.add(this._connectedVehicle.vehicleBody.forceConstraints, Fc);
+            this._connectedVehicle.vehicleModel.forceConstraints = math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
         }
-        this._connectedVehicle.vehicleBody.velocity.valueOf()[0] *= 0.99;
-        this._connectedVehicle.vehicleBody.velocity.valueOf()[1] *= 0.99;
-        this._connectedVehicle.vehicleBody.velocity.valueOf()[2] *= 0.99;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[0] *= 0.99;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[1] *= 0.99;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[2] *= 0.99;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[4] *= 0.99;
     };
     Wheel.prototype.connectVehicle = function (vehicle) {
         this._connectedVehicle = vehicle;

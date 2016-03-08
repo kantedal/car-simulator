@@ -93,4 +93,20 @@ class ParticleCollider extends PhysicsObject3d {
     set isColliding(value:boolean) {
         this._isColliding = value;
     }
+
+    get forceTotal():mathjs.Matrix {
+        return this._forceTotal;
+    }
+    get forceExternal():mathjs.Matrix {
+        return this._forceExternal;
+    }
+
+    get forceConstraints():mathjs.Matrix {
+        return this._forceConstraints;
+    }
+
+    get M():mathjs.Matrix {
+        return this._M;
+    }
+
 }

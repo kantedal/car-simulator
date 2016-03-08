@@ -22,9 +22,8 @@ class Vehicle {
     private _velocity:THREE.Vector3;
     private _isColliding:boolean;
 
-    private _vehicleGroup : THREE.Group;
     private _vehicleSetup : VehicleSetup;
-    private _vehicleBody : DynamicRigidBody;
+    private _vehicleModel : DynamicRigidBody;
 
     constructor(renderer : Renderer){
         this._renderer = renderer;
@@ -35,24 +34,31 @@ class Vehicle {
         this._velocity = new THREE.Vector3(0,0,0);
         this._isColliding = false;
 
-        this._vehicleBody = new DynamicRigidBody(new THREE.BoxGeometry( 5, 2, 8 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
-        //this._vehicleBody.position.set(0,30,0);
+        this._vehicleModel = new DynamicRigidBody(new THREE.BoxGeometry( 0, 0, 0 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), renderer);
+        //this._vehicleModel.position.set(0,30,0);
 
         this._vehicleSetup = new Car(this._renderer, this);
 
-        //renderer.scene.add(this._vehicleBody.object);
+        //renderer.scene.add(this._vehicleModel.object);
     }
 
     public update(time:number, delta:number):void {
         this._vehicleSetup.update(time,delta);
-        this._vehicleBody.update(time,delta);
+        this._vehicleModel.update(time,delta);
 
-        this._velocity = this._vehicleBody.velocity;
-        this._isColliding = this._vehicleBody.isColliding;
+        this._velocity = this._vehicleModel.velocity;
+        this._isColliding = this._vehicleModel.isColliding;
 
-        this._renderer.camera.lookAt(this._vehicleBody.object.position);
-        this._renderer.camera.position.set(this._vehicleBody.object.position.x, this._vehicleBody.object.position.y+8, this._vehicleBody.object.position.z+12);
-        this._position.set(this._vehicleBody.object.position.x, this._vehicleBody.object.position.y, this._vehicleBody.object.position.z);
+        this._renderer.camera.lookAt(this._vehicleModel.object.position);
+        this._renderer.camera.position.set(this._vehicleModel.object.position.x, this._vehicleModel.object.position.y+8, this._vehicleModel.object.position.z+12);
+        this._position.set(this._vehicleModel.object.position.x, this._vehicleModel.object.position.y, this._vehicleModel.object.position.z);
+
+        //this._vehicleSetup.vehicleBody.object.position.setY(Math.sin(time*3));
+        for(var colNum=0; colNum<this._vehicleModel.collisions.length; colNum++){
+            this._vehicleSetup.vehicleBody.collision(this._vehicleModel.collisions[colNum]);
+        }
+
+        this._vehicleSetup.vehicleBody.update(time,delta);
     }
 
     public connectCollisionSurface(groundPlanes: GroundPlane[]): number{
@@ -61,7 +67,7 @@ class Vehicle {
             for(var i=0; i<this._vehicleSetup.wheels.length; i++) {
                 if(Math.abs(this._vehicleSetup.wheels[i].position.x - groundPlanes[g].mesh.position.x) < CarSimulator.ground_width/2 && Math.abs(this._vehicleSetup.wheels[i].position.z - groundPlanes[g].mesh.position.z) < CarSimulator.ground_width/2) {
                     //this._vehicleSetup.wheels[i].connectCollisionSurface(groundPlanes[g].geometry);
-                    this._vehicleBody.connectCollisionSurface(groundPlanes[g].geometry);
+                    this._vehicleModel.connectCollisionSurface(groundPlanes[g].geometry);
                     surfaceIndex = g;
                     break;
                 }
@@ -71,7 +77,7 @@ class Vehicle {
     }
 
     public add(object){
-        this._vehicleBody.object.add(object);
+        this._vehicleModel.object.add(object);
     }
 
     get position():THREE.Vector3 {
@@ -122,11 +128,11 @@ class Vehicle {
         this._vehicleSetup = value;
     }
 
-    get vehicleBody():DynamicRigidBody {
-        return this._vehicleBody;
+    get vehicleModel():DynamicRigidBody {
+        return this._vehicleModel;
     }
 
-    set vehicleBody(value:DynamicRigidBody) {
-        this._vehicleBody = value;
+    set vehicleModel(value:DynamicRigidBody) {
+        this._vehicleModel = value;
     }
 }

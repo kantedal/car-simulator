@@ -4,29 +4,39 @@
 ///<reference path="../../renderer.ts"/>
 ///<reference path="../vehicle.ts"/>
 var Spring = (function () {
-    function Spring(renderer, vehicle, startRot) {
-        this.a = 0;
-        this.v = 0;
-        this.k = 10000;
-        this.c = 1500;
-        this._vehicle = vehicle;
+    function Spring(renderer) {
+        this._linearSpringAcceleration = 0;
+        this._linearSpringVelocity = 0;
+        this._linearSpringConst = 16000;
+        this._linearDampingConst = 1200;
+        this._angularSpringAccelerationX = 0;
+        this._angularSpringVelocityX = 0;
+        this._angularSpringAccelerationY = 0;
+        this._angularSpringVelocityY = 0;
+        this._angularSpringAccelerationZ = 0;
+        this._angularSpringVelocityZ = 0;
+        this._angularSpringConst = 16000;
+        this._angularDampingConst = 1600;
+        //this._vehicle = vehicle;
         this._renderer = renderer;
         this._springGroup = new THREE.Group();
-        this._springGroup.rotateZ(startRot);
+        //this._springGroup.rotateZ(startRot);
         this._springGroup.position.set(0, 0, 0);
         this._spring = new THREE.Object3D();
         this._spring.position.set(0, 0, 0);
         this._springGroup.add(this._spring);
-        this._wheelConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.5, 10), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }));
-        this._wheelConnectorMesh.position.set(0, 0, 0);
-        this._springGroup.add(this._wheelConnectorMesh);
-        this._carBodyConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.5, 10), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }));
-        this._carBodyConnectorMesh.position.set(0, 8, 0);
-        this._springGroup.add(this._carBodyConnectorMesh);
-        this._springDirection = new THREE.Vector3(0, 1, 0);
-        this._springArrow = new THREE.ArrowHelper(this._springDirection, new THREE.Vector3(0, 0, 0), 10, 0x00ffff);
-        this._vehicle.add(this._springGroup);
-        this.loadSpringModel();
+        //this._wheelConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry( 0.5, 0.5, 0.5, 10 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
+        //this._wheelConnectorMesh.position.set(0,0,0);
+        //this._springGroup.add(this._wheelConnectorMesh);
+        //
+        //this._carBodyConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry( 0.5, 0.5, 0.5, 10 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
+        //this._carBodyConnectorMesh.position.set(0,8,0);
+        //this._springGroup.add(this._carBodyConnectorMesh);
+        //
+        //this._springDirection = new THREE.Vector3(0,1,0);
+        //this._springArrow = new THREE.ArrowHelper( this._springDirection, new THREE.Vector3(0,0,0), 10, 0x00ffff );
+        //this._vehicle.add(this._springGroup);
+        //this.loadSpringModel();
     }
     Spring.prototype.loadSpringModel = function () {
         var self = this;
@@ -42,15 +52,51 @@ var Spring = (function () {
             console.log('An error happened');
         });
     };
-    Spring.prototype.update = function (time, delta) {
-        if (this._springMesh) {
-            var dampConst = 5000;
-            this.a = -(this._vehicle.acceleration.y / 0.003 + 9.82) - (this.k * (this._carBodyConnectorMesh.position.y - 4.5) + this.c * this.v) / 500;
-            this._carBodyConnectorMesh.position.y += this.v * 0.03;
-            this._spring.scale.y = this._carBodyConnectorMesh.position.y * 0.35 + 0.2;
-            this.v += this.a * 0.03;
-        }
+    Spring.prototype.update = function (time, delta, state) {
+        this._linearSpringAcceleration = -(this._linearSpringConst * (state.valueOf()[1] - 1) + this._linearDampingConst * this._linearSpringVelocity) / 300;
+        this._linearSpringVelocity += this._linearSpringAcceleration * delta;
+        this._angularSpringAccelerationX = -(this._angularSpringConst * (state.valueOf()[3]) + this._angularDampingConst * this._angularSpringVelocityX) / 1400;
+        this._angularSpringVelocityX += this._angularSpringAccelerationX * delta;
+        this._angularSpringAccelerationY = -(this._angularSpringConst * (state.valueOf()[4]) + this._angularDampingConst * this._angularSpringVelocityY) / 800;
+        this._angularSpringVelocityY += this._angularSpringAccelerationY * delta;
+        this._angularSpringAccelerationZ = -(this._angularSpringConst * (state.valueOf()[5]) + this._angularDampingConst * this._angularSpringVelocityZ) / 800;
+        this._angularSpringVelocityZ += this._angularSpringAccelerationZ * delta;
     };
+    Object.defineProperty(Spring.prototype, "linearSpringAcceleration", {
+        get: function () {
+            return this._linearSpringAcceleration;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "linearSpringVelocity", {
+        get: function () {
+            return this._linearSpringVelocity;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "angularSpringVelocityZ", {
+        get: function () {
+            return this._angularSpringVelocityZ;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "angularSpringVelocityY", {
+        get: function () {
+            return this._angularSpringVelocityY;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "angularSpringVelocityX", {
+        get: function () {
+            return this._angularSpringVelocityX;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Spring.prototype, "position", {
         get: function () {
             return this._springGroup.position;

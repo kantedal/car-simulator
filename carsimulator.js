@@ -66,10 +66,10 @@ var CarSimulator = (function () {
                 self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length - 1].mesh);
                 //self._car.connectCollisionSurface(self._groundPlanes);
                 //self._dynamicBody.connectCollisionSurface(self._groundPlanes[0].geometry);
-                //self._car.vehicleBody.connectCollisionSurface(self._groundPlanes[0].geometry);
-                self._car.vehicleBody.connectCollisionSurfaces(self._groundPlanes);
-                self._car.vehicleBody.setCollisionSurfaceIndices([0]);
-                //self._car.vehicleBody.connectCollisionScene(self._collisionScene);
+                //self._car.vehicleModel.connectCollisionSurface(self._groundPlanes[0].geometry);
+                self._car.vehicleModel.connectCollisionSurfaces(self._groundPlanes);
+                self._car.vehicleModel.setCollisionSurfaceIndices([0]);
+                //self._car.vehicleModel.connectCollisionScene(self._collisionScene);
             }
         };
         ground_plane.loadPlane(groundCallback, this._renderer);

@@ -11,6 +11,9 @@
 ///<reference path="./parts/wheel.ts"/>
 
 class DynamicRigidBody extends PhysicsObject3d {
+    get collisions():number[][] {
+        return this._collisions;
+    }
     private _gravity : number;
     private _mass : number;
     private _frictionConst : number;
@@ -23,14 +26,16 @@ class DynamicRigidBody extends PhysicsObject3d {
     private _forceTotal : mathjs.Matrix;
 
     public _dir : THREE.Vector3 = new THREE.Vector3(1,0,0);
+    private _collisions : number[][];
 
     constructor(geometry: THREE.Geometry, material: THREE.Material, renderer: Renderer){
         super(geometry, material, renderer);
         this._renderer = renderer;
 
-        this._gravity = -9.82*1.5;
+        this._gravity = -9.82*1.7;
         this._mass = 500;
         this._frictionConst = 0.99;
+        this._collisions = [];
 
         this.calculateInertiaTensor();
 
@@ -62,21 +67,18 @@ class DynamicRigidBody extends PhysicsObject3d {
 
         this._forceConstraints = math.matrix([0,0,0,0,0,0]);
 
-
         super.update(time,delta);
         //var collisions = super.checkCollisions();
-        var collisions = super.newCheckCollisions();
+        this._collisions = super.newCheckCollisions();
 
-        for(var colNum=0; colNum<collisions.length; colNum++){
-            this.velocity = this.collision(collisions[colNum]);
-            //this.friction(collisions[colNum]);
+        for(var colNum=0; colNum<this._collisions.length; colNum++){
+            this.velocity = this.collision(this._collisions[colNum]);;
         }
     }
 
     public collision(collision:number[]):mathjs.Matrix {
         var force_radius = math.matrix([collision[0], collision[1], collision[2]]);
         var normal = math.matrix([collision[3], collision[4], collision[5]]);
-
 
         var rotComponent = math.cross(force_radius,normal);
         var J = math.matrix([

@@ -8,6 +8,7 @@
 ///<reference path="./parts/spring.ts"/>
 ///<reference path="./parts/steering.ts"/>
 ///<reference path="./vehicle.ts"/>
+///<reference path="./relative_dynamic_body.ts"/>
 var VehicleSetup = (function () {
     function VehicleSetup(renderer, vehicle) {
         var _this = this;
@@ -56,9 +57,8 @@ var VehicleSetup = (function () {
     VehicleSetup.prototype.update = function (time, delta) {
         if (this._wheels) {
             for (var i = 0; i < this._wheels.length; i++) {
-                this._wheels[i].isColliding = this.vehicle.vehicleBody.externalCollision[i];
+                this._wheels[i].isColliding = this.vehicle.vehicleModel.externalCollision[i];
                 this._wheels[i].update(time, delta);
-                this._wheels[i].object.position.set(this._wheels[i].object.position.x, this._wheels[i].object.position.y, this._wheels[i].object.position.z);
             }
         }
         if (this._springs) {
@@ -68,8 +68,9 @@ var VehicleSetup = (function () {
         }
         if (this._motor) {
             this._motor.update(time, delta);
-            this._vehicle.vehicleBody.forceConstraints.valueOf()[4] += this._steering.steeringAngle * this._motor.torque * 6;
-            this._steering.steeringAngle *= 0.999;
+            if (Math.abs(this._vehicle.vehicleModel.velocity.valueOf()[4]) < 1.5)
+                this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle * this._motor.torque * 90;
+            this._steering.steeringAngle *= 0.98;
         }
         if (this._steering) {
             this._steering.update(time, delta);
@@ -131,6 +132,16 @@ var VehicleSetup = (function () {
         },
         set: function (value) {
             this._renderer = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VehicleSetup.prototype, "vehicleBody", {
+        get: function () {
+            return this._vehicleBody;
+        },
+        set: function (value) {
+            this._vehicleBody = value;
         },
         enumerable: true,
         configurable: true

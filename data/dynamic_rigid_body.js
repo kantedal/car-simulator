@@ -23,9 +23,10 @@ var DynamicRigidBody = (function (_super) {
         this.yLim = [-1, 1];
         this.zLim = [-4, 4];
         this._renderer = renderer;
-        this._gravity = -9.82 * 1.5;
+        this._gravity = -9.82 * 1.7;
         this._mass = 500;
         this._frictionConst = 0.99;
+        this._collisions = [];
         this.calculateInertiaTensor();
         this._forceExternal = math.multiply(math.matrix([0, this._gravity, 0, 0, 0, 0]), this._mass);
         this._forceConstraints = math.matrix([0, 0, 0, 0, 0, 0]);
@@ -44,6 +45,13 @@ var DynamicRigidBody = (function (_super) {
         this.state = math.transpose(math.matrix([0, 30, 0, 0, 0, 0]));
         renderer.scene.add(this.object);
     }
+    Object.defineProperty(DynamicRigidBody.prototype, "collisions", {
+        get: function () {
+            return this._collisions;
+        },
+        enumerable: true,
+        configurable: true
+    });
     DynamicRigidBody.prototype.update = function (time, delta) {
         this._forceTotal = math.add(this._forceExternal, this._forceConstraints); //Combine external and constraint forces
         this.velocity = math.add(this._velocity, math.multiply(math.multiply(math.inv(this._M), this._forceTotal), delta));
@@ -51,9 +59,10 @@ var DynamicRigidBody = (function (_super) {
         this._forceConstraints = math.matrix([0, 0, 0, 0, 0, 0]);
         _super.prototype.update.call(this, time, delta);
         //var collisions = super.checkCollisions();
-        var collisions = _super.prototype.newCheckCollisions.call(this);
-        for (var colNum = 0; colNum < collisions.length; colNum++) {
-            this.velocity = this.collision(collisions[colNum]);
+        this._collisions = _super.prototype.newCheckCollisions.call(this);
+        for (var colNum = 0; colNum < this._collisions.length; colNum++) {
+            this.velocity = this.collision(this._collisions[colNum]);
+            ;
         }
     };
     DynamicRigidBody.prototype.collision = function (collision) {
