@@ -23,7 +23,7 @@ var DynamicRigidBody = (function (_super) {
         this.yLim = [-1, 1];
         this.zLim = [-4, 4];
         this._renderer = renderer;
-        this._gravity = -9.82 * 1.7;
+        this._gravity = -9.82 * 1.5;
         this._mass = 500;
         this._frictionConst = 0.99;
         this.calculateInertiaTensor();
@@ -38,7 +38,7 @@ var DynamicRigidBody = (function (_super) {
             [0, 0, 0, 0, 5000, 0],
             [0, 0, 0, -400, 0, 5000],
         ]);
-        this._M.subset(math.index(math.range(3, 6), math.range(3, 6)), math.multiply(this._inertiaTensor, 0.5));
+        this._M.subset(math.index(math.range(3, 6), math.range(3, 6)), math.multiply(this._inertiaTensor, 1));
         //console.log(this._M.valueOf());
         this.velocity = math.transpose(math.matrix([0, 0, 0, 0, 0, 0]));
         this.state = math.transpose(math.matrix([0, 30, 0, 0, 0, 0]));
@@ -50,7 +50,8 @@ var DynamicRigidBody = (function (_super) {
         this.state = math.add(this._state, math.multiply(this._velocity, delta));
         this._forceConstraints = math.matrix([0, 0, 0, 0, 0, 0]);
         _super.prototype.update.call(this, time, delta);
-        var collisions = _super.prototype.checkCollisions.call(this);
+        //var collisions = super.checkCollisions();
+        var collisions = _super.prototype.newCheckCollisions.call(this);
         for (var colNum = 0; colNum < collisions.length; colNum++) {
             this.velocity = this.collision(collisions[colNum]);
         }
@@ -58,34 +59,20 @@ var DynamicRigidBody = (function (_super) {
     DynamicRigidBody.prototype.collision = function (collision) {
         var force_radius = math.matrix([collision[0], collision[1], collision[2]]);
         var normal = math.matrix([collision[3], collision[4], collision[5]]);
-        var penetration = collision[1];
+        var rotComponent = math.cross(force_radius, normal);
         var J = math.matrix([
             normal.valueOf()[0],
             normal.valueOf()[1],
             normal.valueOf()[2],
-            math.cross(force_radius, normal).valueOf()[0],
-            math.cross(force_radius, normal).valueOf()[1],
-            math.cross(force_radius, normal).valueOf()[2]
+            rotComponent.valueOf()[0],
+            rotComponent.valueOf()[1],
+            rotComponent.valueOf()[2]
         ]);
         var mc = 1 / math.multiply(math.multiply(J, math.inv(this._M)), math.transpose(J));
-        var lagrange = -mc * (math.multiply(J, this._velocity) - 1) * 1;
+        var lagrange = -mc * (math.multiply(J, this._velocity) - 0.7) * 1;
         var Pc = math.multiply(math.transpose(J), lagrange);
         var newVelocity = math.add(this._velocity, math.multiply(math.inv(this._M), Pc));
         return newVelocity;
-    };
-    DynamicRigidBody.prototype.friction = function (collision) {
-        var force_radius = math.matrix([collision[0], collision[1], collision[2]]);
-        var normal = math.matrix([collision[3], collision[4], collision[5]]);
-        var J = math.matrix([
-            -this.velocity.valueOf()[0],
-            -this.velocity.valueOf()[1],
-            -this.velocity.valueOf()[2],
-            0, 0, 0
-        ]);
-        J.subset(math.index(3), -math.cross(force_radius, normal).valueOf()[0]);
-        J.subset(math.index(4), -math.cross(force_radius, normal).valueOf()[1]);
-        J.subset(math.index(5), -math.cross(force_radius, normal).valueOf()[2]);
-        this.velocity = math.add(this.velocity, math.multiply(J, 0.01));
     };
     DynamicRigidBody.prototype.calculateInertiaTensor = function () {
         var dV = 0.1 * 0.1;
@@ -164,6 +151,13 @@ var DynamicRigidBody = (function (_super) {
     Object.defineProperty(DynamicRigidBody.prototype, "M", {
         get: function () {
             return this._M;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DynamicRigidBody.prototype, "forceTotal", {
+        get: function () {
+            return this._forceTotal;
         },
         enumerable: true,
         configurable: true

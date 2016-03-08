@@ -9,6 +9,7 @@ var PhysicsObject3d = (function () {
         this._isColliding = false;
         this._surfaceDistance = 0;
         this._lastSurfaceIndex = 0;
+        this._collisionRaycaster = THREE.Raycaster;
         this._velocity = math.transpose(math.matrix([1, 20, 0, 0, 0, 0]));
         this._state = math.transpose(math.matrix([0, 40, 0, 0, 0, Math.PI / 4]));
         this._renderer = renderer;
@@ -17,6 +18,7 @@ var PhysicsObject3d = (function () {
         this._object = new THREE.Mesh(this._geometry, this._material);
         this._collisionSurfaceIndices = [];
         this._collisionSurfaces = [];
+        this._collisionRaycaster = new THREE.Raycaster();
         this._collisionPosition = new THREE.Vector3(0, 0, 0);
         this._desiredDirection = new THREE.Vector3(0, 0, 0);
         this._normalDirection = new THREE.Vector3(0, 0, 0);
@@ -80,7 +82,7 @@ var PhysicsObject3d = (function () {
         this._localXDirectionArrow.position.set(this.object.position.x, this.object.position.y, this.object.position.z);
         this._localYDirectionArrow.position.set(this.object.position.x, this.object.position.y, this.object.position.z);
         this._localZDirectionArrow.position.set(this.object.position.x, this.object.position.y, this.object.position.z);
-        this.setCollisionSurfaceIndices();
+        //this.setCollisionSurfaceIndices();
     };
     PhysicsObject3d.prototype.rotateAroundWorldAxis = function (object, axis, radians) {
         var rotationMatrix = new THREE.Matrix4();
@@ -98,12 +100,16 @@ var PhysicsObject3d = (function () {
     };
     PhysicsObject3d.prototype.connectCollisionSurfaces = function (surfaces) {
         this._collisionSurfaces = surfaces;
+        this._collisionMeshes = [];
+        for (var i = 0; i < surfaces.length; i++) {
+            this._collisionMeshes.push(this._collisionSurfaces[i].mesh);
+        }
     };
     PhysicsObject3d.prototype.setCollisionSurfaceIndices = function () {
         this._collisionSurfaceIndices = [];
         for (var g = 0; g < this._collisionSurfaces.length; g++) {
-            for (var i = 0; i < this._collisionPoints.length - 1; i++) {
-                if (Math.abs(this._collisionPoints[i].position.x - this._collisionSurfaces[g].mesh.position.x) < CarSimulator.ground_width / 2 && Math.abs(this._collisionPoints[i].position.z - this._collisionSurfaces[g].mesh.position.z) < CarSimulator.ground_width / 2) {
+            for (var i = 0; i < this._externalCollisionPoints.length - 1; i++) {
+                if (Math.abs(this._externalCollisionPoints[i].position.x - this._collisionSurfaces[g].mesh.position.x) < CarSimulator.ground_width / 2 && Math.abs(this._externalCollisionPoints[i].position.z - this._collisionSurfaces[g].mesh.position.z) < CarSimulator.ground_width / 2) {
                     this._collisionSurfaceIndices.push(g);
                     break;
                 }
@@ -120,7 +126,6 @@ var PhysicsObject3d = (function () {
                     for (var i = 0; i < this._collisionSurfaces.length; i++) {
                         if (this._collisionSurfaces[i].mesh.position.x > oldSurfacePos.x) {
                             this._collisionSurfaces[i].mesh.position.set(this._collisionSurfaces[i].mesh.position.x - CarSimulator.ground_width * 3, this._collisionSurfaces[i].mesh.position.y, this._collisionSurfaces[i].mesh.position.z);
-                            this._collisionSurfaces[i].geometry.translate(-CarSimulator.ground_width * 3, 0, 0);
                         }
                     }
                 }
@@ -128,23 +133,20 @@ var PhysicsObject3d = (function () {
                     for (var i = 0; i < this._collisionSurfaces.length; i++) {
                         if (this._collisionSurfaces[i].mesh.position.x < oldSurfacePos.x) {
                             this._collisionSurfaces[i].mesh.position.set(this._collisionSurfaces[i].mesh.position.x + CarSimulator.ground_width * 3, this._collisionSurfaces[i].mesh.position.y, this._collisionSurfaces[i].mesh.position.z);
-                            this._collisionSurfaces[i].geometry.translate(CarSimulator.ground_width * 3, 0, 0);
                         }
                     }
                 }
                 if (zMove > 0) {
                     for (var i = 0; i < this._collisionSurfaces.length; i++) {
                         if (this._collisionSurfaces[i].mesh.position.z > oldSurfacePos.z) {
-                            this._collisionSurfaces[i].mesh.translateZ(-CarSimulator.ground_width * 3);
-                            this._collisionSurfaces[i].geometry.translate(0, 0, -CarSimulator.ground_width * 3);
+                            this._collisionSurfaces[i].mesh.position.set(this._collisionSurfaces[i].mesh.position.x, this._collisionSurfaces[i].mesh.position.y, this._collisionSurfaces[i].mesh.position.z - CarSimulator.ground_width * 3);
                         }
                     }
                 }
                 else if (zMove < 0) {
                     for (var i = 0; i < this._collisionSurfaces.length; i++) {
                         if (this._collisionSurfaces[i].mesh.position.z < oldSurfacePos.z) {
-                            this._collisionSurfaces[i].mesh.translateZ(CarSimulator.ground_width * 3);
-                            this._collisionSurfaces[i].geometry.translate(0, 0, CarSimulator.ground_width * 3);
+                            this._collisionSurfaces[i].mesh.position.set(this._collisionSurfaces[i].mesh.position.x, this._collisionSurfaces[i].mesh.position.y, this._collisionSurfaces[i].mesh.position.z + CarSimulator.ground_width * 3);
                         }
                     }
                 }
@@ -155,41 +157,84 @@ var PhysicsObject3d = (function () {
     PhysicsObject3d.prototype.connectCollisionSurface = function (surface) {
         this._collisionSurface = surface;
     };
-    PhysicsObject3d.prototype.checkCollisions = function () {
+    PhysicsObject3d.prototype.connectCollisionScene = function (scene) {
+        this._collisionScene = scene;
+    };
+    PhysicsObject3d.prototype.newCheckCollisions = function () {
+        for (var i = 0; i < this._externalCollisionPoints.length; i++)
+            this._externalCollision[i] = false;
         var collisions = [];
-        if (this._collisionSurfaces.length > 0) {
-            this.forceRadius.set(0, 0, 0);
-            for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
-                var vertPos = this._object.geometry.vertices[vertexIdx].clone();
-                vertPos.applyQuaternion(this._object.getWorldQuaternion());
-                this._collisionPoints[vertexIdx].position.set(vertPos.x, vertPos.y, vertPos.z).add(this._object.position);
-            }
+        if (this._collisionMeshes) {
+            //for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
+            //    var vertPos:THREE.Vector3 = this._object.geometry.vertices[vertexIdx].clone();
+            //    vertPos.applyQuaternion(this._object.getWorldQuaternion());
+            //    this._collisionPoints[vertexIdx].position.set(vertPos.x, vertPos.y, vertPos.z).add(this._object.position);
+            //
+            //    var testPos = this._collisionPoints[vertexIdx].position.clone()
+            //    testPos.setY(30);
+            //    this._collisionRaycaster.set(testPos, new Vector3(0, -1, 0));
+            //    var intersects = this._collisionRaycaster.intersectObject(this._collisionMeshes[this._collisionSurfaceIndices[surfIdx]], true);
+            //
+            //    if (intersects[0]) {
+            //        if (intersects[0].point.y >= this._collisionPoints[vertexIdx].position.y) {
+            //            var collisionPos:THREE.Vector3 = intersects[0].point;
+            //            var vert1:THREE.Vector3 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.a].clone().add(intersects[0].object.position);
+            //            var vert2:THREE.Vector3 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.b].clone().add(intersects[0].object.position);
+            //            var vert3:THREE.Vector3 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.c].clone().add(intersects[0].object.position);
+            //
+            //            var vertexNormals = [
+            //                intersects[0].face.vertexNormals[0],
+            //                intersects[0].face.vertexNormals[1],
+            //                intersects[0].face.vertexNormals[2]
+            //            ];
+            //
+            //            var collision = this.handleCollision(intersects[0].point, vert1, vert2, vert3, vertexNormals);
+            //            if (collision != 0)
+            //                collisions.push(collision);
+            //        }
+            //    }
+            //}
             for (var extColIdx = 0; extColIdx < this._externalCollisionPoints.length; extColIdx++) {
                 var vertPos = this._externalCollisionPositions[extColIdx].clone();
                 vertPos.applyQuaternion(this._object.getWorldQuaternion());
                 this._externalCollisionPoints[extColIdx].position.set(vertPos.x, vertPos.y, vertPos.z).add(this._object.position);
-            }
-            for (var vertexIdx = 0; vertexIdx < this._externalCollisionPoints.length; vertexIdx++) {
-                this._externalCollision[vertexIdx] = false;
-            }
-            for (var c = 0; c < this._collisionSurfaceIndices.length; c++) {
-                for (var i = 0; i < this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.faces.length; i++) {
-                    var vert1 = this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.vertices[this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.faces[i].a];
-                    var vert2 = this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.vertices[this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.faces[i].b];
-                    var vert3 = this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.vertices[this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.faces[i].c];
-                    var vertexNormals = this._collisionSurfaces[this._collisionSurfaceIndices[c]].geometry.faces[i].vertexNormals;
-                    for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
-                        var vertPos = this._collisionPoints[vertexIdx].position.clone();
-                        var collision = this.handleCollision(vertPos, vert1, vert2, vert3, vertexNormals);
-                        if (collision != 0)
-                            collisions.push(collision);
-                    }
-                    for (var vertexIdx = 0; vertexIdx < this._externalCollisionPoints.length; vertexIdx++) {
-                        var vertPos = this._externalCollisionPoints[vertexIdx].position.clone();
-                        var collision = this.handleCollision(vertPos, vert1, vert2, vert3, vertexNormals);
+                var testPos = this._externalCollisionPoints[extColIdx].position.clone();
+                var x_break = false;
+                var z_break = false;
+                while (true) {
+                    if (testPos.x > CarSimulator.ground_width / 2)
+                        testPos.add(new Vector3(-CarSimulator.ground_width, 0, 0));
+                    else if (testPos.x < -CarSimulator.ground_width / 2)
+                        testPos.add(new Vector3(CarSimulator.ground_width, 0, 0));
+                    else
+                        x_break = true;
+                    if (testPos.z > CarSimulator.ground_width / 2)
+                        testPos.add(new Vector3(0, 0, -CarSimulator.ground_width));
+                    else if (testPos.z < -CarSimulator.ground_width / 2)
+                        testPos.add(new Vector3(0, 0, CarSimulator.ground_width));
+                    else
+                        z_break = true;
+                    if (z_break && x_break)
+                        break;
+                }
+                testPos.setY(30);
+                this._collisionRaycaster.set(testPos, new Vector3(0, -1, 0));
+                var intersects = this._collisionRaycaster.intersectObject(this._collisionMeshes[0], true);
+                if (intersects[0]) {
+                    if (intersects[0].point.y >= this._externalCollisionPoints[extColIdx].position.y) {
+                        var collisionPos = intersects[0].point.clone();
+                        var vert1 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.a].clone();
+                        var vert2 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.b].clone();
+                        var vert3 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.c].clone();
+                        var vertexNormals = [
+                            intersects[0].face.vertexNormals[0],
+                            intersects[0].face.vertexNormals[1],
+                            intersects[0].face.vertexNormals[2]
+                        ];
+                        var collision = this.handleCollision(this._externalCollisionPoints[extColIdx].position, vert1, vert2, vert3, vertexNormals);
                         if (collision != 0) {
-                            this._externalCollision[vertexIdx] = true;
                             collisions.push(collision);
+                            this._externalCollision[extColIdx] = true;
                         }
                     }
                 }
@@ -198,43 +243,25 @@ var PhysicsObject3d = (function () {
         return collisions;
     };
     PhysicsObject3d.prototype.handleCollision = function (vertPos, vert1, vert2, vert3, vertexNormals) {
-        if (this.checkCollision(vertPos.clone(), vert1, vert2, vert3) && this.pointInTriangle(vertPos.clone(), vert1, vert2, vert3)) {
-            var areaT = this.triangleArea(vert1, vert2, vert3);
-            var areaB = this.triangleArea(vert1, this.object.position, vert3);
-            var areaC = this.triangleArea(vert1, this.object.position, vert2);
-            var areaA = areaT - areaB - areaC;
-            var c1 = areaA / areaT;
-            var c2 = areaB / areaT;
-            var c3 = areaC / areaT;
-            this._normalDirection = new THREE.Vector3(vertexNormals[0].x * c1 + vertexNormals[1].x * c2 + vertexNormals[2].x * c3, vertexNormals[0].y * c1 + vertexNormals[1].y * c2 + vertexNormals[2].y * c3, vertexNormals[0].z * c1 + vertexNormals[1].z * c2 + vertexNormals[2].z * c3);
-            this.isColliding = true;
-            return [
-                vertPos.x - this._object.position.x,
-                vertPos.y - this._object.position.y,
-                vertPos.z - this._object.position.z,
-                this._normalDirection.x,
-                this._normalDirection.y,
-                this._normalDirection.z,
-                vertPos.x,
-                vertPos.y,
-                vertPos.z
-            ];
-        }
-        return 0;
-    };
-    PhysicsObject3d.prototype.checkCollision = function (vertPos, p1, p2, p3) {
-        var det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
-        var l1 = ((p2.z - p3.z) * (vertPos.x - p3.x) + (p3.x - p2.x) * (vertPos.z - p3.z)) / det;
-        var l2 = ((p3.z - p1.z) * (vertPos.x - p3.x) + (p1.x - p3.x) * (vertPos.z - p3.z)) / det;
-        var l3 = 1.0 - l1 - l2;
-        var height = l1 * p1.y + l2 * p2.y + l3 * p3.y;
-        this._surfaceDistance = Math.min(Math.max(vertPos.y - height, 0.0001), 10.0) / 10;
-        if (vertPos.y - 1 <= height) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        var areaT = this.triangleArea(vert1, vert2, vert3);
+        var areaB = this.triangleArea(vert1, vertPos, vert3);
+        var areaC = this.triangleArea(vert1, vertPos, vert2);
+        var areaA = areaT - areaB - areaC;
+        var c1 = areaA / areaT;
+        var c2 = areaB / areaT;
+        var c3 = areaC / areaT;
+        this._normalDirection = new THREE.Vector3(vertexNormals[0].x * c1 + vertexNormals[1].x * c2 + vertexNormals[2].x * c3, vertexNormals[0].y * c1 + vertexNormals[1].y * c2 + vertexNormals[2].y * c3, vertexNormals[0].z * c1 + vertexNormals[1].z * c2 + vertexNormals[2].z * c3);
+        return [
+            vertPos.x - this._object.position.x,
+            vertPos.y - this._object.position.y,
+            vertPos.z - this._object.position.z,
+            this._normalDirection.x,
+            this._normalDirection.y,
+            this._normalDirection.z,
+            vertPos.x,
+            vertPos.y,
+            vertPos.z
+        ];
     };
     PhysicsObject3d.prototype.showAxis = function () {
     };

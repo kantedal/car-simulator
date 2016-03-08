@@ -18,7 +18,7 @@ class GroundPlane {
         var self = this;
         var loader = new THREE.OBJLoader();
         loader.load(
-            './models/ground_model3.obj',
+            './models/ground_model8.obj',
             function(object){
 
                 //var textureLoader : THREE.TextureLoader = new THREE.TextureLoader();
@@ -27,7 +27,7 @@ class GroundPlane {
                 //
                 //    //var material1 = new THREE.MeshBasicMaterial({map: texture});
                 //
-                    self._mesh = object;
+                    //self._mesh = object;
                 //    var material = new THREE.MeshPhongMaterial( {
                 //        color: 0xFFFFFF,
                 //        specular: 0xFFDDCC,
@@ -42,6 +42,9 @@ class GroundPlane {
                         if (child instanceof THREE.Mesh) {
                             child.material = material1;
                             self._geometry = new THREE.Geometry().fromBufferGeometry(child.geometry);
+                            self._geometry.computeVertexNormals();
+
+                            self.mesh = new THREE.Mesh(self._geometry, material1);
                         }
                     } );
 

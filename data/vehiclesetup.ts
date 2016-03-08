@@ -43,18 +43,8 @@ class VehicleSetup {
         if(this._motor){
             this._motor.update(time, delta);
 
-            //this._vehicle.vehicleBody.forceConstraints.valueOf()[0] = this._wheels[0].wheelDirection.x*this._motor.torque*13;
-            //this._vehicle.vehicleBody.forceConstraints.valueOf()[1] = this._wheels[0].wheelDirection.y*this._motor.torque*13;
-            //this._vehicle.vehicleBody.forceConstraints.valueOf()[2] = this._wheels[0].wheelDirection.z*this._motor.torque*13;
-
-            //this._vehicle.vehicleBody.forceConstraints.valueOf()[0] += -this._vehicle.vehicleBody.localZDirection.x*this._motor.torque*9;
-            //this._vehicle.vehicleBody.forceConstraints.valueOf()[1] += -this._vehicle.vehicleBody.localZDirection.y*this._motor.torque*9;
-            //this._vehicle.vehicleBody.forceConstraints.valueOf()[2] += -this._vehicle.vehicleBody.localZDirection.z*this._motor.torque*9;
-
-
-           // this._vehicle.vehicleBody.forceConstraints.valueOf()[3] = this._wheels[0].object.position.x*this._motor.torque*8;
-            this._vehicle.vehicleBody.forceConstraints.valueOf()[4] += this._steering.steeringAngle*this._motor.torque*70;
-            //this._vehicle.vehicleBody.forceConstraints.valueOf()[5] = this._wheels[0].object.position.z*this._motor.torque*8;
+            this._vehicle.vehicleBody.forceConstraints.valueOf()[4] += this._steering.steeringAngle*this._motor.torque*6;
+            this._steering.steeringAngle *= 0.999;
         }
 
         if(this._steering){
