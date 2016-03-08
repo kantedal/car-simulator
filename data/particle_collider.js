@@ -49,7 +49,7 @@ var ParticleCollider = (function (_super) {
     ParticleCollider.prototype.collision = function (velocity) {
         var force_radius = math.matrix([0, -1, 0]);
         var normal = math.matrix([0, 1, 0]);
-        //var penetration = collision[1];
+        //var penetration = applyForce[1];
         var J = math.matrix([
             normal.valueOf()[0],
             normal.valueOf()[1],

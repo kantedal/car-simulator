@@ -47,7 +47,7 @@ class VehicleSetup {
             this._motor.update(time, delta);
 
             if(Math.abs(this._vehicle.vehicleModel.velocity.valueOf()[4]) < 1.5)
-                this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle*this._motor.torque*90;
+                this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle*this._motor.torque*70;
 
             this._steering.steeringAngle *= 0.98;
         }

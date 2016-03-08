@@ -47,16 +47,14 @@ class RelativeDynamicBody extends DynamicRigidBody {
         this._relativeVelocity.valueOf()[5] = this.velocity.valueOf()[5] - this._parentVehicle.vehicleModel.velocity.valueOf()[5];
 
         this.state = math.add(this.state, math.multiply(this._relativeVelocity, delta));
-        this._forceConstraints = math.matrix([0,0,0,0,0,0]);
+        //this._forceConstraints = math.matrix([0,0,0,0,0,0]);
+        this._forceConstraints = math.multiply(this._forceConstraints,0.9);
 
         this.object.position.set(0, this.state.valueOf()[1], 0);
         this.object.rotation.set(this.state.valueOf()[3],this.state.valueOf()[4],this.state.valueOf()[5]);
     }
 
-    public collision(collision: number[]){
-        var force_radius = math.matrix([collision[0], collision[1], collision[2]]);
-        var normal = math.matrix([collision[3], collision[4], collision[5]]);
-
+    public applyForce(normal: mathjs.Matrix, force_radius: mathjs.Matrix){
         var rotComponent = math.cross(force_radius,normal);
         var J = math.matrix([
             -normal.valueOf()[0],

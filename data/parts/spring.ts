@@ -68,8 +68,8 @@ class Spring {
     private _linearSpringAcceleration:number = 0;
     private _linearSpringVelocity:number = 0;
 
-    private _linearSpringConst:number = 16000;
-    private _linearDampingConst:number = 1200;
+    private _linearSpringConst:number = 12000;
+    private _linearDampingConst:number = 900;
 
     private _angularSpringAccelerationX:number = 0;
     private _angularSpringVelocityX:number = 0;
@@ -82,10 +82,10 @@ class Spring {
     private _angularDampingConst:number = 1600;
 
     public update(time:number, delta:number, state:mathjs.Matrix) {
-        this._linearSpringAcceleration = - (this._linearSpringConst*(state.valueOf()[1]-1) + this._linearDampingConst*this._linearSpringVelocity)/300;
+        this._linearSpringAcceleration = - (this._linearSpringConst*(state.valueOf()[1]-1) + this._linearDampingConst*this._linearSpringVelocity)/200;
         this._linearSpringVelocity += this._linearSpringAcceleration*delta;
 
-        this._angularSpringAccelerationX = - (this._angularSpringConst*(state.valueOf()[3]) + this._angularDampingConst*this._angularSpringVelocityX)/1400;
+        this._angularSpringAccelerationX = - (this._angularSpringConst*(state.valueOf()[3]) + this._angularDampingConst*this._angularSpringVelocityX)/800;
         this._angularSpringVelocityX += this._angularSpringAccelerationX*delta;
 
         this._angularSpringAccelerationY = - (this._angularSpringConst*(state.valueOf()[4]) + this._angularDampingConst*this._angularSpringVelocityY)/800;

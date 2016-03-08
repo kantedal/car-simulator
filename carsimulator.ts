@@ -105,18 +105,23 @@ class CarSimulator {
     }
 
     update(){
-        var delta = this._clock.getElapsedTime()-this._time;
+        var delta = (this._clock.getElapsedTime()-this._time)*2.0;
+
+        if(delta > 0.05)
+            delta = 0.05;
+
         this._time = this._clock.getElapsedTime();
-        var delta = 0.04;
+
+        //delta = 0.04;
 
         this._car.update(this._time,delta);
 
         this._renderer.render();
 
         var self = this;
-        setTimeout( function() {
+        //setTimeout( function() {
             requestAnimationFrame(() => self.update());
-        }, 1000 / 60 );
+        //}, 1000 / 30 );
 
     }
 

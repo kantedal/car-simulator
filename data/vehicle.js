@@ -35,7 +35,9 @@ var Vehicle = (function () {
         this._position.set(this._vehicleModel.object.position.x, this._vehicleModel.object.position.y, this._vehicleModel.object.position.z);
         //this._vehicleSetup.vehicleBody.object.position.setY(Math.sin(time*3));
         for (var colNum = 0; colNum < this._vehicleModel.collisions.length; colNum++) {
-            this._vehicleSetup.vehicleBody.collision(this._vehicleModel.collisions[colNum]);
+            var force_radius = math.matrix([this._vehicleModel.collisions[colNum].valueOf()[0], this._vehicleModel.collisions[colNum].valueOf()[1], this._vehicleModel.collisions[colNum].valueOf()[2]]);
+            var normal = math.matrix([this._vehicleModel.collisions[colNum].valueOf()[3], this._vehicleModel.collisions[colNum].valueOf()[4], this._vehicleModel.collisions[colNum].valueOf()[5]]);
+            this._vehicleSetup.vehicleBody.applyForce(normal, force_radius);
         }
         this._vehicleSetup.vehicleBody.update(time, delta);
     };

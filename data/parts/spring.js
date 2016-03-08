@@ -7,8 +7,8 @@ var Spring = (function () {
     function Spring(renderer) {
         this._linearSpringAcceleration = 0;
         this._linearSpringVelocity = 0;
-        this._linearSpringConst = 16000;
-        this._linearDampingConst = 1200;
+        this._linearSpringConst = 12000;
+        this._linearDampingConst = 900;
         this._angularSpringAccelerationX = 0;
         this._angularSpringVelocityX = 0;
         this._angularSpringAccelerationY = 0;
@@ -53,9 +53,9 @@ var Spring = (function () {
         });
     };
     Spring.prototype.update = function (time, delta, state) {
-        this._linearSpringAcceleration = -(this._linearSpringConst * (state.valueOf()[1] - 1) + this._linearDampingConst * this._linearSpringVelocity) / 300;
+        this._linearSpringAcceleration = -(this._linearSpringConst * (state.valueOf()[1] - 1) + this._linearDampingConst * this._linearSpringVelocity) / 200;
         this._linearSpringVelocity += this._linearSpringAcceleration * delta;
-        this._angularSpringAccelerationX = -(this._angularSpringConst * (state.valueOf()[3]) + this._angularDampingConst * this._angularSpringVelocityX) / 1400;
+        this._angularSpringAccelerationX = -(this._angularSpringConst * (state.valueOf()[3]) + this._angularDampingConst * this._angularSpringVelocityX) / 800;
         this._angularSpringVelocityX += this._angularSpringAccelerationX * delta;
         this._angularSpringAccelerationY = -(this._angularSpringConst * (state.valueOf()[4]) + this._angularDampingConst * this._angularSpringVelocityY) / 800;
         this._angularSpringVelocityY += this._angularSpringAccelerationY * delta;

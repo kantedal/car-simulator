@@ -188,9 +188,9 @@ var PhysicsObject3d = (function () {
             //                intersects[0].face.vertexNormals[2]
             //            ];
             //
-            //            var collision = this.handleCollision(intersects[0].point, vert1, vert2, vert3, vertexNormals);
-            //            if (collision != 0)
-            //                collisions.push(collision);
+            //            var applyForce = this.handleCollision(intersects[0].point, vert1, vert2, vert3, vertexNormals);
+            //            if (applyForce != 0)
+            //                collisions.push(applyForce);
             //        }
             //    }
             //}

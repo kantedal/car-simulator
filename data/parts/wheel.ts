@@ -47,7 +47,8 @@ class Wheel extends ParticleCollider {
             this.state = math.add(this.state, math.multiply(this._relativeVelocity, delta));
         }
 
-        this._forceConstraints = math.matrix([0,0,0,0,0,0]);
+        //this._forceConstraints = math.matrix([0,0,0,0,0,0]);
+        this._forceConstraints = math.multiply(this._forceConstraints,0.9);
 
         this.object.position.set(this.object.position.x, this.state.valueOf()[1], this.object.position.z);
 
@@ -114,8 +115,8 @@ class Wheel extends ParticleCollider {
             ]),1)
         );
         force_radius = math.matrix([position.x, position.y, position.z]);
-        force_radius = math.matrix([0,0,-1]);
-        //var forceComp =  math.dot(this._connectedVehicle.vehicleModel.forceTotal, )
+        force_radius = math.matrix([0,0,-4]);
+
         var force = math.multiply(math.matrix([this._wheelDirection.x, this._wheelDirection.y, this._wheelDirection.z]), this._connectedMotor.torque);
 
         var J = math.matrix([
@@ -134,10 +135,12 @@ class Wheel extends ParticleCollider {
                 this._wheelDirection.y,
                 this._wheelDirection.z,
                 0,0,0])
-            ))*12;
+            ))*16;
 
         var Fc = math.multiply(math.transpose(J),lagrange);
         this._connectedVehicle.vehicleModel.forceConstraints =  math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
+
+        this._connectedVehicle.vehicleSetup.vehicleBody.forceConstraints.valueOf()[3] += 100000;
     }
 
 
