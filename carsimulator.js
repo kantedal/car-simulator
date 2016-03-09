@@ -77,8 +77,8 @@ var CarSimulator = (function () {
     };
     CarSimulator.prototype.update = function () {
         var delta = (this._clock.getElapsedTime() - this._time) * 2.0;
-        if (delta > 0.05)
-            delta = 0.05;
+        if (delta > 0.06)
+            delta = 0.06;
         this._time = this._clock.getElapsedTime();
         //delta = 0.04;
         this._car.update(this._time, delta);

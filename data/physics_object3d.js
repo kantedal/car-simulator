@@ -233,9 +233,12 @@ var PhysicsObject3d = (function () {
                         ];
                         var collision = this.handleCollision(this._externalCollisionPoints[extColIdx].position, vert1, vert2, vert3, vertexNormals);
                         if (collision != 0) {
+                            //this._externalCollision[extColIdx] = true;
                             collisions.push(collision);
-                            this._externalCollision[extColIdx] = true;
                         }
+                    }
+                    if (intersects[0].point.y + 0.7 >= this._externalCollisionPoints[extColIdx].position.y) {
+                        this._externalCollision[extColIdx] = true;
                     }
                 }
             }

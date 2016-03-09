@@ -32,7 +32,8 @@ var RelativeDynamicBody = (function (_super) {
         //this.velocity.valueOf()[5] = this._spring.v*0.03;
         for (var i = 0; i < this._parentVehicle.vehicleSetup.wheels.length; i++) {
         }
-        this._forceTotal = math.add(this.forceExternal, this.forceConstraints); //Combine external and constraint forces
+        var forceComp = math.dot(math.matrix([0, 1, 0]), math.matrix([this._parentVehicle.vehicleModel.localYDirection.x, this._parentVehicle.vehicleModel.localYDirection.y, this._parentVehicle.vehicleModel.localYDirection.z]));
+        this._forceTotal = math.add(math.multiply(this.forceExternal, forceComp), this.forceConstraints); //Combine external and constraint forces
         this.velocity = math.add(this.velocity, math.multiply(math.multiply(math.inv(this.M), this.forceTotal), delta));
         //this._relativeVelocity = math.subtract(this.velocity, this._parentVehicle.vehicleModel.velocity);
         this._relativeVelocity.valueOf()[1] = this.velocity.valueOf()[1] - this._parentVehicle.vehicleModel.velocity.valueOf()[1];

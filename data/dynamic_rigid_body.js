@@ -62,7 +62,6 @@ var DynamicRigidBody = (function (_super) {
         this._collisions = _super.prototype.newCheckCollisions.call(this);
         for (var colNum = 0; colNum < this._collisions.length; colNum++) {
             this.velocity = this.collision(this._collisions[colNum]);
-            ;
         }
     };
     DynamicRigidBody.prototype.collision = function (collision) {

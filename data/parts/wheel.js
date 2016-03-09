@@ -27,12 +27,12 @@ var Wheel = (function (_super) {
     }
     Wheel.prototype.update = function (time, delta) {
         //super.update(time,delta);
-        if (!this.isColliding) {
-            //this._forceTotal = math.add(this.forceExternal, this.forceConstraints); //Combine external and constraint forces
-            //this.velocity = math.add(this.velocity, math.multiply(math.multiply(math.inv(this.M), this.forceTotal), delta));
-            //this._relativeVelocity = math.subtract(this.velocity, this._connectedVehicle.vehicleModel.velocity);
-            this.state = math.add(this.state, math.multiply(this._relativeVelocity, delta));
-        }
+        //if(!this.isColliding) {
+        //this._forceTotal = math.add(this.forceExternal, this.forceConstraints); //Combine external and constraint forces
+        //this.velocity = math.add(this.velocity, math.multiply(math.multiply(math.inv(this.M), this.forceTotal), delta));
+        //this._relativeVelocity = math.subtract(this.velocity, this._connectedVehicle.vehicleModel.velocity);
+        //this.state = math.add(this.state, math.multiply(this._relativeVelocity, delta));
+        //}
         //this._forceConstraints = math.matrix([0,0,0,0,0,0]);
         this._forceConstraints = math.multiply(this._forceConstraints, 0.9);
         this.object.position.set(this.object.position.x, this.state.valueOf()[1], this.object.position.z);
@@ -42,10 +42,13 @@ var Wheel = (function (_super) {
                 this._wheelDirection.applyAxisAngle(this._connectedVehicle.vehicleModel.localYDirection, this._connectedSteering.steeringAngle);
             }
             var wheelRotation = -this._connectedVehicle.vehicleModel.velocityDirection.clone().dot(this._wheelDirection);
-            this.object.geometry.rotateX(wheelRotation * 0.015);
+            this.object.geometry.rotateX(wheelRotation * 0.01);
             if (this.isColliding) {
                 this.friction();
+                this.object.material.color.setHex(0x00ff00);
             }
+            else
+                this.object.material.color.setHex(0xff0000);
         }
         if (this._connectedSteering) {
             this.object.rotation.set(0, this._connectedSteering.steeringAngle, 0);
@@ -79,7 +82,7 @@ var Wheel = (function (_super) {
             this._wheelDirection.x,
             this._wheelDirection.y,
             this._wheelDirection.z,
-            0, 0, 0]))) * 16;
+            0, 0, 0]))) * 10;
         var Fc = math.multiply(math.transpose(J), lagrange);
         this._connectedVehicle.vehicleModel.forceConstraints = math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
         this._connectedVehicle.vehicleSetup.vehicleBody.forceConstraints.valueOf()[3] += 100000;
@@ -92,11 +95,13 @@ var Wheel = (function (_super) {
             position.y,
             position.z
         ]);
-        var vel = this._connectedVehicle.vehicleModel.velocityDirection.clone().add(rotation.clone().multiplyScalar(position.length()));
+        var vel = this._connectedVehicle.vehicleModel.velocityDirection.clone();
         var forceComp1 = this._connectedVehicle.vehicleModel.localZDirection.clone().applyAxisAngle(this._connectedVehicle.vehicleModel.localYDirection, -Math.PI / 2);
         if (vel.clone().normalize().angleTo(forceComp1) > Math.PI / 2)
             forceComp1.multiplyScalar(-1);
-        forceComp1 = forceComp1.multiplyScalar(Math.abs(vel.dot(forceComp1)) * 20);
+        //this._testArrow.setDirection(forceComp1);
+        //this._testArrow.position.copy(position.clone().add(this._connectedVehicle.position));
+        forceComp1 = forceComp1.multiplyScalar(Math.abs(vel.dot(forceComp1)) * 8);
         var totalForce = math.matrix([
             forceComp1.x,
             forceComp1.y,
@@ -116,10 +121,10 @@ var Wheel = (function (_super) {
             var Fc = math.multiply(math.transpose(J), lagrange);
             this._connectedVehicle.vehicleModel.forceConstraints = math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
         }
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[0] *= 0.99;
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[1] *= 0.99;
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[2] *= 0.99;
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[4] *= 0.99;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[0] *= 0.995;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[1] *= 0.995;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[2] *= 0.995;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[4] *= 0.995;
     };
     Wheel.prototype.connectVehicle = function (vehicle) {
         this._connectedVehicle = vehicle;
