@@ -47,13 +47,15 @@ var Socket = (function () {
         });
     };
     Socket.prototype.update = function (vehicle) {
-        var pos = vehicle.vehicleModel.object.position;
-        var rot = vehicle.vehicleModel.object.rotation;
-        var wheel1 = vehicle.vehicleSetup.wheels[0].object.position.y;
-        var wheel2 = vehicle.vehicleSetup.wheels[1].object.position.y;
-        var wheel3 = vehicle.vehicleSetup.wheels[2].object.position.y;
-        var wheel4 = vehicle.vehicleSetup.wheels[3].object.position.y;
+        //var wheel1 = vehicle.vehicleSetup.wheels[0].object.position.y;
+        //var wheel2 = vehicle.vehicleSetup.wheels[1].object.position.y;
+        //var wheel3 = vehicle.vehicleSetup.wheels[2].object.position.y;
+        //var wheel4 = vehicle.vehicleSetup.wheels[3].object.position.y;
         if (this._isConnected) {
+            var pos = vehicle.vehicleModel.object.position;
+            var rot = vehicle.vehicleModel.object.rotation;
+            var rel_pos = vehicle.vehicleSetup.vehicleBody.object.position;
+            var rel_rot = vehicle.vehicleSetup.vehicleBody.object.rotation;
             this._connection.send({
                 car_data: {
                     x: pos.x,
@@ -62,10 +64,10 @@ var Socket = (function () {
                     rx: rot.x,
                     ry: rot.y,
                     rz: rot.z,
-                    w1: wheel1,
-                    w2: wheel2,
-                    w3: wheel3,
-                    w4: wheel4
+                    rel_y: rel_pos.y,
+                    rel_rx: rel_rot.x,
+                    rel_ry: rel_rot.y,
+                    rel_rz: rel_rot.z
                 }
             });
         }

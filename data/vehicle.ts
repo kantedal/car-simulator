@@ -77,10 +77,12 @@ class Vehicle {
             data.car_data.rz
         );
 
-        this._vehicleSetup.wheels[0].object.position.setY(data.car_data.w1);
-        this._vehicleSetup.wheels[1].object.position.setY(data.car_data.w2);
-        this._vehicleSetup.wheels[2].object.position.setY(data.car_data.w3);
-        this._vehicleSetup.wheels[3].object.position.setY(data.car_data.w4);
+        this._vehicleSetup.vehicleBody.object.position.setY(data.car_data.rel_y);
+        this._vehicleSetup.vehicleBody.object.rotation.set(
+            data.car_data.rel_rx,
+            data.car_data.rel_ry,
+            data.car_data.rel_rz
+        );
     }
 
     public connectCollisionSurface(groundPlanes: GroundPlane[]): number{

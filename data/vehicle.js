@@ -45,10 +45,8 @@ var Vehicle = (function () {
     Vehicle.prototype.setFromNetworkData = function (data) {
         this._vehicleModel.object.position.set(data.car_data.x, data.car_data.y, data.car_data.z);
         this._vehicleModel.object.rotation.set(data.car_data.rx, data.car_data.ry, data.car_data.rz);
-        this._vehicleSetup.wheels[0].object.position.setY(data.car_data.w1);
-        this._vehicleSetup.wheels[1].object.position.setY(data.car_data.w2);
-        this._vehicleSetup.wheels[2].object.position.setY(data.car_data.w3);
-        this._vehicleSetup.wheels[3].object.position.setY(data.car_data.w4);
+        this._vehicleSetup.vehicleBody.object.position.setY(data.car_data.rel_y);
+        this._vehicleSetup.vehicleBody.object.rotation.set(data.car_data.rel_rx, data.car_data.rel_ry, data.car_data.rel_rz);
     };
     Vehicle.prototype.connectCollisionSurface = function (groundPlanes) {
         var surfaceIndex = 0;
