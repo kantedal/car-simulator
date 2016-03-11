@@ -1,42 +1,82 @@
 ///<reference path="./physics_object3d.ts"/>
+///<reference path="../math/noisejs.d.ts"/>
 var GroundPlane = (function () {
-    function GroundPlane(renderer) {
+    function GroundPlane(renderer, dimension) {
+        this._dimension = dimension;
+        this._mesh = [];
+        this._collisionMesh = [];
+        this._maxDistance = Math.sqrt(Math.pow(1.2 * 2 * CarSimulator.ground_width, 2) * 2);
+        this._collisionDistance = Math.sqrt(Math.pow(CarSimulator.ground_width, 2) * 2);
+        this._currentSurfIdx = 0;
+        this._surfaceRaycaster = new THREE.Raycaster();
         this._renderer = renderer;
         this._scale = new Vector3(1, 1, 1);
+        this._noise1 = new Noise(0.23);
+        this._noise2 = new Noise(0.65);
     }
-    GroundPlane.prototype.loadPlane = function (listener, renderer) {
-        this._renderer = renderer;
-        var self = this;
-        var loader = new THREE.OBJLoader();
-        loader.load('./models/ground_model8.obj', function (object) {
-            //var textureLoader : THREE.TextureLoader = new THREE.TextureLoader();
-            //textureLoader.load("./texture/sand.jpg", function(texture){
-            //    console.log("success");
-            //
-            //    //var material1 = new THREE.MeshBasicMaterial({map: texture});
-            //
-            //self._mesh = object;
-            //    var material = new THREE.MeshPhongMaterial( {
-            //        color: 0xFFFFFF,
-            //        specular: 0xFFDDCC,
-            //        shininess: 3,
-            //        shading: THREE.SmoothShading,
-            //        map: texture
-            //    });
-            var material1 = new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true });
-            object.traverse(function (child) {
-                if (child instanceof THREE.Mesh) {
-                    child.material = material1;
-                    self._geometry = new THREE.Geometry().fromBufferGeometry(child.geometry);
-                    self._geometry.computeVertexNormals();
-                    self.mesh = new THREE.Mesh(self._geometry, material1);
+    GroundPlane.prototype.newPlane = function (pos) {
+        var material1 = new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true });
+        var geometry = new THREE.PlaneGeometry(CarSimulator.ground_width, CarSimulator.ground_width, 12, 12);
+        geometry.rotateX(-Math.PI / 2);
+        for (var i = 0; i < geometry.vertices.length; i++) {
+            geometry.vertices[i].y = this.simplexNoise(pos.clone().add(geometry.vertices[i]));
+        }
+        geometry.computeVertexNormals();
+        var mesh = new THREE.Mesh(geometry, material1);
+        mesh.position.copy(pos);
+        this._mesh.push(mesh);
+        this._renderer.scene.add(this._mesh[this._mesh.length - 1]);
+    };
+    GroundPlane.prototype.update = function (pos) {
+        var projectPos = pos.clone().setY(30);
+        this._surfaceRaycaster.set(projectPos, new THREE.Vector3(0, -1, 0));
+        var intersect = this._surfaceRaycaster.intersectObjects(this._mesh, true);
+        if (intersect[0].object != this._mesh[this._currentSurfIdx] && intersect.length == 1) {
+            for (var i = 0; i < this._mesh.length; i++) {
+                if (intersect[0].object == this._mesh[i]) {
+                    this._currentSurfIdx = i;
                 }
-            });
-            listener.planeLoaded(self);
-            //});
-        }, function (xhr) {
-            console.log('An error happened');
-        });
+            }
+            this._collisionMesh = [];
+            for (var i = 0; i < this._mesh.length; i++) {
+                var distance = Math.sqrt(Math.pow(this._mesh[i].position.x - this._mesh[this._currentSurfIdx].position.x, 2) + Math.pow(this._mesh[i].position.z - this._mesh[this._currentSurfIdx].position.z, 2));
+                if (distance >= this._maxDistance) {
+                    var xDist = this._mesh[i].position.x - this._mesh[this._currentSurfIdx].position.x;
+                    var zDist = this._mesh[i].position.z - this._mesh[this._currentSurfIdx].position.z;
+                    if (Math.abs(xDist) == CarSimulator.ground_width * Math.round(this._dimension / 2)) {
+                        this._mesh[i].position.setX(this._mesh[i].position.x - Math.sign(xDist) * this._dimension * CarSimulator.ground_width);
+                    }
+                    if (Math.abs(zDist) == CarSimulator.ground_width * Math.round(this._dimension / 2)) {
+                        this._mesh[i].position.setZ(this._mesh[i].position.z - Math.sign(zDist) * this._dimension * CarSimulator.ground_width);
+                    }
+                    this.regenerateTerrain(i);
+                }
+                if (distance <= this._collisionDistance) {
+                    this._collisionMesh.push(this._mesh[i].clone());
+                    this._mesh[i].material.color.setHex(0x00ff00);
+                }
+                else {
+                    this._mesh[i].material.color.setHex(0x999999);
+                }
+            }
+        }
+        if (this._collisionMesh.length == 0) {
+            for (var i = 0; i < this._mesh.length; i++) {
+                this._collisionMesh.push(this._mesh[i]);
+            }
+        }
+    };
+    GroundPlane.prototype.regenerateTerrain = function (idx) {
+        var pos = this._mesh[idx].position;
+        this._mesh[idx].geometry.dynamic = true;
+        this._mesh[idx].geometry.verticesNeedUpdate = true;
+        for (var i = 0; i < this._mesh[idx].geometry.vertices.length; i++) {
+            this._mesh[idx].geometry.vertices[i].y = this.simplexNoise(pos.clone().add(this._mesh[idx].geometry.vertices[i]));
+        }
+        this._mesh[idx].geometry.computeVertexNormals();
+    };
+    GroundPlane.prototype.simplexNoise = function (pos) {
+        return this._noise1.perlin2(pos.x / 40, (pos.z) / 40) * 10 + this._noise2.simplex2(pos.x / 140, (pos.z) / 140) * 6;
     };
     GroundPlane.prototype.addLoadedListener = function (listener) {
         this._planeLoadedListener = listener;
@@ -58,19 +98,6 @@ var GroundPlane = (function () {
         get: function () {
             return this._mesh;
         },
-        set: function (value) {
-            this._mesh = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(GroundPlane.prototype, "geometry", {
-        get: function () {
-            return this._geometry;
-        },
-        set: function (value) {
-            this._geometry = value;
-        },
         enumerable: true,
         configurable: true
     });
@@ -80,6 +107,20 @@ var GroundPlane = (function () {
         newGround.geometry = this._geometry.clone();
         return newGround;
     };
+    Object.defineProperty(GroundPlane.prototype, "dimension", {
+        get: function () {
+            return this._dimension;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(GroundPlane.prototype, "collisionMesh", {
+        get: function () {
+            return this._collisionMesh;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return GroundPlane;
 })();
 //# sourceMappingURL=ground_plane.js.map

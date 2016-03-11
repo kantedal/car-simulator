@@ -20,7 +20,8 @@ var Vehicle = (function () {
         this._acceleration = new THREE.Vector3(0, 0, 0);
         this._velocity = new THREE.Vector3(0, 0, 0);
         this._isColliding = false;
-        this._vehicleModel = new DynamicRigidBody(new THREE.BoxGeometry(0, 0, 0), new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }), renderer);
+        var geometry = new THREE.BoxGeometry(0, 0, 0);
+        this._vehicleModel = new DynamicRigidBody(geometry, new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }), renderer);
         //this._vehicleModel.position.set(0,30,0);
         this._vehicleSetup = new Car(this._renderer, this);
         //renderer.scene.add(this._vehicleModel.object);
@@ -40,6 +41,14 @@ var Vehicle = (function () {
             this._vehicleSetup.vehicleBody.applyForce(normal, force_radius);
         }
         this._vehicleSetup.vehicleBody.update(time, delta);
+    };
+    Vehicle.prototype.setFromNetworkData = function (data) {
+        this._vehicleModel.object.position.set(data.car_data.x, data.car_data.y, data.car_data.z);
+        this._vehicleModel.object.rotation.set(data.car_data.rx, data.car_data.ry, data.car_data.rz);
+        this._vehicleSetup.wheels[0].object.position.setY(data.car_data.w1);
+        this._vehicleSetup.wheels[1].object.position.setY(data.car_data.w2);
+        this._vehicleSetup.wheels[2].object.position.setY(data.car_data.w3);
+        this._vehicleSetup.wheels[3].object.position.setY(data.car_data.w4);
     };
     Vehicle.prototype.connectCollisionSurface = function (groundPlanes) {
         var surfaceIndex = 0;

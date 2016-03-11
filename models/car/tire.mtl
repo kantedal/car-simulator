@@ -1,0 +1,11 @@
+newmtl phong1SG
+illum 4
+Kd 1.00 1.00 1.00
+Ka 2.00 0.00 1.00
+Tf 1.00 1.00 1.00
+map_Kd tire_diffuse.png
+bump tire_normal.png 
+Ni 0.30
+Ks 0.05 0.05 0.05
+map_Ks tire_spec.png
+Ns 50.00

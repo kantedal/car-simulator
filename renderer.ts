@@ -4,6 +4,7 @@ class Renderer {
     private renderer: THREE.WebGLRenderer;
     private _scene: THREE.Scene;
     private _camera: THREE.Camera;
+    private _light: THREE.DirectionalLight;
     private _controls : THREE.OrbitControls;
 
     constructor(){
@@ -22,11 +23,12 @@ class Renderer {
         this._camera.position.y = 10;
         this._camera.lookAt(new THREE.Vector3(0,0,0));
 
+        this._light = new THREE.DirectionalLight( 0xffffff, 1 );
+        this._light.position.set( 1, 1, 0 );
+        this._scene.add(  this._light );
+
         //this._controls = new THREE.OrbitControls(this.camera);
 
-        var directionalLight = new THREE.DirectionalLight( 0xFFFFFF, 0.5 );
-        directionalLight.position.set( 0, 1, 0 );
-        this._scene.add( directionalLight );
 
         var container = document.getElementById( 'content' );
         container.appendChild( this.renderer.domElement );

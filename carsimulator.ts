@@ -9,27 +9,43 @@
 ///<reference path="./data/vehicle.ts"/>
 ///<reference path="./data/dynamic_rigid_body.ts"/>
 ///<reference path="./data/car_test.ts"/>
+///<reference path="./data/object_loader.ts"/>
+///<reference path="./math/stats.d.ts"/>
+///<reference path="./data/network/socket.ts"/>
+/// <reference path="./math/jquery.d.ts" />
+
 
 class CarSimulator {
     private _renderer : Renderer;
     private _clock : THREE.Clock;
+    private _stats : Stats;
     private _time : number;
     private _surfaceIndex : number = 0;
+    private _socket : Socket;
 
     private _car : Vehicle;
     private _dynamicBody : DynamicRigidBody;
-    private _groundPlanes : GroundPlane[];
+    private _groundPlanes : GroundPlane;
     private _baseGroundPlane : GroundPlane;
     private _collisionScene : THREE.Scene;
 
-    public static ground_width : number = 248.25;
+    private _objectLoader : ObjectLoader;
+
+    public static ground_width : number = 40;
+    public static developer_mode : boolean = false;
 
     constructor(){
         this._renderer = new Renderer();
         this._clock = new THREE.Clock();
+        this._stats = new Stats();
         this._time = 0;
         this._groundPlanes = [];
         this._car = new Vehicle(this._renderer);
+        this._objectLoader = new ObjectLoader();
+
+        this._socket = new Socket(this._renderer);
+
+        this.handleJqueryEvents();
         //this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry( 6, 3, 8 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), this._renderer, 500, this);
 
     }
@@ -38,91 +54,79 @@ class CarSimulator {
         var self = this;
         self._renderer.start();
         //self._carTest = new CarTest(this._renderer);
-        this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry(8,2,4), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}), this._renderer);
+        //this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry(8,2,4), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}), this._renderer);
         this._collisionScene = new THREE.Scene();
 
-        var ground_plane = new GroundPlane(this._renderer);
-        var groundCallback: PlaneLoadedListener = {
-            planeLoaded: function (groundPlane: GroundPlane) {
-                self._baseGroundPlane = groundPlane;
+        this._groundPlanes = new GroundPlane(this._renderer, 11);
 
-                self._groundPlanes.push(groundPlane);
-                //self._groundPlanes[self._groundPlanes.length-1].mesh.com
-                self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
-                //self._collisionScene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
+        var width = CarSimulator.ground_width;
+        var dim = this._groundPlanes.dimension;
+        for(var x=0; x<dim; x++) {
+            for (var z = 0; z < dim; z++) {
+                this._groundPlanes.newPlane(new THREE.Vector3(width * x - width * (dim-1)/2, 0, width * z - width*(dim-1)/2));
+            }
+        }
+        this._car.vehicleModel.connectCollisionSurfaces(this._groundPlanes.collisionMesh);
 
-                var newground_forward = groundPlane.clone();
-                newground_forward.mesh.position.set(0,0,CarSimulator.ground_width);
-                self._groundPlanes.push(newground_forward);
-                self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
 
-                var newground_forward_left = groundPlane.clone();
-                newground_forward_left.mesh.position.set(CarSimulator.ground_width,0,CarSimulator.ground_width);
-                self._groundPlanes.push(newground_forward_left);
-                self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
+        var objectsLoaderListener: ObjectLoaderListener = {
+            objectsLoaded: function() {
+                self._renderer.scene.add(self._objectLoader.wheelMesh);
+                self._objectLoader.wheelMesh.rotateY(Math.PI/2);
+                self._objectLoader.wheelMesh.scale.set(1.6,1.6,1.6);
+                for(var w=0; w<self._car.vehicleSetup.wheels.length; w++){
+                    self._car.vehicleSetup.wheels[w].object.add(self._objectLoader.wheelMesh.clone());
+                }
 
-                var newground_forward_right = groundPlane.clone();
-                newground_forward_right.mesh.position.set(-CarSimulator.ground_width,0,CarSimulator.ground_width);
-                self._groundPlanes.push(newground_forward_right);
-                self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
-
-                var newground_right = groundPlane.clone();
-                newground_right.mesh.position.set(-CarSimulator.ground_width,0,0);
-                self._groundPlanes.push(newground_right);
-                self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
-
-                var newground_left = groundPlane.clone();
-                newground_left.mesh.position.set(CarSimulator.ground_width,0,0);
-                self._groundPlanes.push(newground_left);
-                self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
-
-                var newground_backwards = groundPlane.clone();
-                newground_backwards.mesh.position.set(0,0,-CarSimulator.ground_width);
-                self._groundPlanes.push(newground_backwards);
-                self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
-
-                var newground_backwards_left = groundPlane.clone();
-                newground_backwards_left.mesh.position.set(CarSimulator.ground_width,0,-CarSimulator.ground_width);
-                self._groundPlanes.push(newground_backwards_left);
-                self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
-
-                var newground_backwards_right = groundPlane.clone();
-                newground_backwards_right.mesh.position.set(-CarSimulator.ground_width,0,-CarSimulator.ground_width);
-                self._groundPlanes.push(newground_backwards_right);
-                self._renderer.scene.add(self._groundPlanes[self._groundPlanes.length-1].mesh);
-
-                //self._car.connectCollisionSurface(self._groundPlanes);
-                //self._dynamicBody.connectCollisionSurface(self._groundPlanes[0].geometry);
-                //self._car.vehicleModel.connectCollisionSurface(self._groundPlanes[0].geometry);
-                self._car.vehicleModel.connectCollisionSurfaces(self._groundPlanes);
-                self._car.vehicleModel.setCollisionSurfaceIndices([0]);
-                //self._car.vehicleModel.connectCollisionScene(self._collisionScene);
             }
         };
-        ground_plane.loadPlane(groundCallback, this._renderer);
+        this._objectLoader.load(objectsLoaderListener);
+
+        this._stats = new Stats();
+        this._stats.setMode( 0 ); // 0: fps, 1: ms, 2: mb
+
+        this._stats.domElement.style.position = 'absolute';
+        this._stats.domElement.style.left = '20px';
+        this._stats.domElement.style.top = '20px';
+
+        document.body.appendChild( this._stats.domElement );
 
         this.update();
     }
 
-    update(){
-        var delta = (this._clock.getElapsedTime()-this._time)*2.0;
 
+    private update(delta: number){
+        this._stats.begin();
+
+        this._socket.update(this._car);
+
+        var delta = (this._clock.getElapsedTime()-this._time);
         if(delta > 0.06)
             delta = 0.06;
 
-        this._time = this._clock.getElapsedTime();
-
         //delta = 0.04;
-
+        this._groundPlanes.update(this._car.vehicleModel.object.position);
         this._car.update(this._time,delta);
 
-        this._renderer.render();
+        //this.renderer.camera.lookAt(new THREE.Vector3(0,0,0));
+        //this.renderer.camera.position.set(0,110,0);
 
         var self = this;
         //setTimeout( function() {
-            requestAnimationFrame(() => self.update());
+           requestAnimationFrame(() => self.update());
         //}, 1000 / 30 );
+        this._renderer.render();
+        //requestAnimationFrame( this.update );
 
+
+        this._stats.end();
+    }
+
+    private handleJqueryEvents(){
+        var self = this;
+        $( "#connectButton" ).click(function() {
+            self._socket.connectToPeer($( "#idText" ).val());
+        });
     }
 
     get renderer():Renderer {

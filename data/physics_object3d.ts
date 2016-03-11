@@ -167,76 +167,10 @@ class PhysicsObject3d {
         this._renderer.scene.add(this._externalCollisionPoints[this._externalCollisionPoints.length-1]);
     }
 
-    public connectCollisionSurfaces(surfaces : GroundPlane[]){
-        this._collisionSurfaces = surfaces;
-        this._collisionMeshes = [];
-        for(var i=0; i<surfaces.length; i++){
-            this._collisionMeshes.push(this._collisionSurfaces[i].mesh);
-        }
+    public connectCollisionSurfaces(surfaces : THREE.Mesh[]){
+        this._collisionMeshes = surfaces;
     }
 
-    public setCollisionSurfaceIndices(){
-        this._collisionSurfaceIndices = [];
-
-        for(var g=0; g<this._collisionSurfaces.length; g++){
-            for(var i=0; i<this._externalCollisionPoints.length-1; i++) {
-                if(Math.abs(this._externalCollisionPoints[i].position.x - this._collisionSurfaces[g].mesh.position.x) < CarSimulator.ground_width/2 && Math.abs(this._externalCollisionPoints[i].position.z - this._collisionSurfaces[g].mesh.position.z) < CarSimulator.ground_width/2) {
-                    this._collisionSurfaceIndices.push(g);
-                    break;
-                }
-            }
-        }
-
-        if(this._collisionSurfaceIndices.length == 1)
-        {
-            if(this._lastSurfaceIndex != this._collisionSurfaceIndices[0]){
-                var xMove = this._collisionSurfaces[this._lastSurfaceIndex].mesh.position.x - this._collisionSurfaces[this._collisionSurfaceIndices[0]].mesh.position.x;
-                var zMove = this._collisionSurfaces[this._lastSurfaceIndex].mesh.position.z - this._collisionSurfaces[this._collisionSurfaceIndices[0]].mesh.position.z;
-
-                var oldSurfacePos : THREE.Vector3 = this._collisionSurfaces[this._lastSurfaceIndex].mesh.position.clone();
-                var surfacePos : THREE.Vector3 = this._collisionSurfaces[this._lastSurfaceIndex].mesh.position.clone();
-                var surfaceScale : THREE.Vector3 = this._collisionSurfaces[this._collisionSurfaceIndices[0]].scale.clone();
-
-                if(xMove > 0){
-                    for(var i=0; i<this._collisionSurfaces.length; i++){
-                        if(this._collisionSurfaces[i].mesh.position.x > oldSurfacePos.x){
-                            this._collisionSurfaces[i].mesh.position.set(this._collisionSurfaces[i].mesh.position.x-CarSimulator.ground_width*3, this._collisionSurfaces[i].mesh.position.y, this._collisionSurfaces[i].mesh.position.z);
-                        }
-                    }
-                }else if(xMove < 0){
-                    for(var i=0; i<this._collisionSurfaces.length; i++){
-                        if(this._collisionSurfaces[i].mesh.position.x < oldSurfacePos.x){
-                            this._collisionSurfaces[i].mesh.position.set(this._collisionSurfaces[i].mesh.position.x+CarSimulator.ground_width*3, this._collisionSurfaces[i].mesh.position.y, this._collisionSurfaces[i].mesh.position.z);
-                        }
-                    }
-                }
-
-                if(zMove > 0){
-                    for(var i=0; i<this._collisionSurfaces.length; i++){
-                        if(this._collisionSurfaces[i].mesh.position.z > oldSurfacePos.z){
-                            this._collisionSurfaces[i].mesh.position.set(this._collisionSurfaces[i].mesh.position.x, this._collisionSurfaces[i].mesh.position.y, this._collisionSurfaces[i].mesh.position.z-CarSimulator.ground_width*3);
-                        }
-                    }
-                }else if(zMove < 0){
-                    for(var i=0; i<this._collisionSurfaces.length; i++){
-                        if(this._collisionSurfaces[i].mesh.position.z < oldSurfacePos.z){
-                            this._collisionSurfaces[i].mesh.position.set(this._collisionSurfaces[i].mesh.position.x, this._collisionSurfaces[i].mesh.position.y, this._collisionSurfaces[i].mesh.position.z+CarSimulator.ground_width*3);
-                        }
-                    }
-                }
-
-                this._lastSurfaceIndex = this._collisionSurfaceIndices[0];
-            }
-        }
-    }
-
-    public connectCollisionSurface(surface : THREE.Geometry):void {
-        this._collisionSurface = surface;
-    }
-
-    public connectCollisionScene(scene : THREE.Scene):void {
-        this._collisionScene = scene;
-    }
 
     public newCheckCollisions():number[][] {
         for(var i=0; i<this._externalCollisionPoints.length; i++)
@@ -244,76 +178,25 @@ class PhysicsObject3d {
 
         var collisions:number[] = [];
         if (this._collisionMeshes) {
-            //for (var vertexIdx = 0; vertexIdx < this._object.geometry.vertices.length; vertexIdx++) {
-            //    var vertPos:THREE.Vector3 = this._object.geometry.vertices[vertexIdx].clone();
-            //    vertPos.applyQuaternion(this._object.getWorldQuaternion());
-            //    this._collisionPoints[vertexIdx].position.set(vertPos.x, vertPos.y, vertPos.z).add(this._object.position);
-            //
-            //    var testPos = this._collisionPoints[vertexIdx].position.clone()
-            //    testPos.setY(30);
-            //    this._collisionRaycaster.set(testPos, new Vector3(0, -1, 0));
-            //    var intersects = this._collisionRaycaster.intersectObject(this._collisionMeshes[this._collisionSurfaceIndices[surfIdx]], true);
-            //
-            //    if (intersects[0]) {
-            //        if (intersects[0].point.y >= this._collisionPoints[vertexIdx].position.y) {
-            //            var collisionPos:THREE.Vector3 = intersects[0].point;
-            //            var vert1:THREE.Vector3 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.a].clone().add(intersects[0].object.position);
-            //            var vert2:THREE.Vector3 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.b].clone().add(intersects[0].object.position);
-            //            var vert3:THREE.Vector3 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.c].clone().add(intersects[0].object.position);
-            //
-            //            var vertexNormals = [
-            //                intersects[0].face.vertexNormals[0],
-            //                intersects[0].face.vertexNormals[1],
-            //                intersects[0].face.vertexNormals[2]
-            //            ];
-            //
-            //            var applyForce = this.handleCollision(intersects[0].point, vert1, vert2, vert3, vertexNormals);
-            //            if (applyForce != 0)
-            //                collisions.push(applyForce);
-            //        }
-            //    }
-            //}
 
             for (var extColIdx = 0; extColIdx < this._externalCollisionPoints.length; extColIdx++) {
                 var vertPos:THREE.Vector3 = this._externalCollisionPositions[extColIdx].clone();
                 vertPos.applyQuaternion(this._object.getWorldQuaternion());
                 this._externalCollisionPoints[extColIdx].position.set(vertPos.x, vertPos.y, vertPos.z).add(this._object.position);
 
+
                 var testPos = this._externalCollisionPoints[extColIdx].position.clone();
-
-                var x_break = false;
-                var z_break = false;
-                while(true){
-                    if(testPos.x > CarSimulator.ground_width/2)
-                        testPos.add(new Vector3(-CarSimulator.ground_width, 0, 0));
-                    else if(testPos.x < -CarSimulator.ground_width/2)
-                        testPos.add(new Vector3(CarSimulator.ground_width, 0, 0));
-                    else
-                        x_break = true;
-
-                    if(testPos.z > CarSimulator.ground_width/2)
-                        testPos.add(new Vector3(0, 0, -CarSimulator.ground_width));
-                    else if(testPos.z < -CarSimulator.ground_width/2)
-                        testPos.add(new Vector3(0, 0, CarSimulator.ground_width));
-                    else
-                        z_break = true;
-
-                    if(z_break && x_break)
-                        break;
-                }
-
-
                 testPos.setY(30);
                 this._collisionRaycaster.set(testPos, new Vector3(0, -1, 0));
-                var intersects = this._collisionRaycaster.intersectObject(this._collisionMeshes[0], true);
+                var intersects = this._collisionRaycaster.intersectObjects(this._collisionMeshes, true);
 
                 if (intersects[0]) {
                     if (intersects[0].point.y >= this._externalCollisionPoints[extColIdx].position.y) {
                         var collisionPos:THREE.Vector3 = intersects[0].point.clone();
 
-                        var vert1:THREE.Vector3 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.a].clone();
-                        var vert2:THREE.Vector3 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.b].clone();
-                        var vert3:THREE.Vector3 = this._collisionSurfaces[0].geometry.vertices[intersects[0].face.c].clone();
+                        var vert1:THREE.Vector3 = intersects[0].object.geometry.vertices[intersects[0].face.a].clone().add(intersects[0].object.position);
+                        var vert2:THREE.Vector3 = intersects[0].object.geometry.vertices[intersects[0].face.b].clone().add(intersects[0].object.position);
+                        var vert3:THREE.Vector3 = intersects[0].object.geometry.vertices[intersects[0].face.c].clone().add(intersects[0].object.position);
 
                         var vertexNormals = [
                             intersects[0].face.vertexNormals[0],
@@ -327,7 +210,7 @@ class PhysicsObject3d {
                             collisions.push(collision);
                         }
                     }
-                    if (intersects[0].point.y+0.7 >= this._externalCollisionPoints[extColIdx].position.y) {
+                    if (intersects[0].point.y+0.6 >= this._externalCollisionPoints[extColIdx].position.y) {
                         this._externalCollision[extColIdx] = true;
                     }
                 }

@@ -63,7 +63,8 @@ class Wheel extends ParticleCollider {
 
             if(this.isColliding){
                 this.friction();
-                this.object.material.color.setHex(0x00ff00);
+
+
                 //var linearFrictionComponent = 1-Math.abs(this._connectedVehicle.vehicleModel.velocityDirection.clone().normalize().dot(this._wheelDirection.clone().normalize()));
                 //var linearFriction = math.multiply(
                 //    math.multiply(math.matrix([
@@ -135,7 +136,7 @@ class Wheel extends ParticleCollider {
                 this._wheelDirection.y,
                 this._wheelDirection.z,
                 0,0,0])
-            ))*10;
+            ))*8;
 
         var Fc = math.multiply(math.transpose(J),lagrange);
         this._connectedVehicle.vehicleModel.forceConstraints =  math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
@@ -188,10 +189,10 @@ class Wheel extends ParticleCollider {
             this._connectedVehicle.vehicleModel.forceConstraints =  math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
         }
 
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[0] *= 0.995;
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[1] *= 0.995;
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[2] *= 0.995;
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[4] *= 0.995;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[0] *= 0.99;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[1] *= 0.99;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[2] *= 0.99;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[4] *= 0.99;
     }
 
     

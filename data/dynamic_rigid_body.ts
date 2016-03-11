@@ -32,7 +32,7 @@ class DynamicRigidBody extends PhysicsObject3d {
         super(geometry, material, renderer);
         this._renderer = renderer;
 
-        this._gravity = -9.82*1.7;
+        this._gravity = -9.82;
         this._mass = 500;
         this._frictionConst = 0.99;
         this._collisions = [];
@@ -91,7 +91,7 @@ class DynamicRigidBody extends PhysicsObject3d {
         ]);
 
         var mc = 1/math.multiply( math.multiply(J, math.inv(this._M)), math.transpose(J));
-        var lagrange = -mc*(math.multiply(J,this._velocity)-0.65)*1;
+        var lagrange = -mc*(math.multiply(J,this._velocity)-0.6)*1;
 
         var Pc = math.multiply(math.transpose(J),lagrange);
 

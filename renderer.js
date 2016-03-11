@@ -18,10 +18,10 @@ var Renderer = (function () {
         this._camera.position.x = 0;
         this._camera.position.y = 10;
         this._camera.lookAt(new THREE.Vector3(0, 0, 0));
+        this._light = new THREE.DirectionalLight(0xffffff, 1);
+        this._light.position.set(1, 1, 0);
+        this._scene.add(this._light);
         //this._controls = new THREE.OrbitControls(this.camera);
-        var directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.5);
-        directionalLight.position.set(0, 1, 0);
-        this._scene.add(directionalLight);
         var container = document.getElementById('content');
         container.appendChild(this.renderer.domElement);
         window.addEventListener('resize', this.onWindowResize, false);

@@ -45,7 +45,6 @@ var Wheel = (function (_super) {
             this.object.geometry.rotateX(wheelRotation * 0.01);
             if (this.isColliding) {
                 this.friction();
-                this.object.material.color.setHex(0x00ff00);
             }
             else
                 this.object.material.color.setHex(0xff0000);
@@ -82,7 +81,7 @@ var Wheel = (function (_super) {
             this._wheelDirection.x,
             this._wheelDirection.y,
             this._wheelDirection.z,
-            0, 0, 0]))) * 10;
+            0, 0, 0]))) * 8;
         var Fc = math.multiply(math.transpose(J), lagrange);
         this._connectedVehicle.vehicleModel.forceConstraints = math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
         this._connectedVehicle.vehicleSetup.vehicleBody.forceConstraints.valueOf()[3] += 100000;
@@ -121,10 +120,10 @@ var Wheel = (function (_super) {
             var Fc = math.multiply(math.transpose(J), lagrange);
             this._connectedVehicle.vehicleModel.forceConstraints = math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
         }
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[0] *= 0.995;
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[1] *= 0.995;
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[2] *= 0.995;
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[4] *= 0.995;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[0] *= 0.99;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[1] *= 0.99;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[2] *= 0.99;
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[4] *= 0.99;
     };
     Wheel.prototype.connectVehicle = function (vehicle) {
         this._connectedVehicle = vehicle;

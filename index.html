@@ -4,6 +4,10 @@
     <meta charset="utf-8" />
     <title>Car simulator</title>
     <script src="js/math.min.js"></script>
+    <script src="http://cdn.peerjs.com/0.3/peer.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="js/index.js"></script>
+    <script src="data/network/socket.js"></script>
     <script src="http://threejs.org/build/three.min.js"></script>
     <script src="http://threejs.org/examples/js/loaders/DDSLoader.js"></script>
     <script src="http://threejs.org/examples/js/loaders/MTLLoader.js"></script>
@@ -13,6 +17,7 @@
     <!--<script src="https://dl.dropboxusercontent.com/u/3587259/Code/Threejs/OrbitControls.js"></script>-->
     <!--<script src="data/physics_object3d.js"></script>-->
     <!--<script src="data/sphere.js"></script>-->
+    <script src="data/object_loader.js"></script>
     <script src="data/vehicle.js"></script>
     <script src="data/vehiclesetup.js"></script>
     <script src="data/car.js"></script>
@@ -33,6 +38,10 @@
     <script src="renderer.js"></script>
 </head>
 <body style="margin:0px;">
+<div style="position: relative; float: right; margin: 10px;">
+    <input type="text" name="idTextBox" id="idText">
+    <button type="button" id="connectButton">Connect</button>
+</div>
 <div id="content" style="
 /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#7db9e8+3,ffffff+23 */
 background: #7ec0ee; /* Old browsers */
@@ -41,6 +50,7 @@ background: -webkit-linear-gradient(top,  #7ec0ee 3%,#ffffff 23%); /* Chrome10-2
 background: linear-gradient(to bottom,  #7ec0ee 3%,#ffffff 23%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
 "
-></div>
+>
+</div>
 </body>
 </html>
