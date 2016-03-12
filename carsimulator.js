@@ -112,7 +112,7 @@ var CarSimulator = (function () {
         configurable: true
     });
     CarSimulator.ground_width = 40;
-    CarSimulator.developer_mode = true;
+    CarSimulator.developer_mode = false;
     return CarSimulator;
 })();
 window.onload = function () {

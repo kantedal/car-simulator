@@ -31,7 +31,7 @@ class CarSimulator {
     private _groundObjects : GroundObjects;
 
     public static ground_width : number = 40;
-    public static developer_mode : boolean = true;
+    public static developer_mode : boolean = false;
 
     constructor(){
         this._renderer = new Renderer();
