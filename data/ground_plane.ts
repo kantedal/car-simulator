@@ -1,5 +1,7 @@
 ///<reference path="./physics_object3d.ts"/>
 ///<reference path="../math/noisejs.d.ts"/>
+///<reference path="../math/noisejs.d.ts"/>
+///<reference path="./environment/ground_objects.ts"/>
 
 class GroundPlane {
     private _mesh : THREE.Mesh[];
@@ -12,11 +14,13 @@ class GroundPlane {
     private _currentSurfIdx: number;
     private _dimension: number;
 
-
     private _renderer : Renderer;
     private _scale : THREE.Vector3;
     private _noise1 : Noise;
     private _noise2 : Noise;
+
+    private _texture : THREE.Texture;
+    private _material : THREE.MeshPhongMaterial;
 
     constructor(renderer: Renderer, dimension: number){
         this._dimension = dimension;
@@ -32,10 +36,25 @@ class GroundPlane {
 
         this._noise1 = new Noise(0.23);
         this._noise2 = new Noise(0.65);
+
+
+        if(CarSimulator.developer_mode){
+            this._material = new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true});
+        }
+        else{
+            this._texture = new THREE.TextureLoader().load( "texture/sand_grass.jpg" );
+            this._material = new THREE.MeshPhongMaterial( {
+                color: 0xdddddd,
+                specular: 0x333333,
+                shininess: 10,
+                map: this._texture,
+                bumpMap: this._texture,
+                bumpScale: 0.2
+            });
+        }
     }
 
     public newPlane(pos:THREE.Vector3){
-        var material1 = new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true});
 
         var geometry = new THREE.PlaneGeometry(CarSimulator.ground_width, CarSimulator.ground_width, 12, 12);
         geometry.rotateX(-Math.PI/2)
@@ -45,7 +64,14 @@ class GroundPlane {
         }
 
         geometry.computeVertexNormals();
-        var mesh = new THREE.Mesh(geometry, material1);
+        var mesh = new THREE.Mesh(geometry, this._material);
+
+        if(!CarSimulator.developer_mode){
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+        }
+
+
         mesh.position.copy(pos);
         this._mesh.push(mesh);
         this._renderer.scene.add(this._mesh[this._mesh.length-1]);
@@ -84,10 +110,10 @@ class GroundPlane {
 
                 if(distance <= this._collisionDistance){
                     this._collisionMesh.push(this._mesh[i].clone());
-
-                    this._mesh[i].material.color.setHex(0x00ff00);
+                    if(CarSimulator.developer_mode)
+                        this._mesh[i].material.color.setHex(0x00ff00);
                 }
-                else{
+                else if(CarSimulator.developer_mode){
                     this._mesh[i].material.color.setHex(0x999999);
                 }
 
@@ -113,9 +139,8 @@ class GroundPlane {
         this._mesh[idx].geometry.computeVertexNormals();
     }
 
-    private simplexNoise(pos:THREE.Vector3):number{
+    public simplexNoise(pos:THREE.Vector3):number{
         return this._noise1.perlin2(pos.x/40, (pos.z)/40)*10 + this._noise2.simplex2(pos.x/140, (pos.z)/140)*6;
-
     }
 
     public addLoadedListener(listener : PlaneLoadedListener):void {

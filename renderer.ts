@@ -9,12 +9,13 @@ class Renderer {
 
     constructor(){
         this.renderer = new THREE.WebGLRenderer({ alpha: true });
+        this.renderer.shadowMap.enabled = true;
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setClearColor(0x000000,0);
 
         this._scene = new THREE.Scene();
-        this._scene.fog = new THREE.Fog(0xffffff, 10, 200);
+        this._scene.fog = new THREE.Fog(0xffffff, 1, 175);
         this._camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.4, 1000);
         this._camera.removeEventListener()
         this._camera.aspect = 20;
@@ -23,8 +24,10 @@ class Renderer {
         this._camera.position.y = 10;
         this._camera.lookAt(new THREE.Vector3(0,0,0));
 
-        this._light = new THREE.DirectionalLight( 0xffffff, 1 );
-        this._light.position.set( 1, 1, 0 );
+        this._light = new THREE.DirectionalLight( 0xffeeee, 1 );
+        this._light.castShadow = true;
+        this._light.shadowDarkness = 1.0;
+        this._light.position.set( 1, 0.3, 0 );
         this._scene.add(  this._light );
 
         //this._controls = new THREE.OrbitControls(this.camera);

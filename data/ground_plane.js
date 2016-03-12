@@ -1,5 +1,7 @@
 ///<reference path="./physics_object3d.ts"/>
 ///<reference path="../math/noisejs.d.ts"/>
+///<reference path="../math/noisejs.d.ts"/>
+///<reference path="./environment/ground_objects.ts"/>
 var GroundPlane = (function () {
     function GroundPlane(renderer, dimension) {
         this._dimension = dimension;
@@ -13,16 +15,33 @@ var GroundPlane = (function () {
         this._scale = new Vector3(1, 1, 1);
         this._noise1 = new Noise(0.23);
         this._noise2 = new Noise(0.65);
+        if (CarSimulator.developer_mode) {
+            this._material = new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true });
+        }
+        else {
+            this._texture = new THREE.TextureLoader().load("texture/sand_grass.jpg");
+            this._material = new THREE.MeshPhongMaterial({
+                color: 0xdddddd,
+                specular: 0x333333,
+                shininess: 10,
+                map: this._texture,
+                bumpMap: this._texture,
+                bumpScale: 0.2
+            });
+        }
     }
     GroundPlane.prototype.newPlane = function (pos) {
-        var material1 = new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true });
         var geometry = new THREE.PlaneGeometry(CarSimulator.ground_width, CarSimulator.ground_width, 12, 12);
         geometry.rotateX(-Math.PI / 2);
         for (var i = 0; i < geometry.vertices.length; i++) {
             geometry.vertices[i].y = this.simplexNoise(pos.clone().add(geometry.vertices[i]));
         }
         geometry.computeVertexNormals();
-        var mesh = new THREE.Mesh(geometry, material1);
+        var mesh = new THREE.Mesh(geometry, this._material);
+        if (!CarSimulator.developer_mode) {
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+        }
         mesh.position.copy(pos);
         this._mesh.push(mesh);
         this._renderer.scene.add(this._mesh[this._mesh.length - 1]);
@@ -53,9 +72,10 @@ var GroundPlane = (function () {
                 }
                 if (distance <= this._collisionDistance) {
                     this._collisionMesh.push(this._mesh[i].clone());
-                    this._mesh[i].material.color.setHex(0x00ff00);
+                    if (CarSimulator.developer_mode)
+                        this._mesh[i].material.color.setHex(0x00ff00);
                 }
-                else {
+                else if (CarSimulator.developer_mode) {
                     this._mesh[i].material.color.setHex(0x999999);
                 }
             }

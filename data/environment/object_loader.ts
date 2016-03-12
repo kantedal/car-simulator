@@ -2,7 +2,7 @@
  * Created by filles-dator on 2016-03-09.
  */
 
-///<reference path="../threejs/three.d.ts"/>
+///<reference path="../../threejs/three.d.ts"/>
 class ObjectLoader {
     private _wheelMesh : THREE.Mesh;
     private _objectLoadedListner: ObjectLoaderListener;
@@ -29,6 +29,7 @@ class ObjectLoader {
             objLoader.setPath( 'models/car/' );
             objLoader.load( 'tire.obj', function ( object ) {
                 self._wheelMesh = object;
+                self._wheelMesh.castShadow = true;
                 self._objectLoadedListner.objectsLoaded();
             }, 0, 0 );
         });

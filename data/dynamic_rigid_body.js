@@ -23,8 +23,8 @@ var DynamicRigidBody = (function (_super) {
         this.yLim = [-1, 1];
         this.zLim = [-4, 4];
         this._renderer = renderer;
-        this._gravity = -9.82;
-        this._mass = 500;
+        this._gravity = -9.82 * 0.7;
+        this._mass = 700;
         this._frictionConst = 0.99;
         this._collisions = [];
         this.calculateInertiaTensor();
@@ -77,7 +77,7 @@ var DynamicRigidBody = (function (_super) {
             rotComponent.valueOf()[2]
         ]);
         var mc = 1 / math.multiply(math.multiply(J, math.inv(this._M)), math.transpose(J));
-        var lagrange = -mc * (math.multiply(J, this._velocity) - 0.6) * 1;
+        var lagrange = -mc * (math.multiply(J, this._velocity) - 0.7) * 1;
         var Pc = math.multiply(math.transpose(J), lagrange);
         var newVelocity = math.add(this._velocity, math.multiply(math.inv(this._M), Pc));
         return newVelocity;

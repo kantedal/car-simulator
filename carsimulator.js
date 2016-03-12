@@ -8,7 +8,7 @@
 ///<reference path="./data/vehicle.ts"/>
 ///<reference path="./data/dynamic_rigid_body.ts"/>
 ///<reference path="./data/car_test.ts"/>
-///<reference path="./data/object_loader.ts"/>
+///<reference path="./data/environment/object_loader.ts"/>
 ///<reference path="./math/stats.d.ts"/>
 ///<reference path="./data/network/socket.ts"/>
 /// <reference path="./math/jquery.d.ts" />
@@ -19,9 +19,12 @@ var CarSimulator = (function () {
         this._clock = new THREE.Clock();
         this._stats = new Stats();
         this._time = 0;
-        this._groundPlanes = [];
+        this._groundPlanes = new GroundPlane();
+        ;
         this._car = new Vehicle(this._renderer);
         this._objectLoader = new ObjectLoader();
+        if (!CarSimulator.developer_mode)
+            this._groundObjects = new GroundObjects(this._renderer, this._groundPlanes);
         this._socket = new Socket(this._renderer);
         this.handleJqueryEvents();
         //this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry( 6, 3, 8 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), this._renderer, 500, this);
@@ -47,7 +50,7 @@ var CarSimulator = (function () {
                 self._objectLoader.wheelMesh.rotateY(Math.PI / 2);
                 self._objectLoader.wheelMesh.scale.set(1.6, 1.6, 1.6);
                 for (var w = 0; w < self._car.vehicleSetup.wheels.length; w++) {
-                    self._car.vehicleSetup.wheels[w].object.add(self._objectLoader.wheelMesh.clone());
+                    self._car.vehicleSetup.wheels[w].attatchMesh(self._objectLoader.wheelMesh.clone());
                 }
             }
         };
@@ -66,17 +69,13 @@ var CarSimulator = (function () {
         var delta = (this._clock.getElapsedTime() - this._time);
         if (delta > 0.06)
             delta = 0.06;
-        //delta = 0.04;
         this._groundPlanes.update(this._car.vehicleModel.object.position);
         this._car.update(this._time, delta);
-        //this.renderer.camera.lookAt(new THREE.Vector3(0,0,0));
-        //this.renderer.camera.position.set(0,110,0);
+        if (!CarSimulator.developer_mode)
+            this._groundObjects.update(this._car.vehicleModel.object.position);
         var self = this;
-        //setTimeout( function() {
         requestAnimationFrame(function () { return self.update(); });
-        //}, 1000 / 30 );
         this._renderer.render();
-        //requestAnimationFrame( this.update );
         this._stats.end();
     };
     CarSimulator.prototype.handleJqueryEvents = function () {
@@ -113,7 +112,7 @@ var CarSimulator = (function () {
         configurable: true
     });
     CarSimulator.ground_width = 40;
-    CarSimulator.developer_mode = false;
+    CarSimulator.developer_mode = true;
     return CarSimulator;
 })();
 window.onload = function () {
