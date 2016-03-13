@@ -52,9 +52,9 @@ class Vehicle {
 
         this._renderer.camera.lookAt(this._vehicleModel.object.position);
         this._renderer.camera.position.set(
-            this._vehicleModel.object.position.x+this._vehicleModel.localZDirection.x*0
-            this._vehicleModel.object.position.y+this._vehicleModel.localZDirection.y*0 + 10,
-            this._vehicleModel.object.position.z+this._vehicleModel.localZDirection.z*0 + 12);
+            this._vehicleModel.object.position.x+this._vehicleModel.localZDirection.x*0,
+            this._vehicleModel.object.position.y+this._vehicleModel.localZDirection.y*0 + 9,
+            this._vehicleModel.object.position.z+this._vehicleModel.localZDirection.z*0 + 11);
         this._position.set(this._vehicleModel.object.position.x, this._vehicleModel.object.position.y, this._vehicleModel.object.position.z);
 
         //this._vehicleSetup.vehicleBody.object.position.setY(Math.sin(time*3));

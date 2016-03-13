@@ -67,22 +67,22 @@ class VehicleSetup {
 
             this.pressedKeys[e.keyCode] = true;
 
-            if(this.pressedKeys[37]) {
+            if(this.pressedKeys[37] || this.pressedKeys[65]) {
                 if(this._steering)
                     this._steering.steeringAcceleration += 100;
             }
 
-            if(this.pressedKeys[38]) {
+            if(this.pressedKeys[38] || this.pressedKeys[87]) {
                 if(this._motor)
                     this._motor.isAccelerating = true;
             }
 
-            if(this.pressedKeys[39]) {
+            if(this.pressedKeys[39] || this.pressedKeys[68]) {
                 if(this._steering)
                     this._steering.steeringAcceleration -= 100;
             }
 
-            if(this.pressedKeys[40]) {
+            if(this.pressedKeys[40] || this.pressedKeys[83]) {
             }
         }
     }
@@ -99,6 +99,16 @@ class VehicleSetup {
                 case 39: //Right
                     break;
                 case 40: //Down
+                    break;
+                case 65:
+                    break;
+                case 87:
+                    if(this._motor)
+                        this._motor.isAccelerating = false;
+                    break;
+                case 68:
+                    break;
+                case 83:
                     break;
             }
         }

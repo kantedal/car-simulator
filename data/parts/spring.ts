@@ -6,13 +6,13 @@
 ///<reference path="../vehicle.ts"/>
 
 class Spring {
-    private _linearSpringConst:number = 12000;
+    private _linearSpringConst:number = 6000;
     private _linearDampingConst:number = 900;
     private _linearSpringAcceleration: THREE.Vector3;
     private _linearSpringVelocity: THREE.Vector3;
     private _linearDisplacement: THREE.Vector3;
 
-    private _angularSpringConst:number = 16000;
+    private _angularSpringConst:number = 10000;
     private _angularDampingConst:number = 1600;
     private _angularSpringAcceleration: THREE.Vector3;
     private _angularSpringVelocity: THREE.Vector3;
@@ -65,14 +65,14 @@ class Spring {
         this._linearSpringAcceleration =
                 linearState.clone().sub(this._linearDisplacement)
                 .multiplyScalar(this._linearSpringConst).add(this._linearSpringVelocity.clone()
-                .multiplyScalar(this._linearDampingConst)).multiplyScalar(1/500);
+                .multiplyScalar(this._linearDampingConst)).multiplyScalar(1/300);
         this._linearSpringAcceleration.multiplyScalar(-1);
         this._linearSpringVelocity.add(this._linearSpringAcceleration.clone().multiplyScalar(delta));
 
         this._angularSpringAcceleration =
             angularState.clone().sub(this._angularDisplacement)
                 .multiplyScalar(this._angularSpringConst).add(this._angularSpringVelocity.clone()
-                .multiplyScalar(this._angularDampingConst)).multiplyScalar(1/1500);
+                .multiplyScalar(this._angularDampingConst)).multiplyScalar(1/1000);
         this._angularSpringAcceleration.multiplyScalar(-1);
         this._angularSpringVelocity.add(this._angularSpringAcceleration.clone().multiplyScalar(delta));
 

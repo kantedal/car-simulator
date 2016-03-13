@@ -16,19 +16,19 @@ var VehicleSetup = (function () {
         this.onKeyDown = function (e) {
             if (e) {
                 _this.pressedKeys[e.keyCode] = true;
-                if (_this.pressedKeys[37]) {
+                if (_this.pressedKeys[37] || _this.pressedKeys[65]) {
                     if (_this._steering)
                         _this._steering.steeringAcceleration += 100;
                 }
-                if (_this.pressedKeys[38]) {
+                if (_this.pressedKeys[38] || _this.pressedKeys[87]) {
                     if (_this._motor)
                         _this._motor.isAccelerating = true;
                 }
-                if (_this.pressedKeys[39]) {
+                if (_this.pressedKeys[39] || _this.pressedKeys[68]) {
                     if (_this._steering)
                         _this._steering.steeringAcceleration -= 100;
                 }
-                if (_this.pressedKeys[40]) {
+                if (_this.pressedKeys[40] || _this.pressedKeys[83]) {
                 }
             }
         };
@@ -45,6 +45,16 @@ var VehicleSetup = (function () {
                     case 39:
                         break;
                     case 40:
+                        break;
+                    case 65:
+                        break;
+                    case 87:
+                        if (_this._motor)
+                            _this._motor.isAccelerating = false;
+                        break;
+                    case 68:
+                        break;
+                    case 83:
                         break;
                 }
             }

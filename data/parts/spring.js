@@ -5,9 +5,9 @@
 ///<reference path="../vehicle.ts"/>
 var Spring = (function () {
     function Spring(renderer) {
-        this._linearSpringConst = 12000;
+        this._linearSpringConst = 6000;
         this._linearDampingConst = 900;
-        this._angularSpringConst = 16000;
+        this._angularSpringConst = 10000;
         this._angularDampingConst = 1600;
         this._linearSpringAcceleration = new THREE.Vector3(0, 0, 0);
         this._linearSpringVelocity = new THREE.Vector3(0, 0, 0);
@@ -38,13 +38,13 @@ var Spring = (function () {
         this._linearSpringAcceleration =
             linearState.clone().sub(this._linearDisplacement)
                 .multiplyScalar(this._linearSpringConst).add(this._linearSpringVelocity.clone()
-                .multiplyScalar(this._linearDampingConst)).multiplyScalar(1 / 500);
+                .multiplyScalar(this._linearDampingConst)).multiplyScalar(1 / 300);
         this._linearSpringAcceleration.multiplyScalar(-1);
         this._linearSpringVelocity.add(this._linearSpringAcceleration.clone().multiplyScalar(delta));
         this._angularSpringAcceleration =
             angularState.clone().sub(this._angularDisplacement)
                 .multiplyScalar(this._angularSpringConst).add(this._angularSpringVelocity.clone()
-                .multiplyScalar(this._angularDampingConst)).multiplyScalar(1 / 1500);
+                .multiplyScalar(this._angularDampingConst)).multiplyScalar(1 / 1000);
         this._angularSpringAcceleration.multiplyScalar(-1);
         this._angularSpringVelocity.add(this._angularSpringAcceleration.clone().multiplyScalar(delta));
         //this._angularSpringAcceleration.multiplyScalar(-this._linearSpringConst).addScalar(this._linearDampingConst*this._linearSpringVelocity).multiplyScalar(1/1500);
