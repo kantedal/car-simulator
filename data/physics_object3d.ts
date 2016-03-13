@@ -168,7 +168,9 @@ class PhysicsObject3d {
         this._externalCollision[this._externalCollision.length] = false;
         this._externalCollisionPoints[this._externalCollisionPoints.length] = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshBasicMaterial({color: 0xffff00}))
         this._externalCollisionPoints[this._externalCollisionPoints.length-1].position.set(position.x, position.y, position.z);
-        this._renderer.scene.add(this._externalCollisionPoints[this._externalCollisionPoints.length-1]);
+
+        if(CarSimulator.developer_mode)
+            this._renderer.scene.add(this._externalCollisionPoints[this._externalCollisionPoints.length-1]);
     }
 
     public connectCollisionSurfaces(surfaces : THREE.Mesh[]){

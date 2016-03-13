@@ -14,7 +14,7 @@ class ObjectLoader {
     private _carLoaded = false;
 
     private _treeMesh : THREE.Mesh;
-    private _treeLoaded = true;
+    private _treeLoaded = false;
 
     constructor(){
     }
@@ -23,7 +23,7 @@ class ObjectLoader {
         this._objectLoadedListner = listener;
         this.loadWheel();
         this.loadCar();
-        //this.loadTree();
+        this.loadTree();
     }
 
     public loadWheel():void {
@@ -56,6 +56,8 @@ class ObjectLoader {
         mtlLoader.setPath( 'models/car/' );
         mtlLoader.load( 'car.mtl', function( materials ) {
             materials.preload();
+
+            console.log(materials);
 
             var texture = new THREE.TextureLoader().load("texture/barrel_spec.png")
             materials.materials.phong6SG = new THREE.MeshPhongMaterial({
@@ -100,6 +102,8 @@ class ObjectLoader {
                 shininess: 0
             });
 
+            materials.materials.lambert2SG.transparent = true;
+
             var objLoader = new THREE.OBJLoader();
             objLoader.setMaterials( materials );
             objLoader.setPath( 'models/car/' );
@@ -121,13 +125,24 @@ class ObjectLoader {
         mtlLoader.setPath( 'models/' );
         mtlLoader.load( 'tree.mtl', function( materials ) {
             materials.preload();
-            console.log("MATERIALS LOADED")
+
+            materials.materials.lambert2SG = new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load("models/FirBranches_Df.png"),
+            });
+
+            materials.materials.lambert2SG = new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load("models/FirBranches_Df.png"),
+                transparent: true,
+                alphaTest: 0.2
+            });
+
             var objLoader = new THREE.OBJLoader();
             objLoader.setMaterials( materials );
             objLoader.setPath( 'models/' );
             objLoader.load( 'tree.obj', function ( object ) {
                 self._treeMesh = object;
                 self._treeLoaded = true;
+                self._treeMesh.scale.set(0.5,0.4,0.5);
                 if(self.allLoaded())
                     self._objectLoadedListner.objectsLoaded();
             }, 0, 0 );

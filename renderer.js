@@ -7,10 +7,11 @@ var Renderer = (function () {
             _this._camera.updateProjectionMatrix();
             _this.renderer.setSize(window.innerWidth, window.innerHeight);
         };
-        this.renderer = new THREE.WebGLRenderer({ alpha: true });
+        this.renderer = new THREE.WebGLRenderer({ alpha: true, antialiasing: false });
         this.renderer.shadowMap.enabled = true;
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setClearColor(0x000000, 0);
+        this.renderer.sortObjects = true;
         this._scene = new THREE.Scene();
         this._scene.fog = new THREE.Fog(0xffffff, 1, 175);
         this._camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.4, 1000);

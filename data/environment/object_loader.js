@@ -6,13 +6,13 @@ var ObjectLoader = (function () {
     function ObjectLoader() {
         this._wheelLoaded = false;
         this._carLoaded = false;
-        this._treeLoaded = true;
+        this._treeLoaded = false;
     }
     ObjectLoader.prototype.load = function (listener) {
         this._objectLoadedListner = listener;
         this.loadWheel();
         this.loadCar();
-        //this.loadTree();
+        this.loadTree();
     };
     ObjectLoader.prototype.loadWheel = function () {
         var self = this;
@@ -40,6 +40,7 @@ var ObjectLoader = (function () {
         mtlLoader.setPath('models/car/');
         mtlLoader.load('car.mtl', function (materials) {
             materials.preload();
+            console.log(materials);
             var texture = new THREE.TextureLoader().load("texture/barrel_spec.png");
             materials.materials.phong6SG = new THREE.MeshPhongMaterial({
                 map: new THREE.TextureLoader().load("texture/barrel_diffuse.png"),
@@ -77,6 +78,7 @@ var ObjectLoader = (function () {
                 specular: 0x999999,
                 shininess: 0
             });
+            materials.materials.lambert2SG.transparent = true;
             var objLoader = new THREE.OBJLoader();
             objLoader.setMaterials(materials);
             objLoader.setPath('models/car/');
@@ -96,13 +98,21 @@ var ObjectLoader = (function () {
         mtlLoader.setPath('models/');
         mtlLoader.load('tree.mtl', function (materials) {
             materials.preload();
-            console.log("MATERIALS LOADED");
+            materials.materials.lambert2SG = new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load("models/FirBranches_Df.png")
+            });
+            materials.materials.lambert2SG = new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load("models/FirBranches_Df.png"),
+                transparent: true,
+                alphaTest: 0.2
+            });
             var objLoader = new THREE.OBJLoader();
             objLoader.setMaterials(materials);
             objLoader.setPath('models/');
             objLoader.load('tree.obj', function (object) {
                 self._treeMesh = object;
                 self._treeLoaded = true;
+                self._treeMesh.scale.set(0.5, 0.4, 0.5);
                 if (self.allLoaded())
                     self._objectLoadedListner.objectsLoaded();
             }, 0, 0);

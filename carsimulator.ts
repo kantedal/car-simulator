@@ -96,9 +96,7 @@ class CarSimulator {
                     carMesh.scale.set(0.38, 0.38, 0.38);
                     self._car.vehicleSetup.vehicleBody.attatchMesh(carMesh);
 
-                    //var treeMesh = self._objectLoader.treeMesh;
-                    //treeMesh.postion.set(20,10,20);
-                    //self._renderer.scene.add(treeMesh);
+                    self._groundObjects.tree.attachTreeMesh(self._objectLoader.treeMesh);
                 }
             };
             this._objectLoader.load(objectsLoaderListener);
@@ -142,7 +140,7 @@ class CarSimulator {
         //    this._car.vehicleModel.object.position.clone().add(this._car.vehicleSetup.wheels[3].object.position),
         //    this._clock.getElapsedTime(),
         //    this._car.vehicleSetup.motor.isAccelerating
-        );
+        //);
 
         if(!CarSimulator.developer_mode)
             this._groundObjects.update(this._car.vehicleModel.object.position);

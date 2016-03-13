@@ -63,9 +63,7 @@ var CarSimulator = (function () {
                     var carMesh = self._objectLoader.carMesh.clone();
                     carMesh.scale.set(0.38, 0.38, 0.38);
                     self._car.vehicleSetup.vehicleBody.attatchMesh(carMesh);
-                    //var treeMesh = self._objectLoader.treeMesh;
-                    //treeMesh.postion.set(20,10,20);
-                    //self._renderer.scene.add(treeMesh);
+                    self._groundObjects.tree.attachTreeMesh(self._objectLoader.treeMesh);
                 }
             };
             this._objectLoader.load(objectsLoaderListener);
@@ -88,7 +86,17 @@ var CarSimulator = (function () {
         //this._time = this._clock.getElapsedTime();
         this._groundPlanes.update(this._car.vehicleModel.object.position);
         this._car.update(this._time, delta);
-        ;
+        //this._particleSystems[0].update(
+        //    this._car.vehicleModel.object.position.clone().add(this._car.vehicleSetup.wheels[2].object.position),
+        //    this._clock.getElapsedTime(),
+        //    this._car.vehicleSetup.motor.isAccelerating
+        //);
+        //
+        //this._particleSystems[1].update(
+        //    this._car.vehicleModel.object.position.clone().add(this._car.vehicleSetup.wheels[3].object.position),
+        //    this._clock.getElapsedTime(),
+        //    this._car.vehicleSetup.motor.isAccelerating
+        //);
         if (!CarSimulator.developer_mode)
             this._groundObjects.update(this._car.vehicleModel.object.position);
         var self = this;

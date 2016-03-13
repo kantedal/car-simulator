@@ -8,11 +8,12 @@ class Renderer {
     private _controls : THREE.OrbitControls;
 
     constructor(){
-        this.renderer = new THREE.WebGLRenderer({ alpha: true });
+        this.renderer = new THREE.WebGLRenderer({ alpha: true, antialiasing: false });
         this.renderer.shadowMap.enabled = true;
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setClearColor(0x000000,0);
+        this.renderer.sortObjects = true;
 
         this._scene = new THREE.Scene();
         this._scene.fog = new THREE.Fog(0xffffff, 1, 175);

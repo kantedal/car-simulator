@@ -6,7 +6,7 @@
 ///<reference path="./../ground_plane.ts"/>
 var Grass = (function () {
     function Grass(renderer, groundPlanes) {
-        this._particleCount = 2000;
+        this._particleCount = 7000;
         this._renderer = renderer;
         this._groundPlanes = groundPlanes;
         this._particles = new THREE.Geometry();
@@ -14,13 +14,14 @@ var Grass = (function () {
         var texture_alpha = new THREE.TextureLoader().load("texture/grass_alpha.png");
         this._particleMaterial = new THREE.PointsMaterial({
             color: 0xFFFFFF,
-            size: 4,
+            size: 5,
             map: texture,
-            transparent: true
+            transparent: true,
+            depthWrite: false
         });
         for (var p = 0; p < this._particleCount; p++) {
             var angle = Math.random() * 2 * Math.PI;
-            var length = Math.random() * 200;
+            var length = Math.sqrt(Math.random()) * 200;
             var x_val = Math.cos(angle) * length;
             var z_val = Math.sin(angle) * length;
             var y_val = this._groundPlanes.simplexNoise(new THREE.Vector3(x_val, 0, z_val));
@@ -35,7 +36,7 @@ var Grass = (function () {
         for (var p = 0; p < this._particleCount; p++) {
             if (current_pos.distanceTo(this._particleSystem.geometry.vertices[p]) > 200) {
                 var angle = Math.random() * 2 * Math.PI;
-                var length = Math.random() * 150 + 50;
+                var length = 50 + Math.sqrt(Math.random()) * 150;
                 var x_val = current_pos.x + Math.cos(angle) * length;
                 var z_val = current_pos.z + Math.sin(angle) * length;
                 var y_val = this._groundPlanes.simplexNoise(new THREE.Vector3(x_val, 0, z_val));

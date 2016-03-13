@@ -5,40 +5,38 @@
 ///<reference path="../../renderer.ts"/>
 ///<reference path="./../ground_plane.ts"/>
 var Tree = (function () {
-    function Tree(renderer) {
-        this._cloudCount = 75;
+    function Tree(renderer, groundPlanes) {
+        this._treeCount = 15;
         this._renderer = renderer;
-        var map = new THREE.TextureLoader().load("texture/cloud.png");
-        this._cloudMaterial1 = new THREE.SpriteMaterial({ map: map, color: 0xffffff, fog: true });
-        this._clouds = [];
-        for (var c = 0; c < this._cloudCount; c++) {
-            var angle = Math.random() * 2 * Math.PI;
-            var length = Math.random() * 500;
-            var x_val = Math.cos(angle) * length;
-            var z_val = Math.sin(angle) * length;
-            var y_val = 30 + Math.random() * 10;
-            var scale = 120 + Math.random() * 10;
-            var new_cloud = new THREE.Sprite(this._cloudMaterial1.clone());
-            new_cloud.position.set(x_val, y_val, z_val);
-            new_cloud.scale.set(scale, scale, scale);
-            this._renderer.scene.add(new_cloud);
-            this._clouds.push(new_cloud);
-        }
+        this._trees = [];
+        this._groundPlanes = groundPlanes;
     }
     Tree.prototype.update = function (current_pos) {
-        for (var c = 0; c < this._cloudCount; c++) {
-            if (current_pos.distanceTo(this._clouds[c].position) > 500) {
-                var angle = Math.random() * 2 * Math.PI;
-                var length = Math.random() * 500;
-                var x_val = current_pos.x + Math.cos(angle) * length;
-                var z_val = current_pos.z + Math.sin(angle) * length;
-                var y_val = 40 + Math.random() * 10;
-                this._clouds[c].material.opacity = 0;
-                this._clouds[c].position.set(x_val, y_val, z_val);
+        if (this._treeMesh) {
+            for (var c = 0; c < this._treeCount; c++) {
+                if (current_pos.distanceTo(this._trees[c].position) > 200) {
+                    var angle = Math.random() * 2 * Math.PI;
+                    var radius = Math.sqrt(Math.random()) * 200;
+                    var x_val = current_pos.x + Math.cos(angle) * radius;
+                    var z_val = current_pos.z + Math.sin(angle) * radius;
+                    var y_val = this._groundPlanes.simplexNoise(new THREE.Vector3(x_val, 0, z_val));
+                    this._trees[c].position.set(x_val, y_val, z_val);
+                }
             }
-            if (this._clouds[c].material.opacity < 1) {
-                this._clouds[c].material.opacity += 0.01;
-            }
+        }
+    };
+    Tree.prototype.attachTreeMesh = function (tree) {
+        this._treeMesh = tree;
+        for (var c = 0; c < this._treeCount; c++) {
+            var angle = Math.random() * 2 * Math.PI;
+            var length = 150 + Math.sqrt(Math.random()) * 50;
+            var x_val = Math.cos(angle) * length;
+            var z_val = Math.sin(angle) * length;
+            var y_val = this._groundPlanes.simplexNoise(new THREE.Vector3(x_val, 0, z_val));
+            var newTree = this._treeMesh.clone();
+            newTree.position.set(x_val, y_val, z_val);
+            this._renderer.scene.add(newTree);
+            this._trees.push(newTree);
         }
     };
     return Tree;
