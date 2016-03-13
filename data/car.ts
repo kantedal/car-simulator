@@ -15,10 +15,10 @@ class Car extends VehicleSetup {
         this.motor = new Motor(20000, 100);
 
         this.wheels = [
-            new Wheel(renderer, new THREE.Vector3(-3, -1, -4)),
-            new Wheel(renderer, new THREE.Vector3(3, -1, -4)),
-            new Wheel(renderer, new THREE.Vector3(-3, -1, 4)),
-            new Wheel(renderer, new THREE.Vector3(3, -1, 4))
+            new Wheel(renderer, new THREE.Vector3(-2.8, -1, -4)),
+            new Wheel(renderer, new THREE.Vector3(2.8, -1, -4)),
+            new Wheel(renderer, new THREE.Vector3(-3.8, -1, 5.5)),
+            new Wheel(renderer, new THREE.Vector3(3.8, -1, 5.5))
         ];
 
         vehicle.vehicleModel.object.add(this.wheels[0].object);
@@ -45,7 +45,11 @@ class Car extends VehicleSetup {
         vehicle.vehicleModel.addCollisionPoint(this.wheels[3].object.position.clone().add(new Vector3(0,-1.3,0));
         vehicle.vehicleModel.addCollisionPoint(this.wheels[3].object.position.clone().add(new Vector3(-1,2.5,0));
 
-        this.vehicleBody = new RelativeDynamicBody(new THREE.BoxGeometry( 5, 2, 8 ), new THREE.MeshBasicMaterial({color: 0xff00ff, wireframe: true}), renderer, this.vehicle);
+        if(CarSimulator.developer_mode)
+            this.vehicleBody = new RelativeDynamicBody(new THREE.BoxGeometry( 5, 2, 8 ), new THREE.MeshBasicMaterial({color: 0xff00ff, wireframe: true}), renderer, this.vehicle, this.vehicle.vehicleModel.velocity);
+        else
+            this.vehicleBody = new RelativeDynamicBody(new THREE.BoxGeometry( 0, 0, 0 ), new THREE.MeshBasicMaterial({color: 0xff00ff, wireframe: true}), renderer, this.vehicle, this.vehicle.vehicleModel.velocity);
+
         vehicle.vehicleModel.object.add(this.vehicleBody.object)
 
         //this.springs = [

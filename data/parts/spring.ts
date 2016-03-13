@@ -6,9 +6,19 @@
 ///<reference path="../vehicle.ts"/>
 
 class Spring {
-    private _vehicle : Vehicle;
+    private _linearSpringConst:number = 12000;
+    private _linearDampingConst:number = 900;
+    private _linearSpringAcceleration: THREE.Vector3;
+    private _linearSpringVelocity: THREE.Vector3;
+    private _linearDisplacement: THREE.Vector3;
+
+    private _angularSpringConst:number = 16000;
+    private _angularDampingConst:number = 1600;
+    private _angularSpringAcceleration: THREE.Vector3;
+    private _angularSpringVelocity: THREE.Vector3;
+    private _angularDisplacement: THREE.Vector3;
+
     private _renderer : Renderer;
-    private _object : THREE.Mesh;
     private _springGroup : THREE.Group;
     private _spring : THREE.Object3D;
     private _springMesh : THREE.Mesh;
@@ -19,10 +29,16 @@ class Spring {
     private _springArrow : THREE.ArrowHelper;
 
     constructor(renderer: Renderer){
-        //this._vehicle = vehicle;
+        this._linearSpringAcceleration = new THREE.Vector3(0,0,0);
+        this._linearSpringVelocity = new THREE.Vector3(0,0,0);
+        this._linearDisplacement = new THREE.Vector3(0,1,0);
+
+        this._angularSpringAcceleration = new THREE.Vector3(0,0,0);
+        this._angularSpringVelocity = new THREE.Vector3(0,0,0);
+        this._angularDisplacement = new THREE.Vector3(0,0,0);
+
         this._renderer = renderer;
         this._springGroup = new THREE.Group();
-        //this._springGroup.rotateZ(startRot);
         this._springGroup.position.set(0,0,0);
 
         this._spring = new THREE.Object3D();
@@ -45,83 +61,62 @@ class Spring {
         //this.loadSpringModel();
     }
 
-    private loadSpringModel():void {
-        var self = this;
-        var loader = new THREE.OBJLoader();
-        loader.load(
-            './models/spring2.obj',
-            function(object : THREE.Mesh){
-                var material1 = new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true});
+    public update(time:number, delta:number, linearState: THREE.Vector3, angularState: THREE.Vector3) {
+        this._linearSpringAcceleration =
+                linearState.clone().sub(this._linearDisplacement)
+                .multiplyScalar(this._linearSpringConst).add(this._linearSpringVelocity.clone()
+                .multiplyScalar(this._linearDampingConst)).multiplyScalar(1/500);
+        this._linearSpringAcceleration.multiplyScalar(-1);
+        this._linearSpringVelocity.add(this._linearSpringAcceleration.clone().multiplyScalar(delta));
 
-                self._springMesh = object.clone();
-                self._springMesh.scale.set(0.4,0.4,0.4);
-                self._springMesh.position.set(0,1.2,0);
-                //self._springMesh.position.set(self._wheelConnectorMesh.position.x, self._wheelConnectorMesh.position.y, self._wheelConnectorMesh.position.z);
-                self._spring.add(self._springMesh);
-            },
-            function ( xhr ) {
-                console.log( 'An error happened' );
-            }
-        )
+        this._angularSpringAcceleration =
+            angularState.clone().sub(this._angularDisplacement)
+                .multiplyScalar(this._angularSpringConst).add(this._angularSpringVelocity.clone()
+                .multiplyScalar(this._angularDampingConst)).multiplyScalar(1/1500);
+        this._angularSpringAcceleration.multiplyScalar(-1);
+        this._angularSpringVelocity.add(this._angularSpringAcceleration.clone().multiplyScalar(delta));
+
+
+        //this._angularSpringAcceleration.multiplyScalar(-this._linearSpringConst).addScalar(this._linearDampingConst*this._linearSpringVelocity).multiplyScalar(1/1500);
+        //this._linearSpringVelocity.add(this._linearSpringAcceleration.clone().multiplyScalar(delta));
+
+        //this._linearSpringAcceleration.setY( - (this._linearSpringConst*(linearState.y-1) + this._linearDampingConst*this._linearSpringVelocity.y)/500);
+        //this._linearSpringVelocity.setY(this._linearSpringVelocity.y + this._linearSpringAcceleration.y*delta);
+
+        //
+        //this._angularSpringAccelerationX = - (this._angularSpringConst*(state.valueOf()[3]) + this._angularDampingConst*this._angularSpringVelocityX)/1500;
+        //this._angularSpringVelocityX += this._angularSpringAccelerationX*delta;
     }
 
-    private _linearSpringAcceleration:number = 0;
-    private _linearSpringVelocity:number = 0;
-
-    private _linearSpringConst:number = 12000;
-    private _linearDampingConst:number = 900;
-
-    private _angularSpringAccelerationX:number = 0;
-    private _angularSpringVelocityX:number = 0;
-    private _angularSpringAccelerationY:number = 0;
-    private _angularSpringVelocityY:number = 0;
-    private _angularSpringAccelerationZ:number = 0;
-    private _angularSpringVelocityZ:number = 0;
-
-    private _angularSpringConst:number = 16000;
-    private _angularDampingConst:number = 1600;
-
-    public update(time:number, delta:number, state:mathjs.Matrix) {
-        this._linearSpringAcceleration = - (this._linearSpringConst*(state.valueOf()[1]-1) + this._linearDampingConst*this._linearSpringVelocity)/500;
-        this._linearSpringVelocity += this._linearSpringAcceleration*delta;
-
-        this._angularSpringAccelerationX = - (this._angularSpringConst*(state.valueOf()[3]) + this._angularDampingConst*this._angularSpringVelocityX)/1500;
-        this._angularSpringVelocityX += this._angularSpringAccelerationX*delta;
-
-        this._angularSpringAccelerationY = - (this._angularSpringConst*(state.valueOf()[4]) + this._angularDampingConst*this._angularSpringVelocityY)/1500;
-        this._angularSpringVelocityY += this._angularSpringAccelerationY*delta;
-
-        this._angularSpringAccelerationZ = - (this._angularSpringConst*(state.valueOf()[5]) + this._angularDampingConst*this._angularSpringVelocityZ)/1500;
-        this._angularSpringVelocityZ += this._angularSpringAccelerationZ*delta;
+    set angularDampingConst(value:number) {
+        this._angularDampingConst = value;
     }
-
-    get linearSpringAcceleration():number {
+    set angularSpringConst(value:number) {
+        this._angularSpringConst = value;
+    }
+    set linearDampingConst(value:number) {
+        this._linearDampingConst = value;
+    }
+    set linearSpringConst(value:number) {
+        this._linearSpringConst = value;
+    }
+    set angularDisplacement(value:THREE.Vector3) {
+        this._angularDisplacement = value;
+    }
+    set linearDisplacement(value:THREE.Vector3) {
+        this._linearDisplacement = value;
+    }
+    get angularSpringVelocity():THREE.Vector3 {
+        return this._angularSpringVelocity;
+    }
+    get angularSpringAcceleration():THREE.Vector3 {
+        return this._angularSpringAcceleration;
+    }
+    get linearSpringVelocity():THREE.Vector3 {
+        return this._linearSpringVelocity;
+    }
+    get linearSpringAcceleration():THREE.Vector3 {
         return this._linearSpringAcceleration;
     }
 
-    get linearSpringVelocity():number {
-        return this._linearSpringVelocity;
-    }
-
-    get angularSpringVelocityZ():number {
-        return this._angularSpringVelocityZ;
-    }
-    get angularSpringVelocityY():number {
-        return this._angularSpringVelocityY;
-    }
-    get angularSpringVelocityX():number {
-        return this._angularSpringVelocityX;
-    }
-
-    get position():THREE.Vector3 {
-        return this._springGroup.position;
-    }
-
-    set position(value:THREE.Vector3) {
-        this._springGroup.position = value;
-    }
-
-    get springObject():THREE.Group {
-        return this._springGroup;
-    }
 }

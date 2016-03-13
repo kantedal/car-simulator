@@ -69,10 +69,10 @@ var VehicleSetup = (function () {
         if (this._motor) {
             this._motor.update(time, delta);
             if (Math.abs(this._vehicle.vehicleModel.velocity.valueOf()[4]) < 1.5)
-                this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle * this._motor.torque * 7;
+                this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle * this._motor.torque * 15;
             this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle
                 * -this._vehicle.vehicleModel.velocityDirection.clone().normalize().dot(this._vehicle.vehicleModel.localZDirection)
-                * this._vehicle.vehicleModel.velocityDirection.length() * 2000;
+                * this._vehicle.vehicleModel.velocityDirection.length() * 3000;
             this._steering.steeringAngle *= 0.98;
         }
         if (this._steering) {

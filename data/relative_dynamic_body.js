@@ -14,9 +14,10 @@ var __extends = (this && this.__extends) || function (d, b) {
 ///<reference path="../data/vehicle.ts"/>
 ///<reference path="../data/dynamic_rigid_body.ts"/>
 ///<reference path="../data/car_test.ts"/>
+///<reference path="../math/mathjs.d.ts"/>
 var RelativeDynamicBody = (function (_super) {
     __extends(RelativeDynamicBody, _super);
-    function RelativeDynamicBody(geometry, material, renderer, parent) {
+    function RelativeDynamicBody(geometry, material, renderer, parent, parentVel) {
         _super.call(this, geometry, material, renderer);
         this._parentVehicle = parent;
         this._spring = new Spring(renderer);
@@ -24,14 +25,17 @@ var RelativeDynamicBody = (function (_super) {
         this.state = math.matrix([0, 1, 0, 0, 0, 0]);
     }
     RelativeDynamicBody.prototype.update = function (time, delta) {
-        this._spring.update(time, delta, this.state);
-        this.velocity.valueOf()[1] = this._spring.linearSpringVelocity;
-        this.velocity.valueOf()[3] = this._spring.angularSpringVelocityX;
-        this.velocity.valueOf()[4] = this._spring.angularSpringVelocityY;
-        this.velocity.valueOf()[5] = this._spring.angularSpringVelocityZ;
+        var linearState = new THREE.Vector3(this.state.valueOf()[0], this.state.valueOf()[1], this.state.valueOf()[2]);
+        var angularState = new THREE.Vector3(this.state.valueOf()[3], this.state.valueOf()[4], this.state.valueOf()[5]);
+        this._spring.update(time, delta, linearState, angularState);
+        this.velocity.valueOf()[1] = this._spring.linearSpringVelocity.y;
+        this.velocity.valueOf()[3] = this._spring.angularSpringVelocity.x;
+        this.velocity.valueOf()[4] = this._spring.angularSpringVelocity.y;
+        this.velocity.valueOf()[5] = this._spring.angularSpringVelocity.z;
         //this.velocity.valueOf()[5] = this._spring.v*0.03;
-        for (var i = 0; i < this._parentVehicle.vehicleSetup.wheels.length; i++) {
-        }
+        //for(var i=0; i<this._parentVehicle.vehicleSetup.wheels.length; i++){
+        //this._parentVehicle.vehicleSetup.wheels[i].velocity.valueOf()[1] = -this._spring.v;
+        //}
         var forceComp = math.dot(math.matrix([0, 1, 0]), math.matrix([this._parentVehicle.vehicleModel.localYDirection.x, this._parentVehicle.vehicleModel.localYDirection.y, this._parentVehicle.vehicleModel.localYDirection.z]));
         this._forceTotal = math.add(math.multiply(this.forceExternal, forceComp), this.forceConstraints); //Combine external and constraint forces
         this.velocity = math.add(this.velocity, math.multiply(math.multiply(math.inv(this.M), this.forceTotal), delta));
@@ -63,6 +67,10 @@ var RelativeDynamicBody = (function (_super) {
         this.forceConstraints.valueOf()[3] += Pc.valueOf()[3];
         this.forceConstraints.valueOf()[4] += Pc.valueOf()[4];
         this.forceConstraints.valueOf()[5] += Pc.valueOf()[5];
+    };
+    RelativeDynamicBody.prototype.attatchMesh = function (mesh) {
+        this._attatchedMesh = mesh;
+        this.object.add(this._attatchedMesh);
     };
     return RelativeDynamicBody;
 })(DynamicRigidBody);

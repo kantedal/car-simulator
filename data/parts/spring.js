@@ -5,22 +5,18 @@
 ///<reference path="../vehicle.ts"/>
 var Spring = (function () {
     function Spring(renderer) {
-        this._linearSpringAcceleration = 0;
-        this._linearSpringVelocity = 0;
         this._linearSpringConst = 12000;
         this._linearDampingConst = 900;
-        this._angularSpringAccelerationX = 0;
-        this._angularSpringVelocityX = 0;
-        this._angularSpringAccelerationY = 0;
-        this._angularSpringVelocityY = 0;
-        this._angularSpringAccelerationZ = 0;
-        this._angularSpringVelocityZ = 0;
         this._angularSpringConst = 16000;
         this._angularDampingConst = 1600;
-        //this._vehicle = vehicle;
+        this._linearSpringAcceleration = new THREE.Vector3(0, 0, 0);
+        this._linearSpringVelocity = new THREE.Vector3(0, 0, 0);
+        this._linearDisplacement = new THREE.Vector3(0, 1, 0);
+        this._angularSpringAcceleration = new THREE.Vector3(0, 0, 0);
+        this._angularSpringVelocity = new THREE.Vector3(0, 0, 0);
+        this._angularDisplacement = new THREE.Vector3(0, 0, 0);
         this._renderer = renderer;
         this._springGroup = new THREE.Group();
-        //this._springGroup.rotateZ(startRot);
         this._springGroup.position.set(0, 0, 0);
         this._spring = new THREE.Object3D();
         this._spring.position.set(0, 0, 0);
@@ -38,33 +34,79 @@ var Spring = (function () {
         //this._vehicle.add(this._springGroup);
         //this.loadSpringModel();
     }
-    Spring.prototype.loadSpringModel = function () {
-        var self = this;
-        var loader = new THREE.OBJLoader();
-        loader.load('./models/spring2.obj', function (object) {
-            var material1 = new THREE.MeshBasicMaterial({ color: 0x999999, wireframe: true });
-            self._springMesh = object.clone();
-            self._springMesh.scale.set(0.4, 0.4, 0.4);
-            self._springMesh.position.set(0, 1.2, 0);
-            //self._springMesh.position.set(self._wheelConnectorMesh.position.x, self._wheelConnectorMesh.position.y, self._wheelConnectorMesh.position.z);
-            self._spring.add(self._springMesh);
-        }, function (xhr) {
-            console.log('An error happened');
-        });
+    Spring.prototype.update = function (time, delta, linearState, angularState) {
+        this._linearSpringAcceleration =
+            linearState.clone().sub(this._linearDisplacement)
+                .multiplyScalar(this._linearSpringConst).add(this._linearSpringVelocity.clone()
+                .multiplyScalar(this._linearDampingConst)).multiplyScalar(1 / 500);
+        this._linearSpringAcceleration.multiplyScalar(-1);
+        this._linearSpringVelocity.add(this._linearSpringAcceleration.clone().multiplyScalar(delta));
+        this._angularSpringAcceleration =
+            angularState.clone().sub(this._angularDisplacement)
+                .multiplyScalar(this._angularSpringConst).add(this._angularSpringVelocity.clone()
+                .multiplyScalar(this._angularDampingConst)).multiplyScalar(1 / 1500);
+        this._angularSpringAcceleration.multiplyScalar(-1);
+        this._angularSpringVelocity.add(this._angularSpringAcceleration.clone().multiplyScalar(delta));
+        //this._angularSpringAcceleration.multiplyScalar(-this._linearSpringConst).addScalar(this._linearDampingConst*this._linearSpringVelocity).multiplyScalar(1/1500);
+        //this._linearSpringVelocity.add(this._linearSpringAcceleration.clone().multiplyScalar(delta));
+        //this._linearSpringAcceleration.setY( - (this._linearSpringConst*(linearState.y-1) + this._linearDampingConst*this._linearSpringVelocity.y)/500);
+        //this._linearSpringVelocity.setY(this._linearSpringVelocity.y + this._linearSpringAcceleration.y*delta);
+        //
+        //this._angularSpringAccelerationX = - (this._angularSpringConst*(state.valueOf()[3]) + this._angularDampingConst*this._angularSpringVelocityX)/1500;
+        //this._angularSpringVelocityX += this._angularSpringAccelerationX*delta;
     };
-    Spring.prototype.update = function (time, delta, state) {
-        this._linearSpringAcceleration = -(this._linearSpringConst * (state.valueOf()[1] - 1) + this._linearDampingConst * this._linearSpringVelocity) / 500;
-        this._linearSpringVelocity += this._linearSpringAcceleration * delta;
-        this._angularSpringAccelerationX = -(this._angularSpringConst * (state.valueOf()[3]) + this._angularDampingConst * this._angularSpringVelocityX) / 1500;
-        this._angularSpringVelocityX += this._angularSpringAccelerationX * delta;
-        this._angularSpringAccelerationY = -(this._angularSpringConst * (state.valueOf()[4]) + this._angularDampingConst * this._angularSpringVelocityY) / 1500;
-        this._angularSpringVelocityY += this._angularSpringAccelerationY * delta;
-        this._angularSpringAccelerationZ = -(this._angularSpringConst * (state.valueOf()[5]) + this._angularDampingConst * this._angularSpringVelocityZ) / 1500;
-        this._angularSpringVelocityZ += this._angularSpringAccelerationZ * delta;
-    };
-    Object.defineProperty(Spring.prototype, "linearSpringAcceleration", {
+    Object.defineProperty(Spring.prototype, "angularDampingConst", {
+        set: function (value) {
+            this._angularDampingConst = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "angularSpringConst", {
+        set: function (value) {
+            this._angularSpringConst = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "linearDampingConst", {
+        set: function (value) {
+            this._linearDampingConst = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "linearSpringConst", {
+        set: function (value) {
+            this._linearSpringConst = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "angularDisplacement", {
+        set: function (value) {
+            this._angularDisplacement = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "linearDisplacement", {
+        set: function (value) {
+            this._linearDisplacement = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "angularSpringVelocity", {
         get: function () {
-            return this._linearSpringAcceleration;
+            return this._angularSpringVelocity;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Spring.prototype, "angularSpringAcceleration", {
+        get: function () {
+            return this._angularSpringAcceleration;
         },
         enumerable: true,
         configurable: true
@@ -76,40 +118,9 @@ var Spring = (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Spring.prototype, "angularSpringVelocityZ", {
+    Object.defineProperty(Spring.prototype, "linearSpringAcceleration", {
         get: function () {
-            return this._angularSpringVelocityZ;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Spring.prototype, "angularSpringVelocityY", {
-        get: function () {
-            return this._angularSpringVelocityY;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Spring.prototype, "angularSpringVelocityX", {
-        get: function () {
-            return this._angularSpringVelocityX;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Spring.prototype, "position", {
-        get: function () {
-            return this._springGroup.position;
-        },
-        set: function (value) {
-            this._springGroup.position = value;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Spring.prototype, "springObject", {
-        get: function () {
-            return this._springGroup;
+            return this._linearSpringAcceleration;
         },
         enumerable: true,
         configurable: true

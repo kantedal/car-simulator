@@ -1,11 +1,25 @@
+newmtl initialShadingGroup
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
 newmtl phong1SG
 illum 4
-Kd 1.00 1.00 1.00
-Ka 2.00 0.00 1.00
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 map_Kd tire_diffuse.png
-bump tire_normal.png 
-Ni 0.30
-Ks 0.05 0.05 0.05
+bump tire_normal.png -bm 1
+Ni 1.00
+Ks 0.00 0.00 0.00
 map_Ks tire_spec.png
-Ns 50.00
+Ns 18.00
+newmtl phong2SG
+illum 4
+Kd 0.19 0.19 0.19
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.54 0.54 0.54
+Ns 6.48

@@ -38,24 +38,26 @@ var PhysicsObject3d = (function () {
         this._localXDirectionArrow = new THREE.ArrowHelper(dir, origin, 4, 0xff0000);
         this._localYDirectionArrow = new THREE.ArrowHelper(dir, origin, 4, 0x00ff00);
         this._localZDirectionArrow = new THREE.ArrowHelper(dir, origin, 4, 0x0000ff);
-        //renderer.scene.add( this._normalArrow );
-        //renderer.scene.add( this._gradientArrow );
-        //renderer.scene.add( this._velocityDirectionArrow );
-        renderer.scene.add(this._localXDirectionArrow);
-        renderer.scene.add(this._localYDirectionArrow);
-        renderer.scene.add(this._localZDirectionArrow);
+        if (CarSimulator.developer_mode) {
+            renderer.scene.add(this._localXDirectionArrow);
+            renderer.scene.add(this._localYDirectionArrow);
+            renderer.scene.add(this._localZDirectionArrow);
+        }
         this._externalCollisionPoints = [];
         this._externalCollisionPositions = [];
         this._externalCollision = [];
         this._collisionPoints = [];
         for (var i = 0; i < this.object.geometry.vertices.length; i++) {
             this._collisionPoints[i] = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshBasicMaterial({ color: 0xffff00 }));
-            renderer.scene.add(this._collisionPoints[i]);
+            if (CarSimulator.developer_mode)
+                renderer.scene.add(this._collisionPoints[i]);
         }
         this._collisionPoints[this._collisionPoints.length] = new THREE.Mesh(new THREE.SphereGeometry(0.2, 32, 32), new THREE.MeshBasicMaterial({ color: 0xff0000 }));
-        renderer.scene.add(this._collisionPoints[this._collisionPoints.length - 1]);
+        if (CarSimulator.developer_mode)
+            renderer.scene.add(this._collisionPoints[this._collisionPoints.length - 1]);
         this._centerOfMassPoint = new THREE.Mesh(new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true }));
-        renderer.scene.add(this._centerOfMassPoint);
+        if (CarSimulator.developer_mode)
+            renderer.scene.add(this._centerOfMassPoint);
     }
     PhysicsObject3d.prototype.update = function (time, delta) {
         this.rotateAroundWorldAxis(this.object, new THREE.Vector3(1, 0, 0), delta * this.velocity.valueOf()[3]);
