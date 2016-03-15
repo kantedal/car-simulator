@@ -12,6 +12,7 @@ class Wheel extends ParticleCollider {
     private _wheelRotation : number = 0;
     private _frictionalMomentum : number;
     private _wheelDirection : THREE.Vector3;
+    private _relativePosition: THREE.Vector3;
     private _isColliding : boolean;
     private _collisionNormal : mathjs.Matrix;
     private _relativeVelocity : mathjs.Matrix;
@@ -38,6 +39,7 @@ class Wheel extends ParticleCollider {
         this._isColliding = false;
         this._wheelDirection = new THREE.Vector3(0,0,-1);
         this._relativeVelocity = math.matrix([0,0,0,0,0,0]);
+        this._relativePosition = new THREE.Vector3(0,0,0)
         this.velocity = math.matrix([0,0,0,0,0,0]);
         this.state = math.matrix([pos.x, pos.y, pos.z,0,0,0]);
 
@@ -60,6 +62,7 @@ class Wheel extends ParticleCollider {
 
         //this._forceConstraints = math.matrix([0,0,0,0,0,0]);
         this._forceConstraints = math.multiply(this._forceConstraints,0.9);
+        this._relativePosition = this.object.position.clone().applyQuaternion(this._connectedVehicle.vehicleModel.object.quaternion);
 
         this.object.position.set(this.object.position.x, this.state.valueOf()[1], this.object.position.z);
 
@@ -83,32 +86,6 @@ class Wheel extends ParticleCollider {
 
             if(this.isColliding){
                 this.friction();
-
-
-                //var linearFrictionComponent = 1-Math.abs(this._connectedVehicle.vehicleModel.velocityDirection.clone().normalize().dot(this._wheelDirection.clone().normalize()));
-                //var linearFriction = math.multiply(
-                //    math.multiply(math.matrix([
-                //        this._connectedVehicle.vehicleModel.velocity.valueOf()[0],
-                //        this._connectedVehicle.vehicleModel.velocity.valueOf()[1],
-                //        this._connectedVehicle.vehicleModel.velocity.valueOf()[2],
-                //        0,0,0
-                //    ])
-                //, -1), linearFrictionComponent*400 + 70);
-                //
-                //var angularFrictionComponent = Math.abs(this._connectedVehicle.vehicleModel.angularVelocityDirection.clone().normalize().dot(this._connectedVehicle.vehicleModel.localYDirection.clone().normalize()));
-                //var angularFriction = math.multiply(
-                //    math.multiply(math.matrix([
-                //            0,0,0
-                //            this._connectedVehicle.vehicleModel.velocity.valueOf()[3],
-                //            this._connectedVehicle.vehicleModel.velocity.valueOf()[4],
-                //            this._connectedVehicle.vehicleModel.velocity.valueOf()[5]
-                //        ])
-                //        , -1), angularFrictionComponent*400 + 70);
-                //
-                //var totalFriction = math.add(linearFriction, angularFriction);
-                //
-                //this._connectedVehicle.vehicleModel.forceConstraints = math.add(this._connectedVehicle.vehicleModel.forceConstraints, totalFriction);
-                //console.log(this._connectedVehicle.vehicleModel.forceConstraints.valueOf()[0] + " " + this._connectedVehicle.vehicleModel.forceConstraints.valueOf()[1] + "  " + this._connectedVehicle.vehicleModel.forceConstraints.valueOf()[2]);
             }else
                 this.object.material.color.setHex(0xff0000);
         }
@@ -126,122 +103,61 @@ class Wheel extends ParticleCollider {
     }
 
     private addMotorForce(){
-        var position = this.object.position.clone().applyQuaternion(this._connectedVehicle.vehicleModel.object.quaternion);
-        var force_radius = math.add(
-            math.matrix([position.x, position.y, position.z]),
-            math.multiply(math.matrix([
-                this._connectedVehicle.vehicleModel.localYDirection.x,
-                this._connectedVehicle.vehicleModel.localYDirection.y,
-                this._connectedVehicle.vehicleModel.localYDirection.z
-            ]),1)
-        );
-        force_radius = math.matrix([position.x, position.y, position.z]);
-        force_radius = math.matrix([0,0,-4]);
-
         var force = math.multiply(math.matrix([this._wheelDirection.x, this._wheelDirection.y, this._wheelDirection.z]), this._connectedMotor.torque);
 
         var J = math.matrix([
             force.valueOf()[0],
             force.valueOf()[1],
             force.valueOf()[2],
-            math.cross(force_radius,force).valueOf()[0],
-            math.cross(force_radius,force).valueOf()[1],
-            math.cross(force_radius,force).valueOf()[2]
+            0,0,0
         ]);
 
         var mc = 1/math.multiply( math.multiply(J, math.inv(this._connectedVehicle.vehicleModel.M)), math.transpose(J));
 
-        var lagrange = mc*(math.multiply(J, math.matrix([
-                this._wheelDirection.x,
-                this._wheelDirection.y,
-                this._wheelDirection.z,
-                0,0,0])
-            ))*7;
+        var forceComp = this._connectedVehicle.vehicleModel.localYDirection.clone().dot(new THREE.Vector3(0,1,0));
+        if(forceComp > 0) {
+            var lagrange = mc * (math.multiply(J, math.matrix([
+                    this._wheelDirection.x,
+                    this._wheelDirection.y,
+                    this._wheelDirection.z,
+                    0, 0, 0])
+                )) * 9 * forceComp;
 
-        var Fc = math.multiply(math.transpose(J),lagrange);
-        this._connectedVehicle.vehicleModel.forceConstraints =  math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
-
-        this._connectedVehicle.vehicleSetup.vehicleBody.forceConstraints.valueOf()[3] += 100000;
+            var Fc = math.multiply(math.transpose(J), lagrange);
+            this._connectedVehicle.vehicleModel.forceConstraints = math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
+            this._connectedVehicle.vehicleSetup.vehicleBody.forceConstraints.valueOf()[3] += 100000;
+        }
     }
 
 
-    private friction() {3
-        //var position = this.object.position.clone().applyQuaternion(this._connectedVehicle.vehicleModel.object.quaternion);
-        //var rotation = new THREE.Vector3(this._connectedVehicle.vehicleModel.velocity.valueOf()[3], this._connectedVehicle.vehicleModel.velocity.valueOf()[4], this._connectedVehicle.vehicleModel.velocity.valueOf()[5]);
-        //var force_radius = math.matrix([
-        //    position.x,
-        //    position.y,
-        //    position.z
-        //]);
+    private friction() {
+        this._connectedVehicle.vehicleModel.velocity.valueOf()[4] *= 0.985;
 
-        //
-        //var forceComp1 = this._connectedVehicle.vehicleModel.localZDirection.clone().applyAxisAngle(this._connectedVehicle.vehicleModel.localYDirection, -Math.PI/2);
-        //
-        //if(vel.clone().normalize().angleTo(forceComp1) > Math.PI/2)
-        //    forceComp1.multiplyScalar(-1);
-        //
-        ////this._testArrow.setDirection(forceComp1);
-        ////this._testArrow.position.copy(position.clone().add(this._connectedVehicle.position));
-        //
-        //forceComp1 = forceComp1.multiplyScalar(Math.abs(vel.dot(forceComp1))*0.01);
-        //
-        //var totalForce = math.matrix([
-        //   forceComp1.x,
-        //   forceComp1.y,
-        //   forceComp1.z
-        //]);
-        //
-        //if(math.norm(totalForce) != 0){
-        //    var J = math.matrix([
-        //        totalForce.valueOf()[0],
-        //        totalForce.valueOf()[1],
-        //        totalForce.valueOf()[2],
-        //        math.cross(force_radius,totalForce).valueOf()[0],
-        //        math.cross(force_radius,totalForce).valueOf()[1],
-        //        math.cross(force_radius,totalForce).valueOf()[2]
-        //    ]);
-        //
-        //    var mc = 1/math.multiply( math.multiply(J, math.inv(this._connectedVehicle.vehicleModel.M)), math.transpose(J));
-        //
-        //    var lagrange = -mc*(math.multiply(J, this._connectedVehicle.velocity));
-        //
-        //    var Fc = math.multiply(math.transpose(J),lagrange);
-        //    this._connectedVehicle.vehicleModel.forceConstraints =  math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
-        //}
-
-        //this._connectedVehicle.vehicleModel.velocity.valueOf()[0] *= 0.99;
-        //this._connectedVehicle.vehicleModel.velocity.valueOf()[1] *= 0.99;
-        //this._connectedVehicle.vehicleModel.velocity.valueOf()[2] *= 0.99;
-        this._connectedVehicle.vehicleModel.velocity.valueOf()[4] *= 0.99;
-
-        var position = this.object.position.clone().applyQuaternion(this._connectedVehicle.vehicleModel.object.quaternion);
         var vel = this._connectedVehicle.vehicleModel.velocityDirection.clone();
-        var math_vel = new math.matrix([vel.x, vel.y, vel.z]);
+        var math_vel = math.matrix([vel.x, vel.y, vel.z]);
 
         var force_radius = math.matrix([
-            position.x,
-            position.y,
-            position.z
+            this._relativePosition.x,
+            this._relativePosition.y,
+            this._relativePosition.z
         ]);
 
+        var cross = math.cross(force_radius,math_vel).valueOf();
         var J = math.matrix([
             vel.x,
             vel.y,
             vel.z,
-            math.cross(force_radius,math_vel).valueOf()[0],
-            math.cross(force_radius,math_vel).valueOf()[1],
-            math.cross(force_radius,math_vel).valueOf()[2]
+            cross[0],
+            cross[1],
+            cross[2]
         ]);
 
         var mc = 1/math.multiply(math.multiply(J, math.inv(this._connectedVehicle.vehicleModel.M)), math.transpose(J));
 
-        //var lagrange = mc*(math.multiply(J, math.matrix([
-        //        this._wheelDirection.x,
-        //        this._wheelDirection.y,
-        //        this._wheelDirection.z,
-        //        0,0,0])
-        //    ))*7;
-        var lagrange = -mc*(math.multiply(J, this._connectedVehicle.velocity))*0.2;
+        var forceVec = this._connectedVehicle.vehicleModel.localZDirection.clone().applyAxisAngle(this._connectedVehicle.vehicleModel.localYDirection, -Math.PI/2);
+        var forceComp = Math.abs(vel.clone().normalize().dot(forceVec));
+
+        var lagrange = -mc*(math.multiply(J, this._connectedVehicle.velocity))*(0.15 + 0.3*forceComp);
 
         var Fc = math.multiply(math.transpose(J),lagrange);
         this._connectedVehicle.vehicleModel.forceConstraints =  math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
@@ -268,14 +184,6 @@ class Wheel extends ParticleCollider {
         return this._rotation;
     }
 
-    get forwardForce():number {
-        return this._forwardForce;
-    }
-
-    set forwardForce(value:number) {
-        this._forwardForce = value;
-    }
-
     get wheelDirection():THREE.Vector3 {
         return this._wheelDirection;
     }
@@ -290,5 +198,13 @@ class Wheel extends ParticleCollider {
 
     set collisionNormal(value:mathjs.Matrix) {
         this._collisionNormal = value;
+    }
+
+    get relativePosition():THREE.Vector3 {
+        return this._relativePosition;
+    }
+
+    get connectedVehicle():Vehicle {
+        return this._connectedVehicle;
     }
 }

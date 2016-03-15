@@ -6,6 +6,7 @@
 ///<reference path="./ground_plane.ts"/>
 ///<reference path="./parts/motor.ts"/>
 ///<reference path="./parts/spring.ts"/>
+///<reference path="./parts/spring_connector.ts"/>
 ///<reference path="./parts/steering.ts"/>
 ///<reference path="./vehicle.ts"/>
 ///<reference path="./relative_dynamic_body.ts"/>
@@ -29,6 +30,14 @@ var VehicleSetup = (function () {
                         _this._steering.steeringAcceleration -= 100;
                 }
                 if (_this.pressedKeys[40] || _this.pressedKeys[83]) {
+                }
+                if (_this.pressedKeys[76]) {
+                    if (_this._spotLight) {
+                        if (_this._spotLight.intensity == 10)
+                            _this._spotLight.intensity = 0;
+                        else
+                            _this._spotLight.intensity = 10;
+                    }
                 }
             }
         };
@@ -76,17 +85,23 @@ var VehicleSetup = (function () {
                 this._springs[i].update(time, delta);
             }
         }
+        if (this._springConnector) {
+            for (var i = 0; i < this._springConnector.length; i++) {
+                this._springConnector[i].update(time, delta);
+            }
+        }
         if (this._motor) {
             this._motor.update(time, delta);
-            if (Math.abs(this._vehicle.vehicleModel.velocity.valueOf()[4]) < 1.5)
-                this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle * this._motor.torque * 15;
+            this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle * this._motor.torque * 15;
             this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle
                 * -this._vehicle.vehicleModel.velocityDirection.clone().normalize().dot(this._vehicle.vehicleModel.localZDirection)
-                * this._vehicle.vehicleModel.velocityDirection.length() * 3000;
+                * this._vehicle.vehicleModel.velocityDirection.length() * 2500;
             this._steering.steeringAngle *= 0.98;
         }
         if (this._steering) {
             this._steering.update(time, delta);
+        }
+        if (this._spotLight) {
         }
     };
     Object.defineProperty(VehicleSetup.prototype, "steering", {
@@ -155,6 +170,26 @@ var VehicleSetup = (function () {
         },
         set: function (value) {
             this._vehicleBody = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VehicleSetup.prototype, "springConnector", {
+        get: function () {
+            return this._springConnector;
+        },
+        set: function (value) {
+            this._springConnector = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(VehicleSetup.prototype, "spotLight", {
+        get: function () {
+            return this._spotLight;
+        },
+        set: function (value) {
+            this._spotLight = value;
         },
         enumerable: true,
         configurable: true

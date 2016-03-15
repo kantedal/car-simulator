@@ -47,13 +47,6 @@ var Spring = (function () {
                 .multiplyScalar(this._angularDampingConst)).multiplyScalar(1 / 1000);
         this._angularSpringAcceleration.multiplyScalar(-1);
         this._angularSpringVelocity.add(this._angularSpringAcceleration.clone().multiplyScalar(delta));
-        //this._angularSpringAcceleration.multiplyScalar(-this._linearSpringConst).addScalar(this._linearDampingConst*this._linearSpringVelocity).multiplyScalar(1/1500);
-        //this._linearSpringVelocity.add(this._linearSpringAcceleration.clone().multiplyScalar(delta));
-        //this._linearSpringAcceleration.setY( - (this._linearSpringConst*(linearState.y-1) + this._linearDampingConst*this._linearSpringVelocity.y)/500);
-        //this._linearSpringVelocity.setY(this._linearSpringVelocity.y + this._linearSpringAcceleration.y*delta);
-        //
-        //this._angularSpringAccelerationX = - (this._angularSpringConst*(state.valueOf()[3]) + this._angularDampingConst*this._angularSpringVelocityX)/1500;
-        //this._angularSpringVelocityX += this._angularSpringAccelerationX*delta;
     };
     Object.defineProperty(Spring.prototype, "angularDampingConst", {
         set: function (value) {

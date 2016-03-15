@@ -6,9 +6,11 @@
 ///<reference path="../../threejs/three.d.ts"/>
 ///<reference path="../../renderer.ts"/>
 ///<reference path="../vehicle.ts"/>
+///<reference path="../environment/object_loader.ts"/>
 var Socket = (function () {
-    function Socket(renderer) {
+    function Socket(renderer, objectLoader) {
         this._renderer = renderer;
+        this._objectLoader = objectLoader;
         this._isConnected = false;
         this._connectedVehicles = [];
         var self = this;
@@ -37,7 +39,13 @@ var Socket = (function () {
         var self = this;
         this._connection.on('open', function () {
             self._isConnected = true;
-            self._connectedVehicles.push(new Vehicle(self._renderer));
+            var newVehicle = new Vehicle(self._renderer);
+            newVehicle.vehicleSetup.wheels[0].attatchMesh(this._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.wheels[1].attatchMesh(this._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.wheels[2].attatchMesh(this._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.wheels[3].attatchMesh(this._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.vehicleBody.attatchMesh(this._objectLoader.carMesh.clone());
+            self._connectedVehicles.push(newVehicle);
             // Receive messages
             self._connection.on('data', function (data) {
                 self.recievedData(data);

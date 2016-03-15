@@ -119,7 +119,7 @@ var PhysicsObject3d = (function () {
                 var intersects = this._collisionRaycaster.intersectObjects(this._collisionMeshes, true);
                 if (intersects[0]) {
                     if (intersects[0].point.y >= this._externalCollisionPoints[extColIdx].position.y) {
-                        var collisionPos = intersects[0].point.clone();
+                        var penetration = Math.abs(intersects[0].point.y - this._externalCollisionPoints[extColIdx].position.y);
                         var vert1 = intersects[0].object.geometry.vertices[intersects[0].face.a].clone().add(intersects[0].object.position);
                         var vert2 = intersects[0].object.geometry.vertices[intersects[0].face.b].clone().add(intersects[0].object.position);
                         var vert3 = intersects[0].object.geometry.vertices[intersects[0].face.c].clone().add(intersects[0].object.position);
@@ -128,7 +128,7 @@ var PhysicsObject3d = (function () {
                             intersects[0].face.vertexNormals[1],
                             intersects[0].face.vertexNormals[2]
                         ];
-                        var collision = this.handleCollision(this._externalCollisionPoints[extColIdx].position, vert1, vert2, vert3, vertexNormals);
+                        var collision = this.handleCollision(this._externalCollisionPoints[extColIdx].position, vert1, vert2, vert3, vertexNormals, penetration);
                         if (collision != 0) {
                             //this._externalCollision[extColIdx] = true;
                             collisions.push(collision);
@@ -142,7 +142,7 @@ var PhysicsObject3d = (function () {
         }
         return collisions;
     };
-    PhysicsObject3d.prototype.handleCollision = function (vertPos, vert1, vert2, vert3, vertexNormals) {
+    PhysicsObject3d.prototype.handleCollision = function (vertPos, vert1, vert2, vert3, vertexNormals, penetration) {
         var areaT = this.triangleArea(vert1, vert2, vert3);
         var areaB = this.triangleArea(vert1, vertPos, vert3);
         var areaC = this.triangleArea(vert1, vertPos, vert2);
@@ -160,7 +160,8 @@ var PhysicsObject3d = (function () {
             this._normalDirection.z,
             vertPos.x,
             vertPos.y,
-            vertPos.z
+            vertPos.z,
+            penetration
         ];
     };
     PhysicsObject3d.prototype.showAxis = function () {

@@ -198,7 +198,7 @@ class PhysicsObject3d {
 
                 if (intersects[0]) {
                     if (intersects[0].point.y >= this._externalCollisionPoints[extColIdx].position.y) {
-                        var collisionPos:THREE.Vector3 = intersects[0].point.clone();
+                        var penetration = Math.abs(intersects[0].point.y - this._externalCollisionPoints[extColIdx].position.y);
 
                         var vert1:THREE.Vector3 = intersects[0].object.geometry.vertices[intersects[0].face.a].clone().add(intersects[0].object.position);
                         var vert2:THREE.Vector3 = intersects[0].object.geometry.vertices[intersects[0].face.b].clone().add(intersects[0].object.position);
@@ -210,7 +210,7 @@ class PhysicsObject3d {
                             intersects[0].face.vertexNormals[2]
                         ];
 
-                        var collision = this.handleCollision(this._externalCollisionPoints[extColIdx].position, vert1, vert2, vert3, vertexNormals);
+                        var collision = this.handleCollision(this._externalCollisionPoints[extColIdx].position, vert1, vert2, vert3, vertexNormals, penetration);
                         if (collision != 0) {
                             //this._externalCollision[extColIdx] = true;
                             collisions.push(collision);
@@ -227,7 +227,7 @@ class PhysicsObject3d {
     }
 
 
-    private handleCollision(vertPos:THREE.Vector3, vert1:THREE.Vector3, vert2:THREE.Vector3, vert3:THREE.Vector3, vertexNormals:THREE.Vector3[]){
+    private handleCollision(vertPos:THREE.Vector3, vert1:THREE.Vector3, vert2:THREE.Vector3, vert3:THREE.Vector3, vertexNormals:THREE.Vector3[], penetration: number){
         var areaT = this.triangleArea(vert1, vert2, vert3);
         var areaB = this.triangleArea(vert1, vertPos, vert3);
         var areaC = this.triangleArea(vert1, vertPos, vert2);
@@ -252,7 +252,8 @@ class PhysicsObject3d {
             this._normalDirection.z,
             vertPos.x,
             vertPos.y,
-            vertPos.z
+            vertPos.z,
+            penetration
         ];
     }
 

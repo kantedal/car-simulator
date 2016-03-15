@@ -3,6 +3,27 @@
 <head>
     <meta charset="utf-8" />
     <title>Car simulator</title>
+
+    <script type="application/x-glsl" id="sky-vertex">
+        varying vec2 vUV;
+
+        void main() {
+          vUV = uv;
+          vec4 pos = vec4(position, 1.0);
+          gl_Position = projectionMatrix * modelViewMatrix * pos;
+        }
+    </script>
+
+    <script type="application/x-glsl" id="sky-fragment">
+        uniform sampler2D texture;
+        varying vec2 vUV;
+
+        void main() {
+          vec4 sample = texture2D(texture, vUV);
+          gl_FragColor = vec4(sample.xyz, sample.w);
+        }
+    </script>
+
     <script src="js/math.min.js"></script>
     <script src="http://cdn.peerjs.com/0.3/peer.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
@@ -31,15 +52,16 @@
     <script src="data/ground_plane.js"></script>
     <script src="data/environment/ground_objects.js"></script>
     <script src="data/environment/grass.js"></script>
+    <script src="data/environment/flower.js"></script>
     <script src="data/environment/cloud.js"></script>
     <script src="data/environment/tree.js"></script>
     <script src="data/parts/wheel.js"></script>
     <script src="data/parts/spring.js"></script>
+    <script src="data/parts/spring_connector.js"></script>
     <script src="data/parts/steering.js"></script>
     <script src="data/parts/motor.js"></script>
     <script src="data/dust/particle_system.js"></script>
     <script src="data/dust/particle.js"></script>
-    <script src="data/dust/particle2.js"></script>
     <script src="data/constraints/collision_constraint.js"></script>
     <script src="carsimulator.js"></script>
     <script src="renderer.js"></script>
@@ -49,15 +71,14 @@
     <input type="text" name="idTextBox" id="idText">
     <button type="button" id="connectButton">Connect</button>
 </div>
-<div id="content" style="
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#7db9e8+3,ffffff+23 */
+<!--<div id="content" style="background-image: url('img/NightSkyGradient.png');">-->
+<div id="content" style="/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#7db9e8+3,ffffff+23 */
 background: #7ec0ee; /* Old browsers */
 background: -moz-linear-gradient(top,  #7ec0ee 1%, #ffffff 14%); /* FF3.6-15 */
 background: -webkit-linear-gradient(top,  #7ec0ee 1%,#ffffff 14%); /* Chrome10-25,Safari5.1-6 */
 background: linear-gradient(to bottom,  #7ec0ee 1%,#ffffff 14%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
-"
->
+"">
 </div>
 </body>
 </html>

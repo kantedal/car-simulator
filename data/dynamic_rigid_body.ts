@@ -32,7 +32,7 @@ class DynamicRigidBody extends PhysicsObject3d {
         super(geometry, material, renderer);
         this._renderer = renderer;
 
-        this._gravity = -9.82*0.7;
+        this._gravity = -9.82;
         this._mass = 700;
         this._frictionConst = 0.99;
         this._collisions = [];
@@ -77,6 +77,7 @@ class DynamicRigidBody extends PhysicsObject3d {
     }
 
     public collision(collision:number[]):mathjs.Matrix {
+        var penetration = collision[9];
         var force_radius = math.matrix([collision[0], collision[1], collision[2]]);
         var normal = math.matrix([collision[3], collision[4], collision[5]]);
 
@@ -91,7 +92,7 @@ class DynamicRigidBody extends PhysicsObject3d {
         ]);
 
         var mc = 1/math.multiply( math.multiply(J, math.inv(this._M)), math.transpose(J));
-        var lagrange = -mc*(math.multiply(J,this._velocity)-0.7)*1;
+        var lagrange = -mc*(math.multiply(J,this._velocity)-penetration*4)*1;
 
         var Pc = math.multiply(math.transpose(J),lagrange);
 

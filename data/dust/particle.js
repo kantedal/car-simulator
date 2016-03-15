@@ -4,45 +4,39 @@
 ///<reference path="../../threejs/three.d.ts"/>
 ///<reference path="../../renderer.ts"/>
 var Particle = (function () {
-    function Particle(startPos, renderer, time, particleSprite) {
-        this.lifeLength = 3;
-        this.angle = Math.PI / 2;
-        this.v0 = 5;
-        this.startTime = time;
-        var startPos = startPos.clone();
-        this.startPos = new THREE.Vector3(startPos.x + Math.random() * 4 - 2, startPos.y + Math.random() * 2 - 1, startPos.z + Math.random() * 2 - 1);
-        this.Pos = new THREE.Vector3();
-        this.particleSprite = particleSprite;
-        this.renderer = renderer;
-        this.renderer.scene.add(this.particleSprite);
+    function Particle(startPos, startVel, renderer, time, particleSprite) {
+        this._lifeLength = 0.5;
+        this._startTime = time;
+        this._position = startPos.clone();
+        this._velocity = startVel.clone();
+        this._acceleration = new THREE.Vector3(0, -9.82, 0);
+        this._angularVelocity = Math.random() * 5 - 2.5;
+        this._particleSprite = particleSprite;
+        this._renderer = renderer;
+        this._renderer.scene.add(this._particleSprite);
     }
-    Particle.prototype.update = function (time, wheelPos) {
-        var currentTime = (time - this.startTime);
-        if (currentTime > this.lifeLength) {
-            this.isDead = true;
-            this.particleSprite.material.dispose();
-            this.particleSprite.geometry.dispose();
-            this.renderer.scene.remove(this.particleSprite);
+    Particle.prototype.update = function (time, delta) {
+        var currentTime = (time - this._startTime);
+        if (currentTime > this._lifeLength) {
+            this._isDead = true;
+            this._particleSprite.material.dispose();
+            this._particleSprite.geometry.dispose();
+            this._renderer.scene.remove(this._particleSprite);
         }
-        this.Pos.x = this.startPos.x + (Math.cos(this.angle) * this.v0) * currentTime;
-        this.Pos.y = this.startPos.y + (Math.sin(this.angle) * this.v0) * currentTime - 0.5 * 9.82 * Math.pow(currentTime, 2);
-        this.particleSprite.material.opacity = (this.lifeLength - currentTime) / 8;
-        //Vit fyrkant för spriten syns annars
-        if (currentTime > 0.001)
-            this.particleSprite.position.set(this.Pos.x, this.Pos.y, this.startPos.z);
-        else
-            this.particleSprite.position.set(this.Pos.x, this.Pos.y - 20, this.startPos.z);
+        this._velocity.add(this._acceleration.clone().multiplyScalar(delta));
+        this._position.add(this._velocity.clone().multiplyScalar(delta));
+        this._particleSprite.position.copy(this._position);
+        this._particleSprite.scale.addScalar(8 * delta);
+        this._particleSprite.material.opacity = Math.pow((this._lifeLength - currentTime) / this._lifeLength, 3) * 0.6;
+        this._particleSprite.material.rotation += this._angularVelocity * delta;
     };
-    Object.defineProperty(Particle.prototype, "ParticleDead", {
+    Object.defineProperty(Particle.prototype, "isParticleDead", {
         get: function () {
-            if (this.isDead)
-                return true;
-            else
-                return false;
+            return this._isDead;
         },
         enumerable: true,
         configurable: true
     });
     return Particle;
 })();
-//# sourceMappingURL=Particle.js.map
+//# sourceMappingURL=particle.js.map

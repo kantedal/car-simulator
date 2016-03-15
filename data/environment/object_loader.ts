@@ -13,8 +13,15 @@ class ObjectLoader {
     private _carMesh : THREE.Mesh;
     private _carLoaded = false;
 
+    private _springMesh: THREE.Mesh;
+    private _springLoaded = false;
+
+    private _springConnectorMesh: THREE.Mesh;
+    private _springConnectorLoaded = false;
+
     private _treeMesh : THREE.Mesh;
     private _treeLoaded = false;
+
 
     constructor(){
     }
@@ -24,6 +31,8 @@ class ObjectLoader {
         this.loadWheel();
         this.loadCar();
         this.loadTree();
+        this.loadSpring();
+        this.loadSpringConnector();
     }
 
     public loadWheel():void {
@@ -149,9 +158,51 @@ class ObjectLoader {
         });
     }
 
+    public loadSpring():void {
+        var self = this;
+
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setBaseUrl( 'models/' );
+        mtlLoader.setPath( 'models/' );
+        mtlLoader.load( 'spring.mtl', function( materials ) {
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials( materials );
+            objLoader.setPath( 'models/' );
+            objLoader.load( 'spring.obj', function ( object ) {
+                self._springMesh = object;
+                self._springLoaded = true;
+                if(self.allLoaded())
+                    self._objectLoadedListner.objectsLoaded();
+            }, 0, 0 );
+        });
+    }
+
+    public loadSpringConnector():void {
+        var self = this;
+
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setBaseUrl( 'models/car/' );
+        mtlLoader.setPath( 'models/car/' );
+        mtlLoader.load( 'spring_connector.mtl', function( materials ) {
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials( materials );
+            objLoader.setPath( 'models/car/' );
+            objLoader.load( 'spring_connector.obj', function ( object ) {
+                self._springConnectorMesh = object;
+                self._springConnectorLoaded = true;
+                if(self.allLoaded())
+                    self._objectLoadedListner.objectsLoaded();
+            }, 0, 0 );
+        });
+    }
+
 
     private allLoaded():boolean{
-        if(this._carLoaded && this._wheelLoaded && this._treeLoaded)
+        if(this._carLoaded && this._wheelLoaded && this._treeLoaded && this._springLoaded && this._springConnectorLoaded)
             return true;
         else
             return false;
@@ -168,6 +219,16 @@ class ObjectLoader {
     get treeMesh():THREE.Mesh {
         return this._treeMesh;
     }
+
+    get springMesh():THREE.Mesh {
+        return this._springMesh;
+    }
+
+    get springConnectorMesh():THREE.Mesh {
+        return this._springConnectorMesh;
+    }
+
+
 }
 
 interface ObjectLoaderListener {

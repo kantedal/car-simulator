@@ -6,6 +6,8 @@ var ObjectLoader = (function () {
     function ObjectLoader() {
         this._wheelLoaded = false;
         this._carLoaded = false;
+        this._springLoaded = false;
+        this._springConnectorLoaded = false;
         this._treeLoaded = false;
     }
     ObjectLoader.prototype.load = function (listener) {
@@ -13,6 +15,8 @@ var ObjectLoader = (function () {
         this.loadWheel();
         this.loadCar();
         this.loadTree();
+        this.loadSpring();
+        this.loadSpringConnector();
     };
     ObjectLoader.prototype.loadWheel = function () {
         var self = this;
@@ -118,8 +122,44 @@ var ObjectLoader = (function () {
             }, 0, 0);
         });
     };
+    ObjectLoader.prototype.loadSpring = function () {
+        var self = this;
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setBaseUrl('models/');
+        mtlLoader.setPath('models/');
+        mtlLoader.load('spring.mtl', function (materials) {
+            materials.preload();
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models/');
+            objLoader.load('spring.obj', function (object) {
+                self._springMesh = object;
+                self._springLoaded = true;
+                if (self.allLoaded())
+                    self._objectLoadedListner.objectsLoaded();
+            }, 0, 0);
+        });
+    };
+    ObjectLoader.prototype.loadSpringConnector = function () {
+        var self = this;
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setBaseUrl('models/car/');
+        mtlLoader.setPath('models/car/');
+        mtlLoader.load('spring_connector.mtl', function (materials) {
+            materials.preload();
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models/car/');
+            objLoader.load('spring_connector.obj', function (object) {
+                self._springConnectorMesh = object;
+                self._springConnectorLoaded = true;
+                if (self.allLoaded())
+                    self._objectLoadedListner.objectsLoaded();
+            }, 0, 0);
+        });
+    };
     ObjectLoader.prototype.allLoaded = function () {
-        if (this._carLoaded && this._wheelLoaded && this._treeLoaded)
+        if (this._carLoaded && this._wheelLoaded && this._treeLoaded && this._springLoaded && this._springConnectorLoaded)
             return true;
         else
             return false;
@@ -141,6 +181,20 @@ var ObjectLoader = (function () {
     Object.defineProperty(ObjectLoader.prototype, "treeMesh", {
         get: function () {
             return this._treeMesh;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ObjectLoader.prototype, "springMesh", {
+        get: function () {
+            return this._springMesh;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(ObjectLoader.prototype, "springConnectorMesh", {
+        get: function () {
+            return this._springConnectorMesh;
         },
         enumerable: true,
         configurable: true

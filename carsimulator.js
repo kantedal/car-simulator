@@ -14,7 +14,6 @@
 /// <reference path="./math/jquery.d.ts" />
 /// <reference path="./data/dust/particle_system.ts" />
 /// <reference path="./data/dust/particle.ts" />
-/// <reference path="./data/dust/particle2.ts" />
 var CarSimulator = (function () {
     function CarSimulator() {
         this._surfaceIndex = 0;
@@ -26,14 +25,12 @@ var CarSimulator = (function () {
         ;
         this._car = new Vehicle(this._renderer);
         this._objectLoader = new ObjectLoader();
-        this._particleSystems = [];
-        this._particleSystems.push(new ParticleSystem(this._renderer));
-        this._particleSystems.push(new ParticleSystem(this._renderer));
-        this._particleSystems[0].loadTexture();
-        this._particleSystems[1].loadTexture();
+        //this._particleSystems = [];
+        //this._particleSystems.push(new ParticleSystem(this._renderer, this._car.vehicleSetup.wheels[2]));
+        //this._particleSystems.push(new ParticleSystem(this._renderer));
         if (!CarSimulator.developer_mode)
             this._groundObjects = new GroundObjects(this._renderer, this._groundPlanes);
-        this._socket = new Socket(this._renderer);
+        this._socket = new Socket(this._renderer, this._objectLoader);
         this.handleJqueryEvents();
         //this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry( 6, 3, 8 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), this._renderer, 500, this);
     }
@@ -52,22 +49,28 @@ var CarSimulator = (function () {
             }
         }
         this._car.vehicleModel.connectCollisionSurfaces(this._groundPlanes.collisionMesh);
-        if (!CarSimulator.developer_mode) {
-            var objectsLoaderListener = {
-                objectsLoaded: function () {
-                    self._objectLoader.wheelMesh.rotateY(Math.PI / 2);
-                    self._objectLoader.wheelMesh.scale.set(1.6, 1.6, 1.6);
-                    for (var w = 0; w < self._car.vehicleSetup.wheels.length; w++) {
-                        self._car.vehicleSetup.wheels[w].attatchMesh(self._objectLoader.wheelMesh.clone());
-                    }
-                    var carMesh = self._objectLoader.carMesh.clone();
-                    carMesh.scale.set(0.38, 0.38, 0.38);
-                    self._car.vehicleSetup.vehicleBody.attatchMesh(carMesh);
-                    self._groundObjects.tree.attachTreeMesh(self._objectLoader.treeMesh);
+        //if(!CarSimulator.developer_mode){
+        var objectsLoaderListener = {
+            objectsLoaded: function () {
+                self._objectLoader.wheelMesh.rotateY(Math.PI / 2);
+                self._objectLoader.wheelMesh.scale.set(1.6, 1.6, 1.6);
+                for (var w = 0; w < self._car.vehicleSetup.wheels.length; w++) {
+                    self._car.vehicleSetup.wheels[w].attatchMesh(self._objectLoader.wheelMesh.clone());
                 }
-            };
-            this._objectLoader.load(objectsLoaderListener);
-        }
+                var carMesh = self._objectLoader.carMesh.clone();
+                carMesh.scale.set(0.38, 0.38, 0.38);
+                self._car.vehicleSetup.vehicleBody.attatchMesh(carMesh);
+                self._groundObjects.tree.attachTreeMesh(self._objectLoader.treeMesh);
+                //self._objectLoader.springMesh.position.set(0,0.5,0);
+                ////self._objectLoader.springMesh.rotateX(Math.PI/2);
+                //self._objectLoader.springMesh.scale.set(0.4,0.4,0.4);
+                //for(var i=0; i<self._car.vehicleSetup.springConnector.length; i++){
+                //    self._car.vehicleSetup.springConnector[i].attatchSpringMesh(self._objectLoader.springMesh.clone(), self._objectLoader.springConnectorMesh.clone());
+                //}
+            }
+        };
+        this._objectLoader.load(objectsLoaderListener);
+        //}
         this._stats = new Stats();
         this._stats.setMode(0); // 0: fps, 1: ms, 2: mb
         this._stats.domElement.style.position = 'absolute';
@@ -76,33 +79,26 @@ var CarSimulator = (function () {
         document.body.appendChild(this._stats.domElement);
         this.update();
     };
-    CarSimulator.prototype.update = function (delta) {
+    CarSimulator.prototype.update = function () {
+        var _this = this;
         this._stats.begin();
         this._socket.update(this._car);
-        //var delta = (this._clock.getElapsedTime()-this._time);
-        var delta = this._clock.getDelta() * 5.0;
-        if (delta > 0.06)
-            delta = 0.06;
-        //this._time = this._clock.getElapsedTime();
+        var delta = 0.05;
+        //delta = this._clock.getDelta();
         this._groundPlanes.update(this._car.vehicleModel.object.position);
         this._car.update(this._time, delta);
         //this._particleSystems[0].update(
-        //    this._car.vehicleModel.object.position.clone().add(this._car.vehicleSetup.wheels[2].object.position),
+        //    this._car.vehicleModel.object.position.clone().add(this._car.vehicleSetup.wheels[2].relativePosition),
         //    this._clock.getElapsedTime(),
-        //    this._car.vehicleSetup.motor.isAccelerating
-        //);
-        //
-        //this._particleSystems[1].update(
-        //    this._car.vehicleModel.object.position.clone().add(this._car.vehicleSetup.wheels[3].object.position),
-        //    this._clock.getElapsedTime(),
-        //    this._car.vehicleSetup.motor.isAccelerating
+        //    delta
         //);
         if (!CarSimulator.developer_mode)
             this._groundObjects.update(this._car.vehicleModel.object.position);
-        var self = this;
-        requestAnimationFrame(function () { return self.update(); });
         this._renderer.render();
         this._stats.end();
+        requestAnimationFrame(function () { return _this.update(); });
+        //setTimeout(() => this.update(), 60/1000);
+        //this.update();
     };
     CarSimulator.prototype.handleJqueryEvents = function () {
         var self = this;

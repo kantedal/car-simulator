@@ -6,6 +6,7 @@
 ///<reference path="./ground_plane.ts"/>
 ///<reference path="./parts/motor.ts"/>
 ///<reference path="./parts/spring.ts"/>
+///<reference path="./parts/spring_connector.ts"/>
 ///<reference path="./parts/steering.ts"/>
 ///<reference path="./vehicle.ts"/>
 ///<reference path="./relative_dynamic_body.ts"/>
@@ -15,9 +16,11 @@ class VehicleSetup {
     private _vehicle : Vehicle;
     private _wheels:Wheel[];
     private _springs:Spring[];
+    private _springConnector:SpringConnector[];
     private _motor:Motor;
     private _steering:Steering;
     private _vehicleBody:RelativeDynamicBody;
+    private _spotLight: THREE.SpotLight;
 
     constructor(renderer : Renderer, vehicle : Vehicle){
         this._renderer = renderer;
@@ -43,21 +46,30 @@ class VehicleSetup {
             }
         }
 
+        if(this._springConnector){
+            for(var i=0; i<this._springConnector.length; i++){
+                this._springConnector[i].update(time, delta);
+            }
+        }
+
         if(this._motor){
             this._motor.update(time, delta);
 
-            if(Math.abs(this._vehicle.vehicleModel.velocity.valueOf()[4]) < 1.5)
-                this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle*this._motor.torque*15;
+            this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle*this._motor.torque*15;
 
             this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle
                 *-this._vehicle.vehicleModel.velocityDirection.clone().normalize().dot(this._vehicle.vehicleModel.localZDirection)
-                *this._vehicle.vehicleModel.velocityDirection.length()*3000;
+                *this._vehicle.vehicleModel.velocityDirection.length()*2500;
 
             this._steering.steeringAngle *= 0.98;
         }
 
         if(this._steering){
             this._steering.update(time, delta);
+        }
+
+        if(this._spotLight){
+           // this._spotLight.target =
         }
     }
 
@@ -83,6 +95,15 @@ class VehicleSetup {
             }
 
             if(this.pressedKeys[40] || this.pressedKeys[83]) {
+            }
+
+            if(this.pressedKeys[76]){
+                if(this._spotLight){
+                    if(this._spotLight.intensity == 10)
+                        this._spotLight.intensity = 0;
+                    else
+                        this._spotLight.intensity = 10;
+                }
             }
         }
     }
@@ -168,5 +189,21 @@ class VehicleSetup {
 
     set vehicleBody(value:RelativeDynamicBody) {
         this._vehicleBody = value;
+    }
+
+    get springConnector():SpringConnector[] {
+        return this._springConnector;
+    }
+
+    set springConnector(value:Array) {
+        this._springConnector = value;
+    }
+
+    get spotLight():THREE.SpotLight {
+        return this._spotLight;
+    }
+
+    set spotLight(value:THREE.SpotLight) {
+        this._spotLight = value;
     }
 }

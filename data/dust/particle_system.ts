@@ -1,86 +1,66 @@
 
 ///<reference path="../../threejs/three.d.ts"/>
-///<reference path="Particle.ts"/>
-///<reference path="Particle2.ts"/>
+///<reference path="./particle.ts"/>
 
 ///<reference path="../../renderer.ts"/>
 ///<reference path="../../data/vehicle.ts"/>
+///<reference path="../../data/parts/wheel.ts"/>
+///<reference path="../../math/matrix.ts"/>
 
-import Clock = THREE.Clock;
-import Vector3 = THREE.Vector3;
 class ParticleSystem {
     private _renderer: Renderer;
+    private _emissionWheel: Wheel;
+    private _particles : Particle[];
+    private _particleSprite : THREE.Sprite;
+    private _material : THREE.SpriteMaterial;
 
-    private ParticleArray : Particle[];
-    private ParticleArray2 : Particle2[];
-
-    particleSprite : any;
-    particleSprite2 : any;
-    texture : any;
-    texture2 : any;
-    material : any;
-    material2 : any;
-
-    constructor(renderer: Renderer, texture){
+    constructor(renderer: Renderer, emissionWheel: Wheel){
         this._renderer = renderer;
-        this.ParticleArray = [];
-        this.ParticleArray2 = [];
+        this._particles = [];
+        this._emissionWheel = emissionWheel;
+
+        var texture = new THREE.TextureLoader().load( "./texture/dirt.png" );
+        this._material = new THREE.SpriteMaterial({map: texture, transparent: true });
     }
 
-    public loadTexture(){
-        this.texture = new THREE.TextureLoader().load( "./texture/sand.png" );
-        this.material = new THREE.SpriteMaterial(  {map:this.texture, transparent: false, fog: false, rotation: Math.random()*Math.PI*2, opacity: Math.random() } );
+    public generateParticles(startPos: THREE.Vector3, time : number) {
+        if(this._emissionWheel.isColliding){
+            var force = this._emissionWheel.connectedVehicle.vehicleModel.forceTotal;
+            var force_mag = math.norm(force)/6000;
 
-        this.texture2 = new THREE.TextureLoader().load( "./texture/smoke2.png" );
-        this.material2 = new THREE.SpriteMaterial( { map:this.texture2 } );
-    }
+            for (var i = 0; i < Math.floor((Math.random()*force_mag)); i++) {
+                this._particleSprite = new THREE.Sprite(this._material.clone());
 
-    public generateParticles(startPos : THREE.Vector3, time : number) {
-        for (var i = 0; i < Math.floor((Math.random() * 5) + 1); i++) {
-            this.particleSprite = new THREE.Sprite(this.material);
+                var startVel = this._emissionWheel.wheelDirection.clone().multiplyScalar(-1);
+                startVel.setY(1);
+                startVel.setX(startVel.x + Math.random()-0.5);
+                startVel.setZ(startVel.z + Math.random()-0.5);
+                startVel.multiplyScalar(this._emissionWheel.connectedVehicle.vehicleModel.velocityDirection.length()*0.4 + Math.random()*0.2);
 
-            var rand = Math.random() * 3;
-            this.particleSprite.scale.set(rand, rand, rand);
-            this.ParticleArray.push(new Particle(startPos, this._renderer, time, this.particleSprite));
-        }
-
-        for (var i = 0; i < Math.floor(Math.random() * 5 + 1); i++) {
-            this.particleSprite2 = new THREE.Sprite(this.material2);
-
-            this.particleSprite2.scale.set(0.1, 0.1, 0.1);
-            this.ParticleArray2.push(new Particle2(startPos, this._renderer, time, this.particleSprite2));
-        }
-    }
-
-    public simulateParticles(startPos : THREE.Vector3, time : number){
-        for(var i = 0; i < this.ParticleArray.length; i++) {
-            if (this.ParticleArray[i]) {
-                this.ParticleArray[i].update(time, startPos);
-
-                if(this.ParticleArray[i].ParticleDead)
-                    this.ParticleArray.splice(i,1);
-            }
-        }
-
-        for(var i = 0; i < this.ParticleArray2.length; i++) {
-            if (this.ParticleArray2[i]) {
-                this.ParticleArray2[i].update(time, startPos);
-
-                if(this.ParticleArray2[i].ParticleDead)
-                    this.ParticleArray2.splice(i,1);
+                var scale = Math.random()*2;
+                this._particleSprite.scale.set(scale, scale, scale);
+                this._particleSprite.material.rotation = Math.random*2*Math.PI;
+                this._particles.push(new Particle(startPos, startVel, this._renderer, time, this._particleSprite));
             }
         }
     }
 
-    update(pos : THREE.Vector3, time : number, acc : boolean)
+    public simulateParticles(time : number, delta: number){
+        for(var i = 0; i < this._particles.length; i++) {
+            if (this._particles[i]) {
+                this._particles[i].update(time, delta);
+
+                if(this._particles[i].isParticleDead)
+                    this._particles.splice(i,1);
+            }
+        }
+    }
+
+    public update(pos: THREE.Vector3, time: number, delta: number)
     {
-        if(acc)
-            this.generateParticles(pos, time);
-
-        this.simulateParticles(pos, time);
-
+        this.generateParticles(pos, time);
+        this.simulateParticles(time, delta);
     }
-
 
 }
 
