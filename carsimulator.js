@@ -53,13 +53,10 @@ var CarSimulator = (function () {
         if (!CarSimulator.developer_mode) {
             var objectsLoaderListener = {
                 objectsLoaded: function () {
-                    self._objectLoader.wheelMesh.rotateY(Math.PI / 2);
-                    self._objectLoader.wheelMesh.scale.set(1.6, 1.6, 1.6);
                     for (var w = 0; w < self._car.vehicleSetup.wheels.length; w++) {
                         self._car.vehicleSetup.wheels[w].attatchMesh(self._objectLoader.wheelMesh.clone());
                     }
                     var carMesh = self._objectLoader.carMesh.clone();
-                    carMesh.scale.set(0.38, 0.38, 0.38);
                     self._car.vehicleSetup.vehicleBody.attatchMesh(carMesh);
                     self._groundObjects.tree.attachTreeMesh(self._objectLoader.treeMesh);
                     //self._objectLoader.springMesh.position.set(0,0.5,0);

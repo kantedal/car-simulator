@@ -49,6 +49,8 @@ class ObjectLoader {
             objLoader.setPath( 'models/car/' );
             objLoader.load( 'tire.obj', function ( object ) {
                 self._wheelMesh = object;
+                self._wheelMesh.rotateY(Math.PI/2);
+                self._wheelMesh.scale.set(1.6,1.6,1.6);
                 self._wheelMesh.castShadow = true;
                 self._wheelLoaded = true;
                 if(self.allLoaded())
@@ -118,6 +120,7 @@ class ObjectLoader {
             objLoader.setPath( 'models/car/' );
             objLoader.load( 'car.obj', function ( object ) {
                 self._carMesh = object;
+                self._carMesh.scale.set(0.38, 0.38, 0.38);
                 self._wheelMesh.castShadow = true;
                 self._carLoaded = true;
                 if(self.allLoaded())

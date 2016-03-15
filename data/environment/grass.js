@@ -43,7 +43,7 @@ var Grass = (function () {
                 this._particleSystem.geometry.vertices[p].set(x_val, y_val, z_val);
             }
         }
-        this._particles.boundingSphere.radius = 1000;
+        this._particles.boundingSphere.radius = 10000;
     };
     return Grass;
 })();

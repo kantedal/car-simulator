@@ -121,6 +121,8 @@ var Wheel = (function (_super) {
     };
     Wheel.prototype.attatchMesh = function (mesh) {
         this._attatchedMesh = mesh;
+        if (this.object.position.x < 0)
+            this._attatchedMesh.rotateY(Math.PI);
         this.object.add(this._attatchedMesh);
     };
     Wheel.prototype.connectVehicle = function (vehicle) {

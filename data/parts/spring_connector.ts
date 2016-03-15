@@ -38,7 +38,9 @@ class SpringConnector {
         //spring_geometry.rotateX(Math.PI/2);
         this._springPlaceHolderMesh = new THREE.Mesh(spring_geometry, new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
         this._connectedVehicle.object.add(this._springPlaceHolderMesh);
-        this._springPlaceHolderMesh.position.copy(this._wheelPos);
+        this._springPlaceHolderMesh.position.copy(this._wheelPos).add(new THREE.Vector3(Math.sign(this._wheelPos.x)*0.3, 0, 0));
+
+        this._springPlaceHolderMesh.rotation.set(-Math.sign(this._wheelPos.z)*0.2,0,Math.sign(this._wheelPos.x)*0.2);
     }
 
     public update(time:number, delta:number){
@@ -59,8 +61,8 @@ class SpringConnector {
             this._springArrow.setLength(spring_length*2);
         }
 
-        this._springPlaceHolderMesh.rotation.set(0,0,0.5*Math.sign(this._wheelPos.x));
-        this._springPlaceHolderMesh.scale.set(1, spring_length/2-0.5, 1);
+        if(this._springMesh)
+            this._springMesh.scale.set(0.3, spring_length/7.5-0.15, 0.3);
         //this._springPlaceHolderMesh.lookAt(vehiclePos);
 
         if(this._springTopConnector)
@@ -69,14 +71,15 @@ class SpringConnector {
 
     public attatchSpringMesh(mesh: THREE.Mesh, connectorMesh: THREE.Mesh){
         this._springMesh = mesh;
+        this._springMesh.scale.set(0.25,0.5,0.25);
         this._springPlaceHolderMesh.add(this._springMesh);
-        //this._springMesh.translateX(-Math.sign(this._wheelPos.x));
+        this._springMesh.translateX(-Math.sign(this._wheelPos.x)*0.6);
 
         this._springTopConnector = connectorMesh.clone();
         this._springBottomConnector = connectorMesh.clone();
 
-        this._connectedWheel.object.add(this._springTopConnector);
-        this._springTopConnector.position.copy(this._vehiclePos);
-        this._springTopConnector.scale.set(0.4, 0.4, 0.4);
+        //this._connectedWheel.object.add(this._springTopConnector);
+        //this._springTopConnector.position.copy(this._vehiclePos);
+        //this._springTopConnector.scale.set(0.6, 0.6, 0.6);
     }
 }

@@ -13,8 +13,8 @@ var Car = (function (_super) {
         this.steering = new Steering(0);
         this.motor = new Motor(20000, 100);
         this.wheels = [
-            new Wheel(renderer, new THREE.Vector3(-3.5, -1, -4)),
-            new Wheel(renderer, new THREE.Vector3(3.5, -1, -4)),
+            new Wheel(renderer, new THREE.Vector3(-3, -1, -4)),
+            new Wheel(renderer, new THREE.Vector3(3, -1, -4)),
             new Wheel(renderer, new THREE.Vector3(-3.8, -1, 5.5)),
             new Wheel(renderer, new THREE.Vector3(3.8, -1, 5.5))
         ];
@@ -44,8 +44,8 @@ var Car = (function (_super) {
             this.vehicleBody = new RelativeDynamicBody(new THREE.BoxGeometry(0, 0, 0), new THREE.MeshBasicMaterial({ color: 0xff00ff, wireframe: true }), renderer, this.vehicle, this.vehicle.vehicleModel.velocity);
         vehicle.vehicleModel.object.add(this.vehicleBody.object);
         this.springConnector = [
-            new SpringConnector(renderer, vehicle.vehicleModel, this.wheels[0], this.vehicleBody, this.wheels[0].object.position.clone().add(new THREE.Vector3(2.5, 0.6, 0.5)), this.wheels[0].object.position.clone().add(new THREE.Vector3(0.5, 0, 0))),
-            new SpringConnector(renderer, vehicle.vehicleModel, this.wheels[1], this.vehicleBody, this.wheels[1].object.position.clone().add(new THREE.Vector3(-2.5, 0.6, 0.5)), this.wheels[1].object.position.clone().add(new THREE.Vector3(-0.5, 0, 0))),
+            new SpringConnector(renderer, vehicle.vehicleModel, this.wheels[0], this.vehicleBody, this.wheels[0].object.position.clone().add(new THREE.Vector3(2.2, 0.6, 0.5)), this.wheels[0].object.position.clone().add(new THREE.Vector3(0.5, 0, 0))),
+            new SpringConnector(renderer, vehicle.vehicleModel, this.wheels[1], this.vehicleBody, this.wheels[1].object.position.clone().add(new THREE.Vector3(-2.2, 0.6, 0.5)), this.wheels[1].object.position.clone().add(new THREE.Vector3(-0.5, 0, 0))),
             new SpringConnector(renderer, vehicle.vehicleModel, this.wheels[2], this.vehicleBody, this.wheels[2].object.position.clone().add(new THREE.Vector3(2.5, 2, 0)), this.wheels[2].object.position.clone().add(new THREE.Vector3(0.5, 0, 0))),
             new SpringConnector(renderer, vehicle.vehicleModel, this.wheels[3], this.vehicleBody, this.wheels[3].object.position.clone().add(new THREE.Vector3(-2.5, 2, 0)), this.wheels[3].object.position.clone().add(new THREE.Vector3(-0.5, 0, 0))),
         ];

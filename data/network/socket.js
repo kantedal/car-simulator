@@ -23,7 +23,13 @@ var Socket = (function () {
         this._peer.on("connection", function (conn) {
             self._isConnected = true;
             self._connection = conn;
-            self._connectedVehicles.push(new Vehicle(self._renderer));
+            var newVehicle = new Vehicle(self._renderer);
+            newVehicle.vehicleSetup.wheels[0].attatchMesh(self._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.wheels[1].attatchMesh(self._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.wheels[2].attatchMesh(self._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.wheels[3].attatchMesh(self._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.vehicleBody.attatchMesh(self._objectLoader.carMesh.clone());
+            self._connectedVehicles.push(newVehicle);
             self._connection.on('data', function (data) {
                 self.recievedData(data);
             });
@@ -40,11 +46,11 @@ var Socket = (function () {
         this._connection.on('open', function () {
             self._isConnected = true;
             var newVehicle = new Vehicle(self._renderer);
-            newVehicle.vehicleSetup.wheels[0].attatchMesh(this._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.wheels[1].attatchMesh(this._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.wheels[2].attatchMesh(this._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.wheels[3].attatchMesh(this._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.vehicleBody.attatchMesh(this._objectLoader.carMesh.clone());
+            newVehicle.vehicleSetup.wheels[0].attatchMesh(self._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.wheels[1].attatchMesh(self._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.wheels[2].attatchMesh(self._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.wheels[3].attatchMesh(self._objectLoader.wheelMesh.clone());
+            newVehicle.vehicleSetup.vehicleBody.attatchMesh(self._objectLoader.carMesh.clone());
             self._connectedVehicles.push(newVehicle);
             // Receive messages
             self._connection.on('data', function (data) {

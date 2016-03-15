@@ -11,8 +11,8 @@ class Car extends VehicleSetup {
         this.motor = new Motor(20000, 100);
 
         this.wheels = [
-            new Wheel(renderer, new THREE.Vector3(-3.5, -1, -4)),
-            new Wheel(renderer, new THREE.Vector3(3.5, -1, -4)),
+            new Wheel(renderer, new THREE.Vector3(-3, -1, -4)),
+            new Wheel(renderer, new THREE.Vector3(3, -1, -4)),
             new Wheel(renderer, new THREE.Vector3(-3.8, -1, 5.5)),
             new Wheel(renderer, new THREE.Vector3(3.8, -1, 5.5))
         ];
@@ -54,7 +54,7 @@ class Car extends VehicleSetup {
                 vehicle.vehicleModel,
                 this.wheels[0],
                 this.vehicleBody,
-                this.wheels[0].object.position.clone().add(new THREE.Vector3(2.5, 0.6, 0.5)),
+                this.wheels[0].object.position.clone().add(new THREE.Vector3(2.2, 0.6, 0.5)),
                 this.wheels[0].object.position.clone().add(new THREE.Vector3(0.5,0,0))
             ),
             new SpringConnector(
@@ -62,7 +62,7 @@ class Car extends VehicleSetup {
                 vehicle.vehicleModel,
                 this.wheels[1],
                 this.vehicleBody,
-                this.wheels[1].object.position.clone().add(new THREE.Vector3(-2.5, 0.6, 0.5)),
+                this.wheels[1].object.position.clone().add(new THREE.Vector3(-2.2, 0.6, 0.5)),
                 this.wheels[1].object.position.clone().add(new THREE.Vector3(-0.5,0,0))
             ),
             new SpringConnector(

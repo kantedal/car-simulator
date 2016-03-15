@@ -165,6 +165,9 @@ class Wheel extends ParticleCollider {
 
     public attatchMesh(mesh:THREE.Mesh){
         this._attatchedMesh = mesh;
+        if(this.object.position.x < 0)
+            this._attatchedMesh.rotateY(Math.PI);
+
         this.object.add(this._attatchedMesh)
     }
     
