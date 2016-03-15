@@ -52,10 +52,12 @@ class RelativeDynamicBody extends DynamicRigidBody {
         this.velocity = math.add(this.velocity, math.multiply(math.multiply(math.inv(this.M), this.forceTotal), delta));
 
         //this._relativeVelocity = math.subtract(this.velocity, this._parentVehicle.vehicleModel.velocity);
+
         this._relativeVelocity.valueOf()[1] = this.velocity.valueOf()[1] - this._parentVehicle.vehicleModel.velocity.valueOf()[1];
         this._relativeVelocity.valueOf()[3] = this.velocity.valueOf()[3] - this._parentVehicle.vehicleModel.velocity.valueOf()[3];
         this._relativeVelocity.valueOf()[4] = this.velocity.valueOf()[4] - this._parentVehicle.vehicleModel.velocity.valueOf()[4];
         this._relativeVelocity.valueOf()[5] = this.velocity.valueOf()[5] - this._parentVehicle.vehicleModel.velocity.valueOf()[5];
+
 
         this.state = math.add(this.state, math.multiply(this._relativeVelocity, delta));
         //this._forceConstraints = math.matrix([0,0,0,0,0,0]);

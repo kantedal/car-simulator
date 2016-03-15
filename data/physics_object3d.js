@@ -142,6 +142,45 @@ var PhysicsObject3d = (function () {
         }
         return collisions;
     };
+    PhysicsObject3d.prototype.newNewCheckCollisions = function () {
+        for (var i = 0; i < this._externalCollisionPoints.length; i++)
+            this._externalCollision[i] = false;
+        var collisions = [];
+        for (var extColIdx = 0; extColIdx < this._externalCollisionPoints.length; extColIdx++) {
+            var vertPos = this._externalCollisionPositions[extColIdx].clone();
+            vertPos.applyQuaternion(this._object.getWorldQuaternion());
+            vertPos.add(this._object.position);
+            var surfaceHeight = GroundPlane.simplexNoise(new THREE.Vector3(vertPos.x, vertPos.y, vertPos.z));
+            if (surfaceHeight >= vertPos.y) {
+                var penetration = Math.abs(surfaceHeight - vertPos.y);
+                var x_height = GroundPlane.simplexNoise(new THREE.Vector3(vertPos.x + 0.01, vertPos.y, vertPos.z));
+                var x_dir = new THREE.Vector3(0.01, x_height - surfaceHeight, 0);
+                x_dir.normalize();
+                var z_height = GroundPlane.simplexNoise(new THREE.Vector3(vertPos.x, vertPos.y, vertPos.z + 0.01));
+                var z_dir = new THREE.Vector3(0, z_height - surfaceHeight, 0.01);
+                z_dir.normalize();
+                var normal = z_dir.cross(x_dir).normalize();
+                var force_radius = vertPos.clone().sub(this._object.position);
+                var collision = [
+                    force_radius.x,
+                    force_radius.y,
+                    force_radius.z,
+                    normal.x,
+                    normal.y,
+                    normal.z,
+                    vertPos.x,
+                    vertPos.y,
+                    vertPos.z,
+                    penetration
+                ];
+                collisions.push(collision);
+            }
+            if (surfaceHeight + 0.6 >= vertPos.y) {
+                this._externalCollision[extColIdx] = true;
+            }
+        }
+        return collisions;
+    };
     PhysicsObject3d.prototype.handleCollision = function (vertPos, vert1, vert2, vert3, vertexNormals, penetration) {
         var areaT = this.triangleArea(vert1, vert2, vert3);
         var areaB = this.triangleArea(vert1, vertPos, vert3);

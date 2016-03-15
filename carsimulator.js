@@ -41,7 +41,7 @@ var CarSimulator = (function () {
         //self._carTest = new CarTest(this._renderer);
         //this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry(8,2,4), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}), this._renderer);
         this._collisionScene = new THREE.Scene();
-        this._groundPlanes = new GroundPlane(this._renderer, 11);
+        this._groundPlanes = new GroundPlane(this._renderer, 3);
         var width = CarSimulator.ground_width;
         var dim = this._groundPlanes.dimension;
         for (var x = 0; x < dim; x++) {
@@ -131,7 +131,7 @@ var CarSimulator = (function () {
         enumerable: true,
         configurable: true
     });
-    CarSimulator.ground_width = 40;
+    CarSimulator.ground_width = 200;
     CarSimulator.developer_mode = false;
     return CarSimulator;
 })();

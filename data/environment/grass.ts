@@ -13,7 +13,7 @@ class Grass {
     private _particleSystem: THREE.Points;
     private _particles: THREE.Geometry;
     private _particleMaterial: THREE.PointsMaterial;
-    private _particleCount = 7000;
+    private _particleCount = 3000;
 
     constructor(renderer: Renderer, groundPlanes: GroundPlane){
         this._renderer = renderer;
@@ -37,7 +37,7 @@ class Grass {
 
             var x_val = Math.cos(angle)*length;
             var z_val = Math.sin(angle)*length;
-            var y_val = this._groundPlanes.simplexNoise(new THREE.Vector3(x_val,0,z_val));
+            var y_val = GroundPlane.simplexNoise(new THREE.Vector3(x_val,0,z_val));
 
             var particle = new THREE.Vector3(x_val, y_val, z_val);
             this._particles.vertices.push(particle);
@@ -56,7 +56,7 @@ class Grass {
 
                 var x_val = current_pos.x + Math.cos(angle)*length;
                 var z_val = current_pos.z + Math.sin(angle)*length;
-                var y_val = this._groundPlanes.simplexNoise(new THREE.Vector3(x_val,0,z_val));
+                var y_val = GroundPlane.simplexNoise(new THREE.Vector3(x_val,0,z_val));
 
                 this._particleSystem.geometry.vertices[p].set(x_val, y_val, z_val);
             }

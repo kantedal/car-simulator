@@ -13,7 +13,7 @@ class Tree {
     private _treeMesh: THREE.Mesh;
     private _groundPlanes: GroundPlane;
 
-    private _treeCount = 20;
+    private _treeCount = 10;
 
     constructor(renderer: Renderer, groundPlanes: GroundPlane){
         this._renderer = renderer;
@@ -29,7 +29,7 @@ class Tree {
                     var radius = Math.sqrt(Math.random())*200;
                     var x_val = current_pos.x + Math.cos(angle)*radius;
                     var z_val = current_pos.z + Math.sin(angle)*radius;
-                    var y_val = this._groundPlanes.simplexNoise(new THREE.Vector3(x_val,0,z_val));
+                    var y_val = GroundPlane.simplexNoise(new THREE.Vector3(x_val,0,z_val));
 
                     this._trees[c].position.set(x_val, y_val, z_val);
                 }
@@ -45,7 +45,7 @@ class Tree {
             var length = 150+Math.sqrt(Math.random())*50;
             var x_val = Math.cos(angle)*length;
             var z_val = Math.sin(angle)*length;
-            var y_val = this._groundPlanes.simplexNoise(new THREE.Vector3(x_val,0,z_val));
+            var y_val = GroundPlane.simplexNoise(new THREE.Vector3(x_val,0,z_val));
 
             var newTree = this._treeMesh.clone();
             newTree.position.set(x_val, y_val, z_val);

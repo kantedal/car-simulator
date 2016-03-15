@@ -33,7 +33,7 @@ class CarSimulator {
     private _groundObjects : GroundObjects;
     private _particleSystems : ParticleSystem[];
 
-    public static ground_width : number = 40;
+    public static ground_width : number = 200;
     public static developer_mode : boolean = false;
 
     constructor(){
@@ -67,7 +67,7 @@ class CarSimulator {
         //this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry(8,2,4), new THREE.MeshBasicMaterial({color: 0x999999, wireframe: true}), this._renderer);
         this._collisionScene = new THREE.Scene();
 
-        this._groundPlanes = new GroundPlane(this._renderer, 11);
+        this._groundPlanes = new GroundPlane(this._renderer, 3);
 
         var width = CarSimulator.ground_width;
         var dim = this._groundPlanes.dimension;

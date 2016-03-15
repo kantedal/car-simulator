@@ -69,7 +69,7 @@ class DynamicRigidBody extends PhysicsObject3d {
 
         super.update(time,delta);
         //var collisions = super.checkCollisions();
-        this._collisions = super.newCheckCollisions();
+        this._collisions = super.newNewCheckCollisions();
 
         for(var colNum=0; colNum<this._collisions.length; colNum++){
             this.velocity = this.collision(this._collisions[colNum]);

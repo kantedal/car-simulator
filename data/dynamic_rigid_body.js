@@ -59,7 +59,7 @@ var DynamicRigidBody = (function (_super) {
         this._forceConstraints = math.matrix([0, 0, 0, 0, 0, 0]);
         _super.prototype.update.call(this, time, delta);
         //var collisions = super.checkCollisions();
-        this._collisions = _super.prototype.newCheckCollisions.call(this);
+        this._collisions = _super.prototype.newNewCheckCollisions.call(this);
         for (var colNum = 0; colNum < this._collisions.length; colNum++) {
             this.velocity = this.collision(this._collisions[colNum]);
         }

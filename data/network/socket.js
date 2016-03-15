@@ -24,11 +24,13 @@ var Socket = (function () {
             self._isConnected = true;
             self._connection = conn;
             var newVehicle = new Vehicle(self._renderer);
-            newVehicle.vehicleSetup.wheels[0].attatchMesh(self._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.wheels[1].attatchMesh(self._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.wheels[2].attatchMesh(self._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.wheels[3].attatchMesh(self._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.vehicleBody.attatchMesh(self._objectLoader.carMesh.clone());
+            if (!CarSimulator.developer_mode) {
+                newVehicle.vehicleSetup.wheels[0].attatchMesh(self._objectLoader.wheelMesh.clone());
+                newVehicle.vehicleSetup.wheels[1].attatchMesh(self._objectLoader.wheelMesh.clone());
+                newVehicle.vehicleSetup.wheels[2].attatchMesh(self._objectLoader.wheelMesh.clone());
+                newVehicle.vehicleSetup.wheels[3].attatchMesh(self._objectLoader.wheelMesh.clone());
+                newVehicle.vehicleSetup.vehicleBody.attatchMesh(self._objectLoader.carMesh.clone());
+            }
             self._connectedVehicles.push(newVehicle);
             self._connection.on('data', function (data) {
                 self.recievedData(data);
@@ -46,11 +48,13 @@ var Socket = (function () {
         this._connection.on('open', function () {
             self._isConnected = true;
             var newVehicle = new Vehicle(self._renderer);
-            newVehicle.vehicleSetup.wheels[0].attatchMesh(self._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.wheels[1].attatchMesh(self._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.wheels[2].attatchMesh(self._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.wheels[3].attatchMesh(self._objectLoader.wheelMesh.clone());
-            newVehicle.vehicleSetup.vehicleBody.attatchMesh(self._objectLoader.carMesh.clone());
+            if (!CarSimulator.developer_mode) {
+                newVehicle.vehicleSetup.wheels[0].attatchMesh(self._objectLoader.wheelMesh.clone());
+                newVehicle.vehicleSetup.wheels[1].attatchMesh(self._objectLoader.wheelMesh.clone());
+                newVehicle.vehicleSetup.wheels[2].attatchMesh(self._objectLoader.wheelMesh.clone());
+                newVehicle.vehicleSetup.wheels[3].attatchMesh(self._objectLoader.wheelMesh.clone());
+                newVehicle.vehicleSetup.vehicleBody.attatchMesh(self._objectLoader.carMesh.clone());
+            }
             self._connectedVehicles.push(newVehicle);
             // Receive messages
             self._connection.on('data', function (data) {
