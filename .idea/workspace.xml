@@ -1,36 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="eca5ffb2-22ff-487c-870c-cac14447c28b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/texture/snowgrass.jpg" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/carsimulator.js" afterPath="$PROJECT_DIR$/carsimulator.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/carsimulator.js.map" afterPath="$PROJECT_DIR$/carsimulator.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/carsimulator.ts" afterPath="$PROJECT_DIR$/carsimulator.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/dynamic_rigid_body.js" afterPath="$PROJECT_DIR$/data/dynamic_rigid_body.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/dynamic_rigid_body.js.map" afterPath="$PROJECT_DIR$/data/dynamic_rigid_body.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/dynamic_rigid_body.ts" afterPath="$PROJECT_DIR$/data/dynamic_rigid_body.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/flower.js" afterPath="$PROJECT_DIR$/data/environment/flower.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/flower.js.map" afterPath="$PROJECT_DIR$/data/environment/flower.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/flower.ts" afterPath="$PROJECT_DIR$/data/environment/flower.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/grass.js" afterPath="$PROJECT_DIR$/data/environment/grass.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/grass.js.map" afterPath="$PROJECT_DIR$/data/environment/grass.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/grass.ts" afterPath="$PROJECT_DIR$/data/environment/grass.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/tree.js" afterPath="$PROJECT_DIR$/data/environment/tree.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/tree.js.map" afterPath="$PROJECT_DIR$/data/environment/tree.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/tree.ts" afterPath="$PROJECT_DIR$/data/environment/tree.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/ground_plane.js" afterPath="$PROJECT_DIR$/data/ground_plane.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/ground_plane.js.map" afterPath="$PROJECT_DIR$/data/ground_plane.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/ground_plane.ts" afterPath="$PROJECT_DIR$/data/ground_plane.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/network/socket.js" afterPath="$PROJECT_DIR$/data/network/socket.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/network/socket.js.map" afterPath="$PROJECT_DIR$/data/network/socket.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/network/socket.ts" afterPath="$PROJECT_DIR$/data/network/socket.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/physics_object3d.js" afterPath="$PROJECT_DIR$/data/physics_object3d.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/physics_object3d.js.map" afterPath="$PROJECT_DIR$/data/physics_object3d.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/physics_object3d.ts" afterPath="$PROJECT_DIR$/data/physics_object3d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/relative_dynamic_body.js.map" afterPath="$PROJECT_DIR$/data/relative_dynamic_body.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/relative_dynamic_body.ts" afterPath="$PROJECT_DIR$/data/relative_dynamic_body.ts" />
-    </list>
+    <list default="true" id="eca5ffb2-22ff-487c-870c-cac14447c28b" name="Default" comment="" />
     <ignored path="carsimulator.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -479,9 +450,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2467" height="2085" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11471423" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11471423" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TypeScript Compiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298611" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
