@@ -25,9 +25,10 @@ var CarSimulator = (function () {
         ;
         this._car = new Vehicle(this._renderer);
         this._objectLoader = new ObjectLoader();
-        this._particleSystems = [];
-        this._particleSystems.push(new ParticleSystem(this._renderer, this._car.vehicleSetup.wheels[2]));
-        this._particleSystems.push(new ParticleSystem(this._renderer));
+        //
+        //this._particleSystems = [];
+        //this._particleSystems.push(new ParticleSystem(this._renderer, this._car.vehicleSetup.wheels[2]));
+        //this._particleSystems.push(new ParticleSystem(this._renderer));
         if (!CarSimulator.developer_mode)
             this._groundObjects = new GroundObjects(this._renderer, this._groundPlanes);
         this._socket = new Socket(this._renderer, this._objectLoader);
@@ -61,12 +62,12 @@ var CarSimulator = (function () {
                     carMesh.scale.set(0.38, 0.38, 0.38);
                     self._car.vehicleSetup.vehicleBody.attatchMesh(carMesh);
                     self._groundObjects.tree.attachTreeMesh(self._objectLoader.treeMesh);
-                    self._objectLoader.springMesh.position.set(0, 0.5, 0);
-                    //self._objectLoader.springMesh.rotateX(Math.PI/2);
-                    self._objectLoader.springMesh.scale.set(0.4, 0.4, 0.4);
-                    for (var i = 0; i < self._car.vehicleSetup.springConnector.length; i++) {
-                        self._car.vehicleSetup.springConnector[i].attatchSpringMesh(self._objectLoader.springMesh.clone(), self._objectLoader.springConnectorMesh.clone());
-                    }
+                    //self._objectLoader.springMesh.position.set(0,0.5,0);
+                    ////self._objectLoader.springMesh.rotateX(Math.PI/2);
+                    //self._objectLoader.springMesh.scale.set(0.4,0.4,0.4);
+                    //for(var i=0; i<self._car.vehicleSetup.springConnector.length; i++){
+                    //    self._car.vehicleSetup.springConnector[i].attatchSpringMesh(self._objectLoader.springMesh.clone(), self._objectLoader.springConnectorMesh.clone());
+                    //}
                 }
             };
             this._objectLoader.load(objectsLoaderListener);
@@ -87,7 +88,11 @@ var CarSimulator = (function () {
         //delta = this._clock.getDelta();
         this._groundPlanes.update(this._car.vehicleModel.object.position);
         this._car.update(this._time, delta);
-        this._particleSystems[0].update(this._car.vehicleModel.object.position.clone().add(this._car.vehicleSetup.wheels[2].relativePosition), this._clock.getElapsedTime(), delta);
+        //this._particleSystems[0].update(
+        //    this._car.vehicleModel.object.position.clone().add(this._car.vehicleSetup.wheels[2].relativePosition),
+        //    this._clock.getElapsedTime(),
+        //    delta
+        //);
         if (!CarSimulator.developer_mode)
             this._groundObjects.update(this._car.vehicleModel.object.position);
         this._renderer.render();

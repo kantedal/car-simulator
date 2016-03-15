@@ -2,34 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eca5ffb2-22ff-487c-870c-cac14447c28b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/circle.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/collisionConstraint.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/collisionSurface.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/isColliding.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/isWheelColliding.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/main.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/plotObject.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/projPointOnLine.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/rect.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/springConstraint.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/springConstraint2.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/springConstraint3.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/springRotImpulse.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/test.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/MATLAB-KOD/wheel.m" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/carsimulator.js" afterPath="$PROJECT_DIR$/carsimulator.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/carsimulator.js.map" afterPath="$PROJECT_DIR$/carsimulator.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/carsimulator.ts" afterPath="$PROJECT_DIR$/carsimulator.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/dust/particle_system.js" afterPath="$PROJECT_DIR$/data/dust/particle_system.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/dust/particle_system.js.map" afterPath="$PROJECT_DIR$/data/dust/particle_system.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/dust/particle_system.ts" afterPath="$PROJECT_DIR$/data/dust/particle_system.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/parts/spring_connector.js" afterPath="$PROJECT_DIR$/data/parts/spring_connector.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/parts/spring_connector.js.map" afterPath="$PROJECT_DIR$/data/parts/spring_connector.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/parts/spring_connector.ts" afterPath="$PROJECT_DIR$/data/parts/spring_connector.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/renderer.js" afterPath="$PROJECT_DIR$/renderer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/renderer.js.map" afterPath="$PROJECT_DIR$/renderer.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/renderer.ts" afterPath="$PROJECT_DIR$/renderer.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
     </list>
     <ignored path="carsimulator.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -63,8 +39,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.454545">
-              <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+            <state vertical-scroll-proportion="-2.5454545">
+              <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -80,21 +56,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="carsimulator.ts" pinned="false" current-in-tab="false">
+      <file leaf-file-name="carsimulator.ts" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/carsimulator.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.5492958">
+              <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="100" selection-end-column="23" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="particle_system.ts" pinned="false" current-in-tab="true">
+      <file leaf-file-name="particle_system.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/dust/particle_system.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.14788732">
-              <caret line="21" column="71" selection-start-line="21" selection-start-column="71" selection-end-line="21" selection-end-column="71" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="22" column="86" selection-start-line="22" selection-start-column="86" selection-end-line="22" selection-end-column="86" />
               <folding />
             </state>
           </provider>
@@ -120,8 +96,9 @@
       <list>
         <option value="$PROJECT_DIR$/renderer.ts" />
         <option value="$PROJECT_DIR$/data/parts/spring_connector.ts" />
-        <option value="$PROJECT_DIR$/carsimulator.ts" />
         <option value="$PROJECT_DIR$/data/dust/particle_system.ts" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/carsimulator.ts" />
       </list>
     </option>
   </component>
@@ -383,6 +360,22 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/data/parts/spring_connector.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="45" column="137" selection-start-line="45" selection-start-column="137" selection-end-line="45" selection-end-column="137" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/dust/particle_system.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="86" selection-start-line="22" selection-start-column="86" selection-end-line="22" selection-end-column="86" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/data/car.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -393,8 +386,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.454545">
-          <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+        <state vertical-scroll-proportion="-2.5454545">
+          <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
           <folding />
         </state>
       </provider>
@@ -407,26 +400,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/parts/spring_connector.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="45" column="137" selection-start-line="45" selection-start-column="137" selection-end-line="45" selection-end-column="137" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/carsimulator.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="127" column="0" selection-start-line="127" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/dust/particle_system.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.14788732">
-          <caret line="21" column="71" selection-start-line="21" selection-start-column="71" selection-end-line="21" selection-end-column="71" />
+        <state vertical-scroll-proportion="0.5492958">
+          <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="100" selection-end-column="23" />
           <folding />
         </state>
       </provider>
