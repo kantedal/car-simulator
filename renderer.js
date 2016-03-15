@@ -25,21 +25,6 @@ var Renderer = (function () {
         this._light.shadowDarkness = 1.0;
         this._light.position.set(1, 0.3, 0);
         this._scene.add(this._light);
-        //this._controls = new THREE.OrbitControls(this.camera);
-        var geometry = new THREE.SphereGeometry(3000, 60, 40);
-        var uniforms = {
-            texture: { type: 't', value: new THREE.TextureLoader().load("texture/grass.png") }
-        };
-        var material = new THREE.ShaderMaterial({
-            uniforms: uniforms,
-            vertexShader: document.getElementById('sky-vertex').textContent,
-            fragmentShader: document.getElementById('sky-fragment').textContent
-        });
-        var skyBox = new THREE.Mesh(geometry, material);
-        skyBox.scale.set(-1, 1, 1);
-        skyBox.eulerOrder = 'XZY';
-        skyBox.renderDepth = 1000.0;
-        this._scene.add(skyBox);
         var container = document.getElementById('content');
         container.appendChild(this.renderer.domElement);
         window.addEventListener('resize', this.onWindowResize, false);

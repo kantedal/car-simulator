@@ -43,7 +43,7 @@ class SpringConnector {
 
     public update(time:number, delta:number){
         var vehiclePos:THREE.Vector3 = this._vehiclePos.clone();
-        vehiclePos.applyQuaternion(this._connectedVehicleBody.object.getWorldQuaternion());
+        vehiclePos.applyQuaternion(this._connectedVehicleBody.object.getWorldQuaternion()).add(this._connectedVehicleBody.object.position);
 
         var wheelPos:THREE.Vector3 = this._wheelPos.clone();
         wheelPos.applyQuaternion(this._connectedVehicle.object.getWorldQuaternion());
@@ -60,7 +60,7 @@ class SpringConnector {
         }
 
         this._springPlaceHolderMesh.rotation.set(0,0,0.5*Math.sign(this._wheelPos.x));
-        this._springPlaceHolderMesh.scale.set(1, spring_length/4, 1);
+        this._springPlaceHolderMesh.scale.set(1, spring_length/2-0.5, 1);
         //this._springPlaceHolderMesh.lookAt(vehiclePos);
 
         if(this._springTopConnector)

@@ -19,7 +19,7 @@ class ParticleSystem {
         this._particles = [];
         this._emissionWheel = emissionWheel;
 
-        var texture = new THREE.TextureLoader().load( "./texture/dirt.png" );
+        var texture = new THREE.TextureLoader().load( "./texture/smoke2.png" );
         this._material = new THREE.SpriteMaterial({map: texture, transparent: true });
     }
 
