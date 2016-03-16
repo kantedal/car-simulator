@@ -21,10 +21,11 @@ class Particle {
         this._startTime = time;
         this._position = startPos.clone();
         this._velocity = startVel.clone();
-        this._acceleration = new THREE.Vector3(0,-9.82,0);
+        this._acceleration = new THREE.Vector3(0,-19.82,0);
         this._angularVelocity = Math.random()*5-2.5;
 
         this._particleSprite = particleSprite;
+        this._particleSprite.scale.multiplyScalar(2);
 
         this._renderer = renderer;
         this._renderer.scene.add(this._particleSprite);
@@ -45,7 +46,7 @@ class Particle {
 
         this._particleSprite.position.copy(this._position);
         this._particleSprite.scale.addScalar(8*delta);
-        this._particleSprite.material.opacity = Math.pow((this._lifeLength - currentTime)/this._lifeLength,3)*0.6;
+        this._particleSprite.material.opacity = Math.pow((this._lifeLength - currentTime)/this._lifeLength,2);
         this._particleSprite.material.rotation += this._angularVelocity*delta;
     }
 

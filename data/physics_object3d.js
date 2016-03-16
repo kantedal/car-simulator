@@ -134,7 +134,7 @@ var PhysicsObject3d = (function () {
                             collisions.push(collision);
                         }
                     }
-                    if (intersects[0].point.y + 0.6 >= this._externalCollisionPoints[extColIdx].position.y) {
+                    if (intersects[0].point.y + 0.15 >= this._externalCollisionPoints[extColIdx].position.y) {
                         this._externalCollision[extColIdx] = true;
                     }
                 }
@@ -175,7 +175,7 @@ var PhysicsObject3d = (function () {
                 ];
                 collisions.push(collision);
             }
-            if (surfaceHeight + 0.6 >= vertPos.y) {
+            if (surfaceHeight + 0.5 >= vertPos.y) {
                 this._externalCollision[extColIdx] = true;
             }
         }

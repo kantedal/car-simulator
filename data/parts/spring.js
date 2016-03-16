@@ -4,23 +4,19 @@
 ///<reference path="../../renderer.ts"/>
 ///<reference path="../vehicle.ts"/>
 var Spring = (function () {
-    function Spring(renderer) {
+    function Spring() {
         this._linearSpringConst = 6000;
         this._linearDampingConst = 900;
         this._angularSpringConst = 10000;
         this._angularDampingConst = 1600;
+        this._allowLinearMotion = true;
+        this._allowAngularMotion = true;
         this._linearSpringAcceleration = new THREE.Vector3(0, 0, 0);
         this._linearSpringVelocity = new THREE.Vector3(0, 0, 0);
         this._linearDisplacement = new THREE.Vector3(0, 1, 0);
         this._angularSpringAcceleration = new THREE.Vector3(0, 0, 0);
         this._angularSpringVelocity = new THREE.Vector3(0, 0, 0);
         this._angularDisplacement = new THREE.Vector3(0, 0, 0);
-        this._renderer = renderer;
-        this._springGroup = new THREE.Group();
-        this._springGroup.position.set(0, 0, 0);
-        this._spring = new THREE.Object3D();
-        this._spring.position.set(0, 0, 0);
-        this._springGroup.add(this._spring);
         //this._wheelConnectorMesh = new THREE.Mesh(new THREE.CylinderGeometry( 0.5, 0.5, 0.5, 10 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}));
         //this._wheelConnectorMesh.position.set(0,0,0);
         //this._springGroup.add(this._wheelConnectorMesh);
@@ -35,18 +31,26 @@ var Spring = (function () {
         //this.loadSpringModel();
     }
     Spring.prototype.update = function (time, delta, linearState, angularState) {
-        this._linearSpringAcceleration =
-            linearState.clone().sub(this._linearDisplacement)
-                .multiplyScalar(this._linearSpringConst).add(this._linearSpringVelocity.clone()
-                .multiplyScalar(this._linearDampingConst)).multiplyScalar(1 / 300);
-        this._linearSpringAcceleration.multiplyScalar(-1);
-        this._linearSpringVelocity.add(this._linearSpringAcceleration.clone().multiplyScalar(delta));
-        this._angularSpringAcceleration =
-            angularState.clone().sub(this._angularDisplacement)
-                .multiplyScalar(this._angularSpringConst).add(this._angularSpringVelocity.clone()
-                .multiplyScalar(this._angularDampingConst)).multiplyScalar(1 / 1000);
-        this._angularSpringAcceleration.multiplyScalar(-1);
-        this._angularSpringVelocity.add(this._angularSpringAcceleration.clone().multiplyScalar(delta));
+        if (this._allowLinearMotion) {
+            this._linearSpringAcceleration =
+                linearState.clone().sub(this._linearDisplacement)
+                    .multiplyScalar(this._linearSpringConst).add(this._linearSpringVelocity.clone()
+                    .multiplyScalar(this._linearDampingConst)).multiplyScalar(1 / 300);
+            this._linearSpringAcceleration.multiplyScalar(-1);
+            this._linearSpringVelocity.add(this._linearSpringAcceleration.clone().multiplyScalar(delta));
+        }
+        if (this._allowAngularMotion) {
+            this._angularSpringAcceleration =
+                angularState.clone().sub(this._angularDisplacement)
+                    .multiplyScalar(this._angularSpringConst).add(this._angularSpringVelocity.clone()
+                    .multiplyScalar(this._angularDampingConst)).multiplyScalar(1 / 1000);
+            this._angularSpringAcceleration.multiplyScalar(-1);
+            this._angularSpringVelocity.add(this._angularSpringAcceleration.clone().multiplyScalar(delta));
+        }
+    };
+    Spring.prototype.allowMotion = function (linear, angular) {
+        this._allowLinearMotion = linear;
+        this._allowAngularMotion = angular;
     };
     Object.defineProperty(Spring.prototype, "angularDampingConst", {
         set: function (value) {

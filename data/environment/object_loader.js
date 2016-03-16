@@ -25,6 +25,9 @@ var ObjectLoader = (function () {
         mtlLoader.setPath('models/car/');
         mtlLoader.load('tire.mtl', function (materials) {
             materials.preload();
+            console.log(materials.materials.phong2SG);
+            materials.materials.phong2SG.bumpMap = materials.materials.phong2SG.map;
+            materials.materials.phong2SG.bumpScale = 0.2;
             var objLoader = new THREE.OBJLoader();
             objLoader.setMaterials(materials);
             objLoader.setPath('models/car/');

@@ -24,8 +24,8 @@ class Tree {
     public update(current_pos: THREE.Vector3){
         if(this._treeMesh){
             for(var c=0; c<this._treeCount; c++){
-                if(current_pos.distanceTo(this._trees[c].position) > 200){
-                    var angle = Math.random()*2*Math.PI;
+                if(current_pos.distanceTo(this._trees[c].position) > 200 || current_pos.z+30 < this._trees[c].position.z){
+                    var angle = -Math.random()*Math.PI;
                     var radius = Math.sqrt(Math.random())*200;
                     var x_val = current_pos.x + Math.cos(angle)*radius;
                     var z_val = current_pos.z + Math.sin(angle)*radius;
@@ -41,8 +41,8 @@ class Tree {
         this._treeMesh = tree;
 
         for(var c=0; c<this._treeCount; c++){
-            var angle = Math.random()*2*Math.PI;
-            var length = 150+Math.sqrt(Math.random())*50;
+            var angle = -Math.random()*Math.PI;
+            var length = 100+Math.sqrt(Math.random())*100;
             var x_val = Math.cos(angle)*length;
             var z_val = Math.sin(angle)*length;
             var y_val = GroundPlane.simplexNoise(new THREE.Vector3(x_val,0,z_val));

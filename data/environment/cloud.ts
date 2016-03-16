@@ -12,7 +12,7 @@ class Cloud {
     private _cloudMaterial1: THREE.SpriteMaterial;
     private _clouds: THREE.Sprite[];
 
-    private _cloudCount = 75;
+    private _cloudCount = 20;
 
     constructor(renderer: Renderer){
         this._renderer = renderer;
@@ -23,7 +23,7 @@ class Cloud {
         this._clouds = [];
 
         for(var c=0; c<this._cloudCount; c++){
-            var angle = Math.random()*2*Math.PI;
+            var angle = -Math.random()*Math.PI;
             var length = Math.sqrt(Math.random())*500;
             var x_val = Math.cos(angle)*length;
             var z_val = Math.sin(angle)*length;
@@ -35,13 +35,14 @@ class Cloud {
             new_cloud.scale.set(scale,scale,scale);
             this._renderer.scene.add(new_cloud);
             this._clouds.push(new_cloud);
+
         }
     }
 
     public update(current_pos: THREE.Vector3){
         for(var c=0; c<this._cloudCount; c++){
             if(current_pos.distanceTo(this._clouds[c].position) > 500){
-                var angle = Math.random()*2*Math.PI;
+                var angle = -Math.random()*Math.PI;
                 var length = Math.sqrt(Math.random())*500;
                 var x_val = current_pos.x + Math.cos(angle)*length;
                 var z_val = current_pos.z + Math.sin(angle)*length;

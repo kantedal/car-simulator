@@ -22,7 +22,6 @@ class Grass {
         this._particles = new THREE.Geometry();
 
         var texture = new THREE.TextureLoader().load( "texture/grass.png" );
-        var texture_alpha = new THREE.TextureLoader().load( "texture/grass_alpha.png" );
         this._particleMaterial = new THREE.PointsMaterial({
             color: 0xFFFFFF,
             size: 5,
@@ -30,9 +29,10 @@ class Grass {
             transparent: true,
             depthWrite: false
         });
+        this._particleMaterial.r
 
         for(var p=0; p<this._particleCount; p++){
-            var angle = Math.random()*2*Math.PI;
+            var angle = -Math.random()*Math.PI;
             var length = Math.sqrt(Math.random())*200;
 
             var x_val = Math.cos(angle)*length;
@@ -47,15 +47,21 @@ class Grass {
         this._renderer.scene.add(this._particleSystem);
     }
 
-    public update(current_pos: THREE.Vector3){
+    public update(current_pos: THREE.Vector3, direction: THREE.Vector3){
         this._particleSystem.geometry.verticesNeedUpdate=true;
+
+        var vel = new THREE.Vector3(direction.x, 0, direction.z);
+        var ref = new THREE.Vector3(0, 0, 1);
+        var ref_angle = vel.angleTo(ref);
+
         for(var p=0; p<this._particleCount; p++){
-            if(current_pos.distanceTo(this._particleSystem.geometry.vertices[p]) > 200){
-                var angle = Math.random()*2*Math.PI;
-                var length = 50+Math.sqrt(Math.random())*150;
+            if(current_pos.distanceTo(this._particleSystem.geometry.vertices[p]) > 200 || current_pos.z+30 < this._particleSystem.geometry.vertices[p].z){
+                var angle = -(Math.random())*Math.PI;
+
+                var length =  Math.sqrt(Math.random())*200;
 
                 var x_val = current_pos.x + Math.cos(angle)*length;
-                var z_val = current_pos.z + Math.sin(angle)*length;
+                var z_val = current_pos.z + Math.sin(angle)*length+20;
                 var y_val = GroundPlane.simplexNoise(new THREE.Vector3(x_val,0,z_val));
 
                 this._particleSystem.geometry.vertices[p].set(x_val, y_val, z_val);

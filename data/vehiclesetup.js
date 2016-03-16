@@ -39,6 +39,9 @@ var VehicleSetup = (function () {
                             _this._spotLight.intensity = 10;
                     }
                 }
+                if (_this.pressedKeys[32]) {
+                    _this._vehicle.vehicleModel.applyImpulse();
+                }
             }
         };
         this.onKeyUp = function (e) {

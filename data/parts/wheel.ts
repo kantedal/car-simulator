@@ -121,7 +121,7 @@ class Wheel extends ParticleCollider {
                     this._wheelDirection.y,
                     this._wheelDirection.z,
                     0, 0, 0])
-                )) * 9 * forceComp;
+                )) * 10 * forceComp;
 
             var Fc = math.multiply(math.transpose(J), lagrange);
             this._connectedVehicle.vehicleModel.forceConstraints = math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);

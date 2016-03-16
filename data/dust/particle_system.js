@@ -9,24 +9,25 @@ var ParticleSystem = (function () {
         this._renderer = renderer;
         this._particles = [];
         this._emissionWheel = emissionWheel;
-        var texture = new THREE.TextureLoader().load("./texture/smoke2.png");
+        var texture = new THREE.TextureLoader().load("./texture/dirt.png");
         this._material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+        this._material.depthWrite = false;
     }
     ParticleSystem.prototype.generateParticles = function (startPos, time) {
-        if (this._emissionWheel.isColliding) {
+        if (this._emissionWheel.isColliding && this._emissionWheel.connectedVehicle.vehicleModel.velocityDirection.length() > 7) {
             var force = this._emissionWheel.connectedVehicle.vehicleModel.forceTotal;
-            var force_mag = math.norm(force) / 6000;
-            for (var i = 0; i < Math.floor((Math.random() * force_mag)); i++) {
+            var force_mag = math.norm(force) / 8000;
+            for (var i = 0; i < Math.floor((Math.random() * force_mag * 2)); i++) {
                 this._particleSprite = new THREE.Sprite(this._material.clone());
                 var startVel = this._emissionWheel.wheelDirection.clone().multiplyScalar(-1);
-                startVel.setY(1);
+                startVel.setY(1.6);
                 startVel.setX(startVel.x + Math.random() - 0.5);
                 startVel.setZ(startVel.z + Math.random() - 0.5);
                 startVel.multiplyScalar(this._emissionWheel.connectedVehicle.vehicleModel.velocityDirection.length() * 0.4 + Math.random() * 0.2);
                 var scale = Math.random() * 2;
                 this._particleSprite.scale.set(scale, scale, scale);
-                this._particleSprite.material.rotation = Math.random * 2 * Math.PI;
-                this._particles.push(new Particle(startPos, startVel, this._renderer, time, this._particleSprite));
+                this._particleSprite.material.rotation = Math.random() * 2 * Math.PI;
+                this._particles.push(new Particle(startPos.add(this._emissionWheel.connectedVehicle.vehicleModel.localYDirection.clone().multiplyScalar(-1)), startVel, this._renderer, time, this._particleSprite));
             }
         }
     };

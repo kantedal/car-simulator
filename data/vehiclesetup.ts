@@ -105,6 +105,10 @@ class VehicleSetup {
                         this._spotLight.intensity = 10;
                 }
             }
+
+            if(this.pressedKeys[32]){
+                this._vehicle.vehicleModel.applyImpulse();
+            }
         }
     }
     onKeyUp = (e) => {

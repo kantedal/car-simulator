@@ -78,10 +78,29 @@ var DynamicRigidBody = (function (_super) {
             rotComponent.valueOf()[2]
         ]);
         var mc = 1 / math.multiply(math.multiply(J, math.inv(this._M)), math.transpose(J));
-        var lagrange = -mc * (math.multiply(J, this._velocity) - penetration * 4) * 1;
+        var lagrange = -mc * (math.multiply(J, this._velocity) - penetration * 10) * 1;
         var Pc = math.multiply(math.transpose(J), lagrange);
         var newVelocity = math.add(this._velocity, math.multiply(math.inv(this._M), Pc));
         return newVelocity;
+    };
+    DynamicRigidBody.prototype.applyImpulse = function () {
+        if (this.localYDirection.clone().dot(new THREE.Vector3(0, 1, 0)) < -0.3) {
+            var force_radius = math.matrix([0, 0, 4]);
+            var normal = math.matrix([0, 1, 0]);
+            var rotComponent = math.cross(force_radius, normal);
+            var J = math.matrix([
+                normal.valueOf()[0],
+                normal.valueOf()[1],
+                normal.valueOf()[2],
+                rotComponent.valueOf()[0],
+                rotComponent.valueOf()[1],
+                rotComponent.valueOf()[2]
+            ]);
+            var mc = 1 / math.multiply(math.multiply(J, math.inv(this._M)), math.transpose(J));
+            var lagrange = -mc * (math.multiply(J, math.matrix([0, -14, 0, 0, 0, 0])) - 4) * 1;
+            var Pc = math.multiply(math.transpose(J), lagrange);
+            this.velocity = math.add(this.velocity, math.multiply(math.inv(this._M), Pc));
+        }
     };
     DynamicRigidBody.prototype.calculateInertiaTensor = function () {
         var dV = 0.1 * 0.1;

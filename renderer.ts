@@ -31,6 +31,7 @@ class Renderer {
         this._scene.add( this._light );
 
 
+
         var container = document.getElementById( 'content' );
         container.appendChild( this.renderer.domElement );
 

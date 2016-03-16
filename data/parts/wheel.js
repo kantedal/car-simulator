@@ -88,7 +88,7 @@ var Wheel = (function (_super) {
                 this._wheelDirection.x,
                 this._wheelDirection.y,
                 this._wheelDirection.z,
-                0, 0, 0]))) * 9 * forceComp;
+                0, 0, 0]))) * 10 * forceComp;
             var Fc = math.multiply(math.transpose(J), lagrange);
             this._connectedVehicle.vehicleModel.forceConstraints = math.add(this._connectedVehicle.vehicleModel.forceConstraints, Fc);
             this._connectedVehicle.vehicleSetup.vehicleBody.forceConstraints.valueOf()[3] += 100000;

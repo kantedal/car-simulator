@@ -14,7 +14,7 @@ class GroundPlane {
 
     private _maxDistance: number;
     private _collisionDistance: number;
-    private _currentSurfIdx: number;
+
     private _dimension: number;
 
     private _renderer : Renderer;
@@ -27,7 +27,7 @@ class GroundPlane {
         this._dimension = dimension;
         this._mesh = [];
         this._collisionMesh = [];
-        this._maxDistance = Math.sqrt(Math.pow(1.2*2*CarSimulator.ground_width,2)*2);
+        this._maxDistance = Math.sqrt(Math.pow(2*CarSimulator.ground_width,2)*2);
         this._collisionDistance = Math.sqrt(Math.pow(CarSimulator.ground_width,2)*2);
         this._currentSurfIdx = 0;
         this._surfaceRaycaster = new THREE.Raycaster();
@@ -79,54 +79,29 @@ class GroundPlane {
         this._renderer.scene.add(this._mesh[this._mesh.length-1]);
     }
 
+    private ground_x: number = 0;
+    private ground_z: number = 0;
+    private _currentSurfIdx: number = 4;
     public update(pos:THREE.Vector3){
-        //var projectPos = pos.clone().setY(30);
-        //this._surfaceRaycaster.set(projectPos, new THREE.Vector3(0,-1,0));
-        //var intersect = this._surfaceRaycaster.intersectObjects(this._mesh, true);
-        //
-        //if(intersect[0].object != this._mesh[this._currentSurfIdx] && intersect.length == 1){
-        //
-        //    for(var i=0; i<this._mesh.length; i++) {
-        //        if(intersect[0].object == this._mesh[i]){
-        //            this._currentSurfIdx = i;
-        //        }
-        //    }
-        //
-        //    this._collisionMesh = [];
-        //    for(var i=0; i<this._mesh.length; i++) {
-        //        var distance = Math.sqrt(Math.pow(this._mesh[i].position.x - this._mesh[this._currentSurfIdx].position.x, 2) + Math.pow(this._mesh[i].position.z - this._mesh[this._currentSurfIdx].position.z, 2))
-        //        if(distance >= this._maxDistance){
-        //            var xDist = this._mesh[i].position.x - this._mesh[this._currentSurfIdx].position.x;
-        //            var zDist = this._mesh[i].position.z - this._mesh[this._currentSurfIdx].position.z;
-        //
-        //            if(Math.abs(xDist) == CarSimulator.ground_width*Math.round(this._dimension/2)){
-        //                this._mesh[i].position.setX(this._mesh[i].position.x - Math.sign(xDist)*this._dimension*CarSimulator.ground_width);
-        //            }
-        //
-        //            if(Math.abs(zDist) == CarSimulator.ground_width*Math.round(this._dimension/2)){
-        //                this._mesh[i].position.setZ(this._mesh[i].position.z - Math.sign(zDist)*this._dimension*CarSimulator.ground_width);
-        //            }
-        //
-        //           this.regenerateTerrain(i);
-        //        }
-        //
-        //        if(distance <= this._collisionDistance){
-        //            this._collisionMesh.push(this._mesh[i].clone());
-        //            if(CarSimulator.developer_mode)
-        //                this._mesh[i].material.color.setHex(0x00ff00);
-        //        }
-        //        else if(CarSimulator.developer_mode){
-        //            this._mesh[i].material.color.setHex(0x999999);
-        //        }
-        //
-        //    }
-        //}
-        //
-        //if(this._collisionMesh.length == 0){
-        //    for(var i=0; i<this._mesh.length; i++) {
-        //        this._collisionMesh.push(this._mesh[i]);
-        //    }
-        //}
+        var x = Math.round(pos.x / CarSimulator.ground_width);
+        var z = Math.round(pos.z / CarSimulator.ground_width);
+        if(x != this.ground_x || z != this.ground_z){
+            for(var i=0; i<this._mesh.length; i++) {
+                var distance = Math.sqrt(Math.pow(this._mesh[i].position.x - x*CarSimulator.ground_width, 2) + Math.pow(this._mesh[i].position.z - z*CarSimulator.ground_width, 2))
+                if(distance*1.99 >= this._maxDistance){
+
+                    if(x != this.ground_x)
+                        this._mesh[i].position.setX(this._mesh[i].position.x - (this.ground_x-x)*this._dimension*CarSimulator.ground_width);
+
+                    if(z != this.ground_z)
+                        this._mesh[i].position.setZ(this._mesh[i].position.z -(this.ground_z-z)*this._dimension*CarSimulator.ground_width);
+
+                   this.regenerateTerrain(i);
+                }
+            }
+            this.ground_x = x;
+            this.ground_z = z;
+        }
     }
 
     private regenerateTerrain(idx:number){
