@@ -7,20 +7,31 @@
 ///<reference path="../../renderer.ts"/>
 ///<reference path="../vehicle.ts"/>
 ///<reference path="../environment/object_loader.ts"/>
+/// <reference path="../../math/jquery.d.ts" />
+/// <reference path="./connected_vehicle.ts" />
 
 class Socket {
     private _renderer : Renderer;
     private _peer : PeerJs.Peer;
     private _connection : any;
-    private _isConnected : boolean;
-    private _connectedVehicles : Vehicle[];
+    private _connections : any;
     private _objectLoader: ObjectLoader;
+
+    private _connectedVehicles : ConnectedVehicle[];
+    private _isConnected: boolean;
+    private _isServer: boolean;
+    private _connectionId: string;
+    private _name: string;
+    private _carColor: string;
 
     constructor(renderer:Renderer, objectLoader:ObjectLoader){
         this._renderer = renderer;
         this._objectLoader = objectLoader;
-        this._isConnected = false;
         this._connectedVehicles = [];
+
+        this._connections = [];
+        this._isConnected = false;
+        this._isServer = false;
 
         var self = this;
         this._peer = new Peer({
@@ -28,30 +39,17 @@ class Socket {
         });
 
         this._peer.on('open', function(id) {
-            console.log('My peer ID is: ' + id);
+            self._connectionId = id;
+            console.log('My peer ID is: ' + self._connectionId);
         });
 
         this._peer.on("connection", function(conn) {
             self._isConnected = true;
-            self._connection = conn;
+            self._connections.push(conn);
 
-            var newVehicle = new Vehicle(self._renderer);
-            if(!CarSimulator.developer_mode) {
-                newVehicle.vehicleSetup.wheels[0].attatchMesh(self._objectLoader.wheelMesh.clone());
-                newVehicle.vehicleSetup.wheels[1].attatchMesh(self._objectLoader.wheelMesh.clone());
-                newVehicle.vehicleSetup.wheels[2].attatchMesh(self._objectLoader.wheelMesh.clone());
-                newVehicle.vehicleSetup.wheels[3].attatchMesh(self._objectLoader.wheelMesh.clone());
-                newVehicle.vehicleSetup.vehicleBody.attatchMesh(self._objectLoader.carMesh.clone());
-            }
-
-            self._connectedVehicles.push(newVehicle);
-
-            self._connection.on('data', function(data) {
+            conn.on('data', function(data) {
                 self.recievedData(data);
             });
-
-            // Send messages
-            self._connection.send('Hello!');
         });
 
 
@@ -68,17 +66,6 @@ class Socket {
         this._connection.on('open', function() {
             self._isConnected = true;
 
-            var newVehicle = new Vehicle(self._renderer);
-            if(!CarSimulator.developer_mode) {
-                newVehicle.vehicleSetup.wheels[0].attatchMesh(self._objectLoader.wheelMesh.clone());
-                newVehicle.vehicleSetup.wheels[1].attatchMesh(self._objectLoader.wheelMesh.clone());
-                newVehicle.vehicleSetup.wheels[2].attatchMesh(self._objectLoader.wheelMesh.clone());
-                newVehicle.vehicleSetup.wheels[3].attatchMesh(self._objectLoader.wheelMesh.clone());
-                newVehicle.vehicleSetup.vehicleBody.attatchMesh(self._objectLoader.carMesh.clone());
-            }
-
-            self._connectedVehicles.push(newVehicle);
-
             // Receive messages
             self._connection.on('data', function(data) {
                 self.recievedData(data);
@@ -90,14 +77,6 @@ class Socket {
     }
 
     public update(vehicle:Vehicle){
-
-
-        //var wheel1 = vehicle.vehicleSetup.wheels[0].object.position.y;
-        //var wheel2 = vehicle.vehicleSetup.wheels[1].object.position.y;
-        //var wheel3 = vehicle.vehicleSetup.wheels[2].object.position.y;
-        //var wheel4 = vehicle.vehicleSetup.wheels[3].object.position.y;
-
-
         if(this._isConnected){
             var pos = vehicle.vehicleModel.object.position;
             var rot = vehicle.vehicleModel.object.rotation;
@@ -105,24 +84,115 @@ class Socket {
             var rel_pos = vehicle.vehicleSetup.vehicleBody.object.position;
             var rel_rot = vehicle.vehicleSetup.vehicleBody.object.rotation;
 
-            this._connection.send({
-                car_data: {
-                    x: pos.x,
-                    y: pos.y,
-                    z: pos.z,
-                    rx: rot.x,
-                    ry: rot.y,
-                    rz: rot.z,
-                    rel_y: rel_pos.y,
-                    rel_rx: rel_rot.x,
-                    rel_ry: rel_rot.y,
-                    rel_rz: rel_rot.z,
+            if(this.isServer) {
+                for(var c=0; c<this._connections.length; c++) {
+                    for (var i = 0; i < this._connectedVehicles.length; i++) {
+                        this._connections[c].send({
+                            car_data: {
+                                car_id: this._connectedVehicles[i].id,
+                                car_name: this._connectedVehicles[i].name,
+                                car_color: this._connectedVehicles[i].color,
+                                x: this._connectedVehicles[i].cardata.x,
+                                y: this._connectedVehicles[i].cardata.y,
+                                z: this._connectedVehicles[i].cardata.z,
+                                rx: this._connectedVehicles[i].cardata.rx,
+                                ry: this._connectedVehicles[i].cardata.ry,
+                                rz: this._connectedVehicles[i].cardata.rz,
+                                rel_y: this._connectedVehicles[i].cardata.rel_y,
+                                rel_rx: this._connectedVehicles[i].cardata.rel_rx,
+                                rel_ry: this._connectedVehicles[i].cardata.rel_ry,
+                                rel_rz: this._connectedVehicles[i].cardata.rel_rz,
+                            }
+                        });
+                    }
+
+                    this._connections[c].send({
+                        car_data: {
+                            car_id: this._connectionId,
+                            car_name: this._name,
+                            car_color: this._carColor,
+                            x: pos.x,
+                            y: pos.y,
+                            z: pos.z,
+                            rx: rot.x,
+                            ry: rot.y,
+                            rz: rot.z,
+                            rel_y: rel_pos.y,
+                            rel_rx: rel_rot.x,
+                            rel_ry: rel_rot.y,
+                            rel_rz: rel_rot.z,
+                        }
+                    });
                 }
-            });
+            }else{
+                this._connection.send({
+                    car_data: {
+                        car_id: this._connectionId,
+                        car_name: this._name,
+                        car_color: this._carColor,
+                        x: pos.x,
+                        y: pos.y,
+                        z: pos.z,
+                        rx: rot.x,
+                        ry: rot.y,
+                        rz: rot.z,
+                        rel_y: rel_pos.y,
+                        rel_rx: rel_rot.x,
+                        rel_ry: rel_rot.y,
+                        rel_rz: rel_rot.z,
+                    }
+                });
+            }
         }
     }
 
     private recievedData(data){
-        this._connectedVehicles[0].setFromNetworkData(data);
+        if(data.car_data.car_id != this._connectionId) {
+            var new_car = true;
+            for (var i = 0; i < this._connectedVehicles.length; i++) {
+                if (data.car_data.car_id == this._connectedVehicles[i].id && data.car_data.car_id != this._connectionId) {
+                    this._connectedVehicles[i].setFromNetworkData(data);
+                    new_car = false;
+                    break;
+                }
+            }
+            if (new_car)
+                this.newVehicle(data);
+        }
+    }
+
+    private newVehicle(cardata){
+        console.log("new vehicle " + this._connectedVehicles.length + " " +  cardata.car_data.car_name);
+        this._connectedVehicles.push(
+            new ConnectedVehicle(cardata.car_data.car_id, cardata.car_data.car_name, cardata.car_data.car_color, this._renderer, this._objectLoader)
+        );
+
+        $.get("style/connection_client.html", function (data) {
+            $("#clientList").append(data);
+            $("#client").attr("id", cardata.car_data.car_id);
+            $("#"+cardata.car_data.car_id).html(cardata.car_data.car_name);
+        });
+    }
+
+    get connectionId():string {
+        return this._connectionId;
+    }
+    get carColor():string {
+        return this._carColor;
+    }
+    set carColor(value:string) {
+        this._carColor = value;
+    }
+    get name():string {
+        return this._name;
+    }
+    set name(value:string) {
+        this._name = value;
+    }
+    get isServer():boolean {
+        return this._isServer;
+    }
+    set isServer(value:boolean) {
+        this._isServer = value;
     }
 }

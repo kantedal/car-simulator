@@ -22,12 +22,13 @@ var GroundObjects = (function () {
         this._bushes = new Bushes(this._renderer);
     }
     GroundObjects.prototype.update = function (car_pos, time, delta) {
+        this._bushes.update(car_pos, time, delta);
+    };
+    GroundObjects.prototype.slowUpdate = function (car_pos) {
         this._grassParticles.update(car_pos, this._vehicle.vehicleModel.localZDirection);
         this._flowerParticles.update(car_pos);
         this._cloud.update(car_pos);
         this._tree.update(car_pos);
-        this._bushes.update(car_pos, time, delta);
-        //console.log(car_pos)
     };
     Object.defineProperty(GroundObjects.prototype, "tree", {
         get: function () {

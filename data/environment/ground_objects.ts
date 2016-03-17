@@ -37,12 +37,14 @@ class GroundObjects {
     }
 
     public update(car_pos: THREE.Vector3, time:number, delta:number){
+        this._bushes.update(car_pos, time, delta);
+    }
+
+    public slowUpdate(car_pos: THREE.Vector3){
         this._grassParticles.update(car_pos, this._vehicle.vehicleModel.localZDirection);
         this._flowerParticles.update(car_pos);
         this._cloud.update(car_pos);
         this._tree.update(car_pos);
-        this._bushes.update(car_pos, time, delta);
-        //console.log(car_pos)
     }
 
     get tree():Tree {

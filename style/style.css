@@ -1,0 +1,95 @@
+.conection_header {
+    font-size: 13pt;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 200;
+    color: #FFFFFF;
+    display:inline;
+}
+
+.conection_large_header {
+    font-size: 12pt;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 200;
+    color: #FFFFFF;
+    display:inline;
+}
+
+#connection_box {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    background: #000;
+    opacity: 0.75;
+    padding: 10px;
+    border-radius:4px;
+}
+
+.textbox {
+    border-color:#cccccc;
+    border-style:solid;
+    padding:3px;
+    font-size:15px;
+    text-align:center;
+    border-radius:2px;
+    border-width:0px;
+    background-color:#383838;
+    color:#ffffff;
+    font-weight: 200;
+    font-family: 'Roboto', sans-serif;
+}
+
+.textbox:focus { outline:none; }
+
+.connectionBtn {
+    -webkit-border-radius: 5;
+    -moz-border-radius: 5;
+    border-radius:2px;
+    font-weight: 300;
+    border: 0;
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+    font-size: 15px;
+    background: #65bd00;
+    padding: 3px 20px 3px 20px;
+    text-decoration: none;
+}
+
+.connectionBtn:hover {
+    background: #2a6900;
+    text-decoration: none;
+}
+
+.listElement {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    padding-left: 5px;
+    border-bottom: 1px solid #999;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+}
+
+#clientList {
+    color: #ffffff;
+    font-weight: 200;
+    background-color: #383838;
+    padding: 5px;
+    border-radius: 2px;
+}
+
+.demo {
+    border: 0 !important;  /*Removes border*/
+    -webkit-appearance: none;  /*Removes default chrome and safari style*/
+    -moz-appearance: none; /* Removes Default Firefox style*/
+    appearance:none;
+    background: #0088cc;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    text-indent: 0.01px; /* Removes default arrow from firefox*/
+    text-overflow: "";  /*Removes default arrow from firefox*/ /*My custom style for fonts*/
+    color: #FFF;
+    border-radius: 2px;
+    padding: 3px 20px 3px 20px;
+}

@@ -30,7 +30,7 @@ class Cloud {
             var y_val = 30 + Math.random()*10;
             var scale = 120+Math.random()*10;
 
-            var new_cloud = new THREE.Sprite(this._cloudMaterial1.clone());
+            var new_cloud = new THREE.Sprite(this._cloudMaterial1);
             new_cloud.position.set(x_val, y_val, z_val);
             new_cloud.scale.set(scale,scale,scale);
             this._renderer.scene.add(new_cloud);
@@ -48,11 +48,8 @@ class Cloud {
                 var z_val = current_pos.z + Math.sin(angle)*length;
                 var y_val = 40 + Math.random()*10;
 
-                this._clouds[c].material.opacity = 0;
+                //this._clouds[c].material.opacity = 0;
                 this._clouds[c].position.set(x_val, y_val, z_val);
-            }
-            if(this._clouds[c].material.opacity < 1){
-                this._clouds[c].material.opacity += 0.01
             }
         }
     }

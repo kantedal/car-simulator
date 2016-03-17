@@ -125,7 +125,6 @@ class ObjectLoader {
             objLoader.load( 'car.obj', function ( object ) {
                 self._carMesh = object;
                 self._carMesh.scale.set(0.38, 0.38, 0.38);
-                self._wheelMesh.castShadow = true;
                 self._carLoaded = true;
                 if(self.allLoaded())
                     self._objectLoadedListner.objectsLoaded();

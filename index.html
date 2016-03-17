@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <title>Car simulator</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="style/style.css">
 
     <script src="js/math.min.js"></script>
     <script src="http://cdn.peerjs.com/0.3/peer.js"></script>
@@ -21,6 +23,7 @@
     <script src="data/environment/object_loader.js"></script>
     <script src="data/vehicle.js"></script>
     <script src="data/vehiclesetup.js"></script>
+    <script src="data/network/connected_vehicle.js"></script>
     <script src="data/car.js"></script>
     <script src="data/car_test.js"></script>
     <script src="data/physics_object3d.js"></script>
@@ -48,10 +51,11 @@
     <script src="renderer.js"></script>
 </head>
 <body style="margin:0px;overflow: hidden;">
-<div style="position: absolute; right: 10px; top: 10px;">
-    <input type="text" name="idTextBox" id="idText">
-    <button type="button" id="connectButton">Connect</button>
+
+<div id="connection_box">
+
 </div>
+
 <!--<div id="content" style="background-image: url('img/NightSkyGradient.png');">-->
 <div id="content" style="/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#7db9e8+3,ffffff+23 */
 background: #7ec0ee; /* Old browsers */
@@ -59,7 +63,7 @@ background: -moz-linear-gradient(top,  #7ec0ee 1%, #ffffff 14%); /* FF3.6-15 */
 background: -webkit-linear-gradient(top,  #7ec0ee 1%,#ffffff 14%); /* Chrome10-25,Safari5.1-6 */
 background: linear-gradient(to bottom,  #7ec0ee 1%,#ffffff 14%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
-"">
+">
 </div>
 </body>
 </html>

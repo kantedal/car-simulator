@@ -175,7 +175,7 @@ var PhysicsObject3d = (function () {
                 ];
                 collisions.push(collision);
             }
-            if (surfaceHeight + 0.5 >= vertPos.y) {
+            if (surfaceHeight + 0.7 >= vertPos.y) {
                 this._externalCollision[extColIdx] = true;
             }
         }

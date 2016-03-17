@@ -51,12 +51,12 @@ var Wheel = (function (_super) {
             }
             var wheelRotation = -this._connectedVehicle.vehicleModel.velocityDirection.clone().dot(this._wheelDirection);
             if (CarSimulator.developer_mode)
-                this.object.geometry.rotateX(wheelRotation * 0.01);
+                this.object.geometry.rotateX(wheelRotation * 0.02);
             else if (this._attatchedMesh) {
                 //console.log(this._attatchedMesh);
                 //this._attatchedMesh.children[1].geometry.rotateZ(wheelRotation*0.01);
                 var dir = this._wheelDirection;
-                this._attatchedMesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), wheelRotation * 0.01);
+                this._attatchedMesh.rotateOnAxis(new THREE.Vector3(0, 0, 1), Math.sign(this.object.position.x) * wheelRotation * 0.015);
             }
             if (this.isColliding) {
                 this.friction();
