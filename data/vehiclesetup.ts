@@ -26,8 +26,14 @@ class VehicleSetup {
         this._renderer = renderer;
         this._vehicle = vehicle;
 
-        window.addEventListener( 'keydown', this.onKeyDown, false );
-        window.addEventListener( 'keyup', this.onKeyUp, false );
+        if(CarSimulator.is_touch_device){
+            window.addEventListener( 'touchstart', this.onTouchStart, false );
+            window.addEventListener( 'touchend', this.onTouchEnd, false );
+        }
+        else{
+            window.addEventListener( 'keydown', this.onKeyDown, false );
+            window.addEventListener( 'keyup', this.onKeyUp, false );
+        }
     }
 
     public update(time:number, delta:number):void{
@@ -74,7 +80,7 @@ class VehicleSetup {
     }
 
     private pressedKeys = [];
-    onKeyDown = (e) => {
+    private onKeyDown = (e) => {
         if (e) {
 
             this.pressedKeys[e.keyCode] = true;
@@ -111,7 +117,7 @@ class VehicleSetup {
             }
         }
     }
-    onKeyUp = (e) => {
+    private onKeyUp = (e) => {
         if (e) {
             this.pressedKeys[e.keyCode] = false;
             switch (e.which) {
@@ -136,6 +142,19 @@ class VehicleSetup {
                 case 83:
                     break;
             }
+        }
+    }
+
+    private onTouchStart = (e) => {
+        if (e) {
+            console.log("TOUCH ");
+            this._motor.isAccelerating = true;
+        }
+    }
+    private onTouchEnd = (e) => {
+        if (e) {
+            console.log("TOUCH END");
+            this._motor.isAccelerating = false;
         }
     }
 

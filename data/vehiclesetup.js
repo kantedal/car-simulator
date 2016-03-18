@@ -71,10 +71,28 @@ var VehicleSetup = (function () {
                 }
             }
         };
+        this.onTouchStart = function (e) {
+            if (e) {
+                console.log("TOUCH ");
+                _this._motor.isAccelerating = true;
+            }
+        };
+        this.onTouchEnd = function (e) {
+            if (e) {
+                console.log("TOUCH END");
+                _this._motor.isAccelerating = false;
+            }
+        };
         this._renderer = renderer;
         this._vehicle = vehicle;
-        window.addEventListener('keydown', this.onKeyDown, false);
-        window.addEventListener('keyup', this.onKeyUp, false);
+        if (CarSimulator.is_touch_device) {
+            window.addEventListener('touchstart', this.onTouchStart, false);
+            window.addEventListener('touchend', this.onTouchEnd, false);
+        }
+        else {
+            window.addEventListener('keydown', this.onKeyDown, false);
+            window.addEventListener('keyup', this.onKeyUp, false);
+        }
     }
     VehicleSetup.prototype.update = function (time, delta) {
         if (this._wheels) {

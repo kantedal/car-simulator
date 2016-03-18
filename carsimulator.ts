@@ -39,8 +39,11 @@ class CarSimulator {
 
     public static ground_width : number = 200;
     public static developer_mode : boolean = false;
+    public static is_touch_device : boolean = false;
 
     constructor(){
+        CarSimulator.is_touch_device = this.isTouchDevice();
+
         this._renderer = new Renderer();
         this._clock = new THREE.Clock();
         this._stats = new Stats();
@@ -241,6 +244,10 @@ class CarSimulator {
                 });
             });
         });
+    }
+
+    private isTouchDevice() {
+        return !!('ontouchstart' in window);
     }
 
     get renderer():Renderer {

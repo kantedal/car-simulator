@@ -18,6 +18,7 @@ var CarSimulator = (function () {
     function CarSimulator() {
         this._isStarted = false;
         this._surfaceIndex = 0;
+        CarSimulator.is_touch_device = this.isTouchDevice();
         this._renderer = new Renderer();
         this._clock = new THREE.Clock();
         this._stats = new Stats();
@@ -171,6 +172,9 @@ var CarSimulator = (function () {
             });
         });
     };
+    CarSimulator.prototype.isTouchDevice = function () {
+        return !!('ontouchstart' in window);
+    };
     Object.defineProperty(CarSimulator.prototype, "renderer", {
         get: function () {
             return this._renderer;
@@ -200,6 +204,7 @@ var CarSimulator = (function () {
     });
     CarSimulator.ground_width = 200;
     CarSimulator.developer_mode = false;
+    CarSimulator.is_touch_device = false;
     return CarSimulator;
 })();
 window.onload = function () {
