@@ -3,7 +3,7 @@
  */
 ///<reference path="../../threejs/three.d.ts"/>
 ///<reference path="../../renderer.ts"/>
-///<reference path="./../ground_plane.ts"/>
+///<reference path="./ground_plane.ts"/>
 var Flower = (function () {
     function Flower(renderer, groundPlanes) {
         this._particleCount = 200;
@@ -18,7 +18,7 @@ var Flower = (function () {
             transparent: true
         });
         for (var p = 0; p < this._particleCount; p++) {
-            var angle = -Math.random() * Math.PI;
+            var angle = -Math.random() * Math.PI * 2;
             var length = Math.sqrt(Math.random()) * 200;
             var x_val = Math.cos(angle) * length;
             var z_val = Math.sin(angle) * length;
@@ -33,7 +33,7 @@ var Flower = (function () {
         this._particleSystem.geometry.verticesNeedUpdate = true;
         for (var p = 0; p < this._particleCount; p++) {
             if (current_pos.distanceTo(this._particleSystem.geometry.vertices[p]) > 200) {
-                var angle = -Math.random() * Math.PI;
+                var angle = -Math.random() * Math.PI * 2;
                 var length = 50 + Math.sqrt(Math.random()) * 150;
                 var x_val = current_pos.x + Math.cos(angle) * length;
                 var z_val = current_pos.z + Math.sin(angle) * length;

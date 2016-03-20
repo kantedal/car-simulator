@@ -3,7 +3,7 @@
  */
 ///<reference path="../renderer.ts"/>
 ///<reference path="./parts/wheel.ts"/>
-///<reference path="./ground_plane.ts"/>
+///<reference path="./environment/ground_plane.ts"/>
 ///<reference path="./parts/motor.ts"/>
 ///<reference path="./parts/spring.ts"/>
 ///<reference path="./parts/spring_connector.ts"/>

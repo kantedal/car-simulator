@@ -1,11 +1,11 @@
-///<reference path="./physics_object3d.ts"/>
-///<reference path="../math/noisejs.d.ts"/>
-///<reference path="../math/noisejs.d.ts"/>
-///<reference path="./environment/ground_objects.ts"/>
+///<reference path="./../physics_object3d.ts"/>
+///<reference path="../../math/noisejs.d.ts"/>
+///<reference path="../../math/noisejs.d.ts"/>
+///<reference path="./ground_objects.ts"/>
 
 class GroundPlane {
     private static _noise1 : Noise = new Noise(0.23);
-    private static _noise2 : Noise = new Noise(0.23);
+    private static _noise2 : Noise = new Noise(0.59);
 
     private _mesh : THREE.Mesh[];
     private _collisionMesh : THREE.Mesh[];
@@ -58,7 +58,7 @@ class GroundPlane {
 
     public newPlane(pos:THREE.Vector3){
 
-        var geometry = new THREE.PlaneGeometry(CarSimulator.ground_width, CarSimulator.ground_width, 25, 25);
+        var geometry = new THREE.PlaneGeometry(CarSimulator.ground_width, CarSimulator.ground_width, 50, 50);
         geometry.rotateX(-Math.PI/2)
 
         for(var i=0; i<geometry.vertices.length; i++){
@@ -67,12 +67,6 @@ class GroundPlane {
 
         geometry.computeVertexNormals();
         var mesh = new THREE.Mesh(geometry, this._material);
-
-        if(!CarSimulator.developer_mode){
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-        }
-
 
         mesh.position.copy(pos);
         this._mesh.push(mesh);
@@ -96,7 +90,7 @@ class GroundPlane {
                     if(z != this.ground_z)
                         this._mesh[i].position.setZ(this._mesh[i].position.z -(this.ground_z-z)*this._dimension*CarSimulator.ground_width);
 
-                   this.regenerateTerrain(i);
+                   this.generateTerrain(i);
                 }
             }
             this.ground_x = x;
@@ -104,7 +98,7 @@ class GroundPlane {
         }
     }
 
-    private regenerateTerrain(idx:number){
+    private generateTerrain(idx:number){
         var pos = this._mesh[idx].position;
 
         this._mesh[idx].geometry.dynamic = true;
@@ -117,7 +111,7 @@ class GroundPlane {
     }
 
     public static simplexNoise(pos:THREE.Vector3):number{
-        return GroundPlane._noise1.perlin2(pos.x/40, (pos.z)/40)*10 + GroundPlane._noise2.simplex2(pos.x/140, (pos.z)/140)*6;
+        return (GroundPlane._noise1.perlin2(pos.x/40, (pos.z)/40)*10 + GroundPlane._noise2.simplex2(pos.x/140, (pos.z)/140)*6);
     }
 
     public addLoadedListener(listener : PlaneLoadedListener):void {

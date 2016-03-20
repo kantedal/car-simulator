@@ -3,10 +3,10 @@
  */
 ///<reference path="../../threejs/three.d.ts"/>
 ///<reference path="../../renderer.ts"/>
-///<reference path="./../ground_plane.ts"/>
+///<reference path="./ground_plane.ts"/>
 var Grass = (function () {
     function Grass(renderer, groundPlanes) {
-        this._particleCount = 3000;
+        this._particleCount = 6000;
         this._renderer = renderer;
         this._groundPlanes = groundPlanes;
         this._particles = new THREE.Geometry();
@@ -20,7 +20,7 @@ var Grass = (function () {
         });
         this._particleMaterial.r;
         for (var p = 0; p < this._particleCount; p++) {
-            var angle = -Math.random() * Math.PI;
+            var angle = -Math.random() * Math.PI * 2;
             var length = Math.sqrt(Math.random()) * 200;
             var x_val = Math.cos(angle) * length;
             var z_val = Math.sin(angle) * length;
@@ -37,8 +37,8 @@ var Grass = (function () {
         var ref = new THREE.Vector3(0, 0, 1);
         var ref_angle = vel.angleTo(ref);
         for (var p = 0; p < this._particleCount; p++) {
-            if (current_pos.distanceTo(this._particleSystem.geometry.vertices[p]) > 200 || current_pos.z + 30 < this._particleSystem.geometry.vertices[p].z) {
-                var angle = -(Math.random()) * Math.PI;
+            if (current_pos.distanceTo(this._particleSystem.geometry.vertices[p]) > 200) {
+                var angle = -(Math.random()) * Math.PI * 2;
                 var length = Math.sqrt(Math.random()) * 200;
                 var x_val = current_pos.x + Math.cos(angle) * length;
                 var z_val = current_pos.z + Math.sin(angle) * length + 20;

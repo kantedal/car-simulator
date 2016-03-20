@@ -4,7 +4,7 @@
 
 ///<reference path="../../threejs/three.d.ts"/>
 ///<reference path="../../renderer.ts"/>
-///<reference path="./../ground_plane.ts"/>
+///<reference path="./ground_plane.ts"/>
 ///<reference path="./../parts/spring.ts"/>
 
 
@@ -27,7 +27,7 @@ class Bushes {
         });
 
         for(var i=0; i<this._bushCount; i++){
-            var angle = -Math.random()*Math.PI;
+            var angle = -Math.random()*Math.PI*2;
             var length = Math.sqrt(Math.random())*200;
 
             var x_val = Math.cos(angle)*length;
@@ -46,7 +46,7 @@ class Bushes {
         for(var i=0; i<this._bushCount; i++){
             var distance = current_pos.distanceTo(this._bushes[i].group.position);
             if(distance > 200){
-                var angle = -Math.random()*Math.PI;
+                var angle = -Math.random()*Math.PI*2;
                 var length = Math.sqrt(Math.random())*200;
 
                 var x_val = current_pos.x + Math.cos(angle)*length;

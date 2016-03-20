@@ -17,8 +17,6 @@ class Wheel extends ParticleCollider {
     private _collisionNormal : mathjs.Matrix;
     private _relativeVelocity : mathjs.Matrix;
 
-    private _testArrow : THREE.ArrowHelper;
-
     private _connectedMotor : Motor;
     private _connectedSpring : Spring;
     private _connectedSteering : Steering;
@@ -44,10 +42,8 @@ class Wheel extends ParticleCollider {
         this.state = math.matrix([pos.x, pos.y, pos.z,0,0,0]);
 
         this.object.position.set(pos.x, pos.y, pos.z);
-       //this._testArrow = new THREE.ArrowHelper(new THREE.Vector3(0,1,0), new THREE.Vector3(0,0,0), 4, 0xff0000);
 
         this._renderer = renderer
-        this._renderer.scene.add(this._testArrow);
     }
 
     public update(time: number, delta: number){

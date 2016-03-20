@@ -1,7 +1,7 @@
 ///<reference path="../threejs/three.d.ts"/>
 ///<reference path="../renderer.ts"/>
 ///<reference path="../math/mathjs.d.ts"/>
-///<reference path="./ground_plane.ts"/>
+///<reference path="./environment/ground_plane.ts"/>
 ///<reference path="../carsimulator.ts"/>
 
 import Vector3 = THREE.Vector3;

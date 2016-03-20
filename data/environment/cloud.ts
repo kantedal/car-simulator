@@ -4,7 +4,7 @@
 
 ///<reference path="../../threejs/three.d.ts"/>
 ///<reference path="../../renderer.ts"/>
-///<reference path="./../ground_plane.ts"/>
+///<reference path="./ground_plane.ts"/>
 
 
 class Cloud {
@@ -12,7 +12,7 @@ class Cloud {
     private _cloudMaterial1: THREE.SpriteMaterial;
     private _clouds: THREE.Sprite[];
 
-    private _cloudCount = 20;
+    private _cloudCount = 40;
 
     constructor(renderer: Renderer){
         this._renderer = renderer;
@@ -23,7 +23,7 @@ class Cloud {
         this._clouds = [];
 
         for(var c=0; c<this._cloudCount; c++){
-            var angle = -Math.random()*Math.PI;
+            var angle = -Math.random()*Math.PI*2;
             var length = Math.sqrt(Math.random())*500;
             var x_val = Math.cos(angle)*length;
             var z_val = Math.sin(angle)*length;
@@ -42,7 +42,7 @@ class Cloud {
     public update(current_pos: THREE.Vector3){
         for(var c=0; c<this._cloudCount; c++){
             if(current_pos.distanceTo(this._clouds[c].position) > 500){
-                var angle = -Math.random()*Math.PI;
+                var angle = -Math.random()*Math.PI*2;
                 var length = Math.sqrt(Math.random())*500;
                 var x_val = current_pos.x + Math.cos(angle)*length;
                 var z_val = current_pos.z + Math.sin(angle)*length;

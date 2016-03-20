@@ -4,7 +4,7 @@
 
 ///<reference path="../../threejs/three.d.ts"/>
 ///<reference path="../../renderer.ts"/>
-///<reference path="./../ground_plane.ts"/>
+///<reference path="./ground_plane.ts"/>
 ///<reference path="./../vehicle.ts"/>
 ///<reference path="./grass.ts"/>
 ///<reference path="./cloud.ts"/>

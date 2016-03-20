@@ -4,7 +4,8 @@
 ///<reference path="./physics_object3d.ts"/>
 ///<reference path="../renderer.ts"/>
 ///<reference path="./parts/wheel.ts"/>
-///<reference path="./ground_plane.ts"/>
+///<reference path="./parts/vehicle_camera.ts"/>
+///<reference path="./environment/ground_plane.ts"/>
 ///<reference path="../carsimulator.ts"/>
 ///<reference path="./parts/motor.ts"/>
 ///<reference path="./parts/spring.ts"/>
@@ -24,15 +25,14 @@ var Vehicle = (function () {
         this._vehicleModel = new DynamicRigidBody(geometry, new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true }), renderer);
         //this._vehicleModel.position.set(0,30,0);
         this._vehicleSetup = new Car(this._renderer, this);
-        //renderer.scene.add(this._vehicleModel.object);
+        this._vehicleCamera = new VehicleCamera(this._vehicleSetup, this._vehicleModel, this._renderer.camera);
     }
     Vehicle.prototype.update = function (time, delta) {
+        this._vehicleCamera.update(time, delta);
         this._vehicleSetup.update(time, delta);
         this._vehicleModel.update(time, delta);
         this._velocity = this._vehicleModel.velocity;
         this._isColliding = this._vehicleModel.isColliding;
-        this._renderer.camera.lookAt(this._vehicleModel.object.position);
-        this._renderer.camera.position.set(this._vehicleModel.object.position.x + this._vehicleModel.localZDirection.x * 0, this._vehicleModel.object.position.y + this._vehicleModel.localZDirection.y * 0 + 9, this._vehicleModel.object.position.z + this._vehicleModel.localZDirection.z * 0 + 11);
         this._position.set(this._vehicleModel.object.position.x, this._vehicleModel.object.position.y, this._vehicleModel.object.position.z);
         //this._vehicleSetup.vehicleBody.object.position.setY(Math.sin(time*3));
         for (var colNum = 0; colNum < this._vehicleModel.collisions.length; colNum++) {

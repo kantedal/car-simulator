@@ -39,7 +39,7 @@ var SpringConnector = (function () {
             this._springArrow.setLength(spring_length * 2);
         }
         if (this._springMesh)
-            this._springMesh.scale.set(0.3, spring_length / 10.5 - 0.1, 0.3);
+            this._springMesh.scale.set(0.3, spring_length / 20, 0.3);
         //this._springPlaceHolderMesh.lookAt(vehiclePos);
         if (this._springTopConnector)
             this._springTopConnector.position.copy(totPos.clone().add(this._connectedVehicle.object.position));

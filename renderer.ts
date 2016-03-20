@@ -8,7 +8,6 @@ class Renderer {
 
     constructor(){
         this.renderer = new THREE.WebGLRenderer({ alpha: true });
-        this.renderer.shadowMap.enabled = true;
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setClearColor(0x000000,0);
@@ -25,12 +24,8 @@ class Renderer {
         this._camera.lookAt(new THREE.Vector3(0,0,0));
 
         this._light = new THREE.DirectionalLight( 0xffeeee, 0.85 );
-        this._light.castShadow = true;
-        this._light.shadowDarkness = 1.0;
         this._light.position.set( 1, 0.3, 0 );
         this._scene.add( this._light );
-
-
 
         var container = document.getElementById( 'content' );
         container.appendChild( this.renderer.domElement );

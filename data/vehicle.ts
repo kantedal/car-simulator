@@ -4,7 +4,8 @@
 ///<reference path="./physics_object3d.ts"/>
 ///<reference path="../renderer.ts"/>
 ///<reference path="./parts/wheel.ts"/>
-///<reference path="./ground_plane.ts"/>
+///<reference path="./parts/vehicle_camera.ts"/>
+///<reference path="./environment/ground_plane.ts"/>
 ///<reference path="../carsimulator.ts"/>
 ///<reference path="./parts/motor.ts"/>
 ///<reference path="./parts/spring.ts"/>
@@ -15,6 +16,7 @@
 
 class Vehicle {
     private _renderer:Renderer;
+    private _vehicleCamera:VehicleCamera;
 
     private _position:THREE.Vector3;
     private _rotation:THREE.Vector3;
@@ -39,22 +41,17 @@ class Vehicle {
         //this._vehicleModel.position.set(0,30,0);
 
         this._vehicleSetup = new Car(this._renderer, this);
-
-        //renderer.scene.add(this._vehicleModel.object);
+        this._vehicleCamera = new VehicleCamera(this._vehicleSetup, this._vehicleModel, this._renderer.camera);
     }
 
     public update(time:number, delta:number):void {
+        this._vehicleCamera.update(time,delta);
         this._vehicleSetup.update(time,delta);
         this._vehicleModel.update(time,delta);
 
         this._velocity = this._vehicleModel.velocity;
         this._isColliding = this._vehicleModel.isColliding;
 
-        this._renderer.camera.lookAt(this._vehicleModel.object.position);
-        this._renderer.camera.position.set(
-            this._vehicleModel.object.position.x+this._vehicleModel.localZDirection.x*0,
-            this._vehicleModel.object.position.y+this._vehicleModel.localZDirection.y*0 + 9,
-            this._vehicleModel.object.position.z+this._vehicleModel.localZDirection.z*0 + 11);
         this._position.set(this._vehicleModel.object.position.x, this._vehicleModel.object.position.y, this._vehicleModel.object.position.z);
 
         //this._vehicleSetup.vehicleBody.object.position.setY(Math.sin(time*3));

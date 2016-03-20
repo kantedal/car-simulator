@@ -9,8 +9,11 @@
 ///<reference path="../environment/object_loader.ts"/>
 /// <reference path="../../math/jquery.d.ts" />
 /// <reference path="./connected_vehicle.ts" />
+/// <reference path="../../typed/firebase.d.ts" />
+/// <reference path="./race/race_track.ts" />
 var Socket = (function () {
     function Socket(renderer, objectLoader) {
+        this._firebaseRef = new Firebase("https://car-simulator.firebaseio.com/");
         this._renderer = renderer;
         this._objectLoader = objectLoader;
         this._connectedVehicles = [];
@@ -35,18 +38,54 @@ var Socket = (function () {
         this._peer.on('data', function (data) {
             console.log("data");
         });
+        this._raceTrack = new RaceTrack(renderer);
     }
     Socket.prototype.connectToPeer = function (id) {
-        this._connection = this._peer.connect(id);
         var self = this;
-        this._connection.on('open', function () {
-            self._isConnected = true;
-            // Receive messages
-            self._connection.on('data', function (data) {
-                self.recievedData(data);
+        var connection_id = id;
+        this._firebaseRef.child(connection_id).once("value", function (snapshot) {
+            var connectionList = snapshot.val().connected;
+            connectionList.push({
+                name: self._name,
+                id: self._connectionId
             });
-            // Send messages
-            self._connection.send('Hello!');
+            self._connection = self._peer.connect(snapshot.val().server_id);
+            self._connection.on('open', function () {
+                self._isConnected = true;
+                self._firebaseRef.child(connection_id).child("connected").set(connectionList);
+                //for(var i=0; i<connectionList.length; i++){
+                //    if(connectionList[i].name != self._name)
+                //        self.newVehicle(connectionList[i]);
+                //}
+                self._firebaseRef.child(connection_id).child("connected").on("child_added", function (snapshot) {
+                    if (snapshot.val().name != self._name)
+                        self.newVehicle(snapshot.val());
+                });
+                self._connection.on('data', function (data) {
+                    self.recievedData(data);
+                });
+            });
+            self._connection.on('error', function () {
+                console.log("connection error");
+            });
+        });
+    };
+    Socket.prototype.startServer = function () {
+        this._isServer = true;
+        this._firebaseRef.child(this._name).set({
+            server_creator: this._name,
+            server_id: this._connectionId,
+            connected: [
+                {
+                    name: this._name,
+                    id: this._connectionId
+                }
+            ]
+        });
+        var self = this;
+        this._firebaseRef.child(this._name).child("connected").on("child_added", function (snapshot) {
+            if (snapshot.val().name != self._name)
+                self.newVehicle(snapshot.val());
         });
     };
     Socket.prototype.update = function (vehicle) {
@@ -118,25 +157,21 @@ var Socket = (function () {
     };
     Socket.prototype.recievedData = function (data) {
         if (data.car_data.car_id != this._connectionId) {
-            var new_car = true;
             for (var i = 0; i < this._connectedVehicles.length; i++) {
                 if (data.car_data.car_id == this._connectedVehicles[i].id && data.car_data.car_id != this._connectionId) {
                     this._connectedVehicles[i].setFromNetworkData(data);
-                    new_car = false;
                     break;
                 }
             }
-            if (new_car)
-                this.newVehicle(data);
         }
     };
     Socket.prototype.newVehicle = function (cardata) {
-        console.log("new vehicle " + this._connectedVehicles.length + " " + cardata.car_data.car_name);
-        this._connectedVehicles.push(new ConnectedVehicle(cardata.car_data.car_id, cardata.car_data.car_name, cardata.car_data.car_color, this._renderer, this._objectLoader));
+        this._connectedVehicles.push(new ConnectedVehicle(cardata.id, cardata.name, "red", this._renderer, this._objectLoader));
+        console.log(cardata.name);
         $.get("style/connection_client.html", function (data) {
             $("#clientList").append(data);
-            $("#client").attr("id", cardata.car_data.car_id);
-            $("#" + cardata.car_data.car_id).html(cardata.car_data.car_name);
+            $("#client").attr("id", cardata.id);
+            $("#" + cardata.id).html(cardata.name);
         });
     };
     Object.defineProperty(Socket.prototype, "connectionId", {

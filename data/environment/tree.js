@@ -3,10 +3,10 @@
  */
 ///<reference path="../../threejs/three.d.ts"/>
 ///<reference path="../../renderer.ts"/>
-///<reference path="./../ground_plane.ts"/>
+///<reference path="./ground_plane.ts"/>
 var Tree = (function () {
     function Tree(renderer, groundPlanes) {
-        this._treeCount = 10;
+        this._treeCount = 30;
         this._renderer = renderer;
         this._trees = [];
         this._groundPlanes = groundPlanes;
@@ -14,8 +14,8 @@ var Tree = (function () {
     Tree.prototype.update = function (current_pos) {
         if (this._treeMesh) {
             for (var c = 0; c < this._treeCount; c++) {
-                if (current_pos.distanceTo(this._trees[c].position) > 200 || current_pos.z + 30 < this._trees[c].position.z) {
-                    var angle = -Math.random() * Math.PI;
+                if (current_pos.distanceTo(this._trees[c].position) > 200) {
+                    var angle = -Math.random() * Math.PI * 2;
                     var radius = Math.sqrt(Math.random()) * 200;
                     var x_val = current_pos.x + Math.cos(angle) * radius;
                     var z_val = current_pos.z + Math.sin(angle) * radius;
@@ -28,7 +28,7 @@ var Tree = (function () {
     Tree.prototype.attachTreeMesh = function (tree) {
         this._treeMesh = tree;
         for (var c = 0; c < this._treeCount; c++) {
-            var angle = -Math.random() * Math.PI;
+            var angle = -Math.random() * Math.PI * 2;
             var length = Math.sqrt(Math.random()) * 200;
             var x_val = Math.cos(angle) * length;
             var z_val = Math.sin(angle) * length;

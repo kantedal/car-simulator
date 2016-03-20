@@ -28,9 +28,7 @@ var Wheel = (function (_super) {
         this.velocity = math.matrix([0, 0, 0, 0, 0, 0]);
         this.state = math.matrix([pos.x, pos.y, pos.z, 0, 0, 0]);
         this.object.position.set(pos.x, pos.y, pos.z);
-        //this._testArrow = new THREE.ArrowHelper(new THREE.Vector3(0,1,0), new THREE.Vector3(0,0,0), 4, 0xff0000);
         this._renderer = renderer;
-        this._renderer.scene.add(this._testArrow);
     }
     Wheel.prototype.update = function (time, delta) {
         //super.update(time,delta);

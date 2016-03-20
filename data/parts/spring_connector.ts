@@ -62,7 +62,7 @@ class SpringConnector {
         }
 
         if(this._springMesh)
-            this._springMesh.scale.set(0.3, spring_length/10.5-0.1, 0.3);
+            this._springMesh.scale.set(0.3, spring_length/20, 0.3);
         //this._springPlaceHolderMesh.lookAt(vehiclePos);
 
         if(this._springTopConnector)
