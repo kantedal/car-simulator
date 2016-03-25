@@ -13,9 +13,8 @@ var Renderer = (function () {
         this.renderer.sortObjects = true;
         this._scene = new THREE.Scene();
         this._scene.fog = new THREE.Fog(0xffffff, 1, 165);
-        this._camera = new THREE.PerspectiveCamera(100, window.innerWidth / window.innerHeight, 0.4, 1000);
+        this._camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1.1, 400);
         this._camera.removeEventListener();
-        this._camera.aspect = 20;
         this._camera.position.x = 0;
         this._camera.position.y = 10;
         this._camera.lookAt(new THREE.Vector3(0, 0, 0));

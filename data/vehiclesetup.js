@@ -116,7 +116,7 @@ var VehicleSetup = (function () {
             this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle * this._motor.torque * 15;
             this._vehicle.vehicleModel.forceConstraints.valueOf()[4] += this._steering.steeringAngle
                 * -this._vehicle.vehicleModel.velocityDirection.clone().normalize().dot(this._vehicle.vehicleModel.localZDirection)
-                * this._vehicle.vehicleModel.velocityDirection.length() * 2500;
+                * this._vehicle.vehicleModel.velocityDirection.length() * 1200;
             this._steering.steeringAngle *= 0.98;
         }
         if (this._steering) {

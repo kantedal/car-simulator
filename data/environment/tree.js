@@ -6,7 +6,7 @@
 ///<reference path="./ground_plane.ts"/>
 var Tree = (function () {
     function Tree(renderer, groundPlanes) {
-        this._treeCount = 30;
+        this._treeCount = 20;
         this._renderer = renderer;
         this._trees = [];
         this._groundPlanes = groundPlanes;

@@ -24,7 +24,7 @@ class Spring {
     constructor(){
         this._linearSpringAcceleration = new THREE.Vector3(0,0,0);
         this._linearSpringVelocity = new THREE.Vector3(0,0,0);
-        this._linearDisplacement = new THREE.Vector3(0,1,0);
+        this._linearDisplacement = new THREE.Vector3(0,2,0);
 
         this._angularSpringAcceleration = new THREE.Vector3(0,0,0);
         this._angularSpringVelocity = new THREE.Vector3(0,0,0);

@@ -22,8 +22,8 @@ class VehicleCamera {
         this._camera = camera;
         this._cameraSpring = new Spring();
         this._cameraSpring.allowMotion(true, false);
-        this._cameraSpring.linearSpringConst = 30;
-        this._cameraSpring.linearDampingConst = 200;
+        this._cameraSpring.linearSpringConst = 50;
+        this._cameraSpring.linearDampingConst = 300;
         this._cameraDirection = this._vehicleModel.localZDirection;
 
         if(this._firstPersonView){
@@ -45,9 +45,9 @@ class VehicleCamera {
 
             var realCameraDir = this._cameraDirection.clone().normalize();
             this._camera.position.set(
-                this._vehicleModel.object.position.x+realCameraDir.x*12,
-                this._vehicleModel.object.position.y+9,
-                this._vehicleModel.object.position.z+realCameraDir.z*12
+                this._vehicleModel.object.position.x+realCameraDir.x*23,
+                this._vehicleModel.object.position.y+11,
+                this._vehicleModel.object.position.z+realCameraDir.z*23
             );
         }
     }

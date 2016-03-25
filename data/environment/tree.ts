@@ -13,7 +13,7 @@ class Tree {
     private _treeMesh: THREE.Mesh;
     private _groundPlanes: GroundPlane;
 
-    private _treeCount = 30;
+    private _treeCount = 20;
 
     constructor(renderer: Renderer, groundPlanes: GroundPlane){
         this._renderer = renderer;

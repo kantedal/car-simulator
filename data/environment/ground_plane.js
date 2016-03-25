@@ -75,7 +75,7 @@ var GroundPlane = (function () {
         this._mesh[idx].geometry.computeVertexNormals();
     };
     GroundPlane.simplexNoise = function (pos) {
-        return (GroundPlane._noise1.perlin2(pos.x / 40, (pos.z) / 40) * 10 + GroundPlane._noise2.simplex2(pos.x / 140, (pos.z) / 140) * 6);
+        return (GroundPlane._noise1.perlin2(pos.x / 40, (pos.z) / 40) * 8 + GroundPlane._noise2.simplex2(pos.x / 140, (pos.z) / 140) * 4);
     };
     GroundPlane.prototype.addLoadedListener = function (listener) {
         this._planeLoadedListener = listener;

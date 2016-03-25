@@ -1,7 +1,6 @@
 
 ///<reference path="../../threejs/three.d.ts"/>
 ///<reference path="./particle.ts"/>
-
 ///<reference path="../../renderer.ts"/>
 ///<reference path="../../data/vehicle.ts"/>
 ///<reference path="../../data/parts/wheel.ts"/>
@@ -10,7 +9,8 @@
 class ParticleSystem {
     private _renderer: Renderer;
     private _emissionWheel: Wheel;
-    private _particles : Particle[];
+    private _particles: Particle[];
+    private _forceFields: ForceField[];
     private _particleSprite : THREE.Sprite;
     private _material : THREE.SpriteMaterial;
 

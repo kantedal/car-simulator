@@ -22,6 +22,7 @@ var PhysicsObject3d = (function () {
         this._collisionPosition = new THREE.Vector3(0, 0, 0);
         this._desiredDirection = new THREE.Vector3(0, 0, 0);
         this._normalDirection = new THREE.Vector3(0, 0, 0);
+        this._acceleration = new THREE.Vector3(0, 0, 0);
         this._realDirection = new THREE.Vector3(0, 0, 0);
         this._forceRadius = new THREE.Vector3(0, 0, 0);
         this._velocityDirection = new THREE.Vector3(0, 0, 0);
@@ -59,6 +60,13 @@ var PhysicsObject3d = (function () {
         if (CarSimulator.developer_mode)
             renderer.scene.add(this._centerOfMassPoint);
     }
+    Object.defineProperty(PhysicsObject3d.prototype, "acceleration", {
+        get: function () {
+            return this._acceleration;
+        },
+        enumerable: true,
+        configurable: true
+    });
     PhysicsObject3d.prototype.update = function (time, delta) {
         this.rotateAroundWorldAxis(this.object, new THREE.Vector3(1, 0, 0), delta * this.velocity.valueOf()[3]);
         this.rotateAroundWorldAxis(this.object, new THREE.Vector3(0, 1, 0), delta * this.velocity.valueOf()[4]);
@@ -71,6 +79,7 @@ var PhysicsObject3d = (function () {
         this._realDirection.set(this._desiredDirection.x, this._desiredDirection.y, this._desiredDirection.z);
         this._realDirection.projectOnPlane(this._normalDirection);
         this._realDirection.normalize();
+        this._acceleration.set(this._velocityDirection.x - this.velocity.valueOf()[0], this._velocityDirection.y - this.velocity.valueOf()[1], this._velocityDirection.z - this.velocity.valueOf()[2]);
         this._velocityDirection.set(this.velocity.valueOf()[0], this.velocity.valueOf()[1], this.velocity.valueOf()[2]);
         this._angularVelocityDirection.set(this.velocity.valueOf()[3], this.velocity.valueOf()[4], this.velocity.valueOf()[5]);
         this._velocityDirectionArrow.position.set(this.object.position.x, this.object.position.y, this.object.position.z);
@@ -133,8 +142,6 @@ var PhysicsObject3d = (function () {
                             //this._externalCollision[extColIdx] = true;
                             collisions.push(collision);
                         }
-                    }
-                    if (intersects[0].point.y + 0.15 >= this._externalCollisionPoints[extColIdx].position.y) {
                         this._externalCollision[extColIdx] = true;
                     }
                 }

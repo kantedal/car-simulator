@@ -25,7 +25,7 @@ class RelativeDynamicBody extends DynamicRigidBody {
         this._spring = new Spring(renderer);
 
         this._relativeVelocity = math.matrix([0,0,0,0,0,0]);
-        this.state = math.matrix([0,1,0,0,0,0]);
+        this.state = math.matrix([0,2,0,0,0,0]);
     }
 
     public update(time:number, delta:number){
@@ -39,10 +39,6 @@ class RelativeDynamicBody extends DynamicRigidBody {
         this.velocity.valueOf()[5] = this._spring.angularSpringVelocity.z;
         //this.velocity.valueOf()[5] = this._spring.v*0.03;
 
-        //for(var i=0; i<this._parentVehicle.vehicleSetup.wheels.length; i++){
-            //this._parentVehicle.vehicleSetup.wheels[i].velocity.valueOf()[1] = -this._spring.v;
-        //}
-
         var forceComp = math.dot(
             math.matrix([0,1,0]),
             math.matrix([this._parentVehicle.vehicleModel.localYDirection.x, this._parentVehicle.vehicleModel.localYDirection.y, this._parentVehicle.vehicleModel.localYDirection.z])
@@ -50,8 +46,6 @@ class RelativeDynamicBody extends DynamicRigidBody {
 
         this._forceTotal = math.add(math.multiply(this.forceExternal,forceComp), this.forceConstraints); //Combine external and constraint forces
         this.velocity = math.add(this.velocity, math.multiply(math.multiply(math.inv(this.M), this.forceTotal), delta));
-
-        //this._relativeVelocity = math.subtract(this.velocity, this._parentVehicle.vehicleModel.velocity);
 
         this._relativeVelocity.valueOf()[1] = this.velocity.valueOf()[1] - this._parentVehicle.vehicleModel.velocity.valueOf()[1];
         this._relativeVelocity.valueOf()[3] = this.velocity.valueOf()[3] - this._parentVehicle.vehicleModel.velocity.valueOf()[3];

@@ -13,8 +13,8 @@
 ///<reference path="./math/stats.d.ts"/>
 ///<reference path="./data/network/socket.ts"/>
 /// <reference path="./math/jquery.d.ts" />
-/// <reference path="./data/dust/particle_system.ts" />
-/// <reference path="./data/dust/particle.ts" />
+/// <reference path="data/particle/particle_system.ts" />
+/// <reference path="data/particle/particle.ts" />
 
 
 class CarSimulator {
@@ -58,29 +58,25 @@ class CarSimulator {
     start(){
         var self = this;
 
-        if(!CarSimulator.developer_mode){
-            this._objectLoader = new ObjectLoader();
-            var objectsLoaderListener: ObjectLoaderListener = {
-                objectsLoaded: function() {
-                    self._groundPlanes = new GroundPlane(self._renderer, 3);
-                    self._car = new Vehicle(self._renderer);
+        this._objectLoader = new ObjectLoader();
+        var objectsLoaderListener: ObjectLoaderListener = {
+            objectsLoaded: function() {
+                self._groundPlanes = new GroundPlane(self._renderer, 3);
+                self._car = new Vehicle(self._renderer);
 
-                    var width = CarSimulator.ground_width;
-                    var dim = self._groundPlanes.dimension;
-                    for(var x=0; x<dim; x++) {
-                        for (var z = 0; z < dim; z++) {
-                            self._groundPlanes.newPlane(new THREE.Vector3(width * x - width * (dim-1)/2, 0, width * z - width*(dim-1)/2));
-                        }
+                var width = CarSimulator.ground_width;
+                var dim = self._groundPlanes.dimension;
+                for(var x=0; x<dim; x++) {
+                    for (var z = 0; z < dim; z++) {
+                        self._groundPlanes.newPlane(new THREE.Vector3(width * x - width * (dim-1)/2, 0, width * z - width*(dim-1)/2));
                     }
-                    self._car.vehicleModel.connectCollisionSurfaces(self._groundPlanes.collisionMesh);
+                }
+                self._car.vehicleModel.connectCollisionSurfaces(self._groundPlanes.collisionMesh);
 
-                    if(!CarSimulator.developer_mode) {
-                        self._particleSystem = new ParticleSystem(self._renderer, self._car.vehicleSetup.wheels[2]);
-                        self._particleSystem2 = new ParticleSystem(self._renderer, self._car.vehicleSetup.wheels[2]);
-                        self._groundObjects = new GroundObjects(self._renderer, self._groundPlanes, self._car);
-                    }
-
-                    self._socket = new Socket(self._renderer,self._objectLoader);
+                if(!CarSimulator.developer_mode) {
+                    self._particleSystem = new ParticleSystem(self._renderer, self._car.vehicleSetup.wheels[2]);
+                    self._particleSystem2 = new ParticleSystem(self._renderer, self._car.vehicleSetup.wheels[2]);
+                    self._groundObjects = new GroundObjects(self._renderer, self._groundPlanes, self._car);
 
                     for(var w=0; w<self._car.vehicleSetup.wheels.length; w++){
                         self._car.vehicleSetup.wheels[w].attatchMesh(ObjectLoader.wheelMesh.clone());
@@ -97,29 +93,31 @@ class CarSimulator {
                     for(var i=0; i<self._car.vehicleSetup.springConnector.length; i++){
                         self._car.vehicleSetup.springConnector[i].attatchSpringMesh(ObjectLoader.springMesh.clone(), ObjectLoader.springConnectorMesh.clone());
                     }
-
-                    self._renderer.start();
-                    self.update();
-                    self.twoHertzUpdate();
-                    self.thirtyHertzUpdate();
                 }
-            };
 
-            this._stats = new Stats();
-            if(CarSimulator.developer_mode) {
-                this._stats.setMode(0); // 0: fps, 1: ms, 2: mb
+                self._socket = new Socket(self._renderer,self._objectLoader);
 
-                this._stats.domElement.style.position = 'absolute';
-                this._stats.domElement.style.left = '20px';
-                this._stats.domElement.style.top = '20px';
-
-                document.body.appendChild(this._stats.domElement);
+                self._renderer.start();
+                self.update();
+                self.twoHertzUpdate();
+                self.thirtyHertzUpdate();
             }
+        };
 
-            this._renderer.camera.position.set(0,60,0);
-            this._renderer.camera.lookAt(new THREE.Vector3(0,0,0));
-            this._objectLoader.load(objectsLoaderListener);
+        this._stats = new Stats();
+        if(CarSimulator.developer_mode) {
+            this._stats.setMode(0); // 0: fps, 1: ms, 2: mb
+
+            this._stats.domElement.style.position = 'absolute';
+            this._stats.domElement.style.left = '20px';
+            this._stats.domElement.style.top = '20px';
+
+            document.body.appendChild(this._stats.domElement);
         }
+
+        this._renderer.camera.position.set(0,60,0);
+        this._renderer.camera.lookAt(new THREE.Vector3(0,0,0));
+        this._objectLoader.load(objectsLoaderListener);
     }
 
     private update(){

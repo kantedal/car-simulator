@@ -111,7 +111,7 @@ class GroundPlane {
     }
 
     public static simplexNoise(pos:THREE.Vector3):number{
-        return (GroundPlane._noise1.perlin2(pos.x/40, (pos.z)/40)*10 + GroundPlane._noise2.simplex2(pos.x/140, (pos.z)/140)*6);
+        return (GroundPlane._noise1.perlin2(pos.x/40, (pos.z)/40)*8 + GroundPlane._noise2.simplex2(pos.x/140, (pos.z)/140)*4);
     }
 
     public addLoadedListener(listener : PlaneLoadedListener):void {

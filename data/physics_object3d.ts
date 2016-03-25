@@ -6,6 +6,9 @@
 
 import Vector3 = THREE.Vector3;
 class PhysicsObject3d {
+    get acceleration():THREE.Vector3 {
+        return this._acceleration;
+    }
     private _state : mathjs.Matrix;
     private _velocity : mathjs.Matrix;
 
@@ -18,6 +21,7 @@ class PhysicsObject3d {
 
     private _desiredDirection : THREE.Vector3;
     private _normalDirection : THREE.Vector3;
+    private _acceleration : THREE.Vector3;
     private _realDirection : THREE.Vector3;
     private _velocityDirection : THREE.Vector3;
     private _angularVelocityDirection : THREE.Vector3;
@@ -67,6 +71,7 @@ class PhysicsObject3d {
         this._collisionPosition = new THREE.Vector3(0,0,0);
         this._desiredDirection = new THREE.Vector3(0,0,0);
         this._normalDirection = new THREE.Vector3(0,0,0);
+        this._acceleration = new THREE.Vector3(0,0,0);
         this._realDirection = new THREE.Vector3(0,0,0);
         this._forceRadius = new THREE.Vector3(0,0,0);
         this._velocityDirection  = new THREE.Vector3(0,0,0);
@@ -133,6 +138,7 @@ class PhysicsObject3d {
         this._realDirection.projectOnPlane(this._normalDirection);
         this._realDirection.normalize();
 
+        this._acceleration.set(this._velocityDirection.x - this.velocity.valueOf()[0], this._velocityDirection.y - this.velocity.valueOf()[1], this._velocityDirection.z - this.velocity.valueOf()[2]);
         this._velocityDirection.set(this.velocity.valueOf()[0], this.velocity.valueOf()[1], this.velocity.valueOf()[2]);
         this._angularVelocityDirection.set(this.velocity.valueOf()[3], this.velocity.valueOf()[4], this.velocity.valueOf()[5]);
 
@@ -215,8 +221,7 @@ class PhysicsObject3d {
                             //this._externalCollision[extColIdx] = true;
                             collisions.push(collision);
                         }
-                    }
-                    if (intersects[0].point.y + 0.15 >= this._externalCollisionPoints[extColIdx].position.y) {
+
                         this._externalCollision[extColIdx] = true;
                     }
                 }

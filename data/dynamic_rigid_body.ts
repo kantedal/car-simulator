@@ -33,7 +33,7 @@ class DynamicRigidBody extends PhysicsObject3d {
         this._renderer = renderer;
 
         this._gravity = -9.82;
-        this._mass = 700;
+        this._mass = 500;
         this._frictionConst = 0.99;
         this._collisions = [];
 
@@ -81,6 +81,8 @@ class DynamicRigidBody extends PhysicsObject3d {
         var force_radius = math.matrix([collision[0], collision[1], collision[2]]);
         var normal = math.matrix([collision[3], collision[4], collision[5]]);
 
+        this.applyFriction(force_radius, normal);
+
         var rotComponent = math.cross(force_radius,normal);
         var J = math.matrix([
             normal.valueOf()[0],
@@ -92,13 +94,52 @@ class DynamicRigidBody extends PhysicsObject3d {
         ]);
 
         var mc = 1/math.multiply( math.multiply(J, math.inv(this._M)), math.transpose(J));
-        var lagrange = -mc*(math.multiply(J,this._velocity)-penetration*10)*1;
+        var lagrange = -mc*(math.multiply(J,this._velocity)-14*penetration-0.3);
 
         var Pc = math.multiply(math.transpose(J),lagrange);
 
         var newVelocity : mathjs.Matrix = math.add(this._velocity, math.multiply(math.inv(this._M),Pc));
 
         return newVelocity;
+    }
+
+    private applyFriction(force_radius: mathjs.Matrix, normal: mathjs.Matrix) {
+        var direction = this.velocityDirection.clone().normalize();
+        var force_comp = Math.abs(direction.clone().dot(this.localXDirection));
+        var math_direction = math.matrix([direction.x, direction.y, direction.z]);
+
+        //this.velocity.valueOf()[0] *= 0.998 - force_comp*0.01;
+        //this.velocity.valueOf()[1] *= 0.998 - force_comp*0.01;
+        //this.velocity.valueOf()[2] *= 0.998 - force_comp*0.01;
+
+        var cross = math.cross(force_radius,math_direction).valueOf();
+        var J = math.matrix([
+            direction.x,
+            direction.y,
+            direction.z,
+            cross[0],
+            cross[1],
+            cross[2]
+        ]);
+
+        var mc = 1/math.multiply(math.multiply(J, math.inv(this.M)), math.transpose(J));
+
+        //var forceVec = this._connectedVehicle.vehicleModel.localZDirection.clone().applyAxisAngle(this._connectedVehicle.vehicleModel.localYDirection, -Math.PI/2);
+        //var forceComp = Math.abs(vel.clone().normalize().dot(forceVec));
+
+        //var forceUp = this._connectedVehicle.vehicleModel.forceTotal.valueOf()[1]
+
+        //if(this.acceleration.y > 0){
+
+        //var acc_norm = this.acceleration.clone().normalize();
+
+        var lagrange = -mc*(math.multiply(J, this.velocity))*(0.15 + 0.1*force_comp);
+
+        var Fc = math.multiply(math.transpose(J),lagrange);
+        this.forceConstraints =  math.add(this.forceConstraints, Fc);
+        //}
+
+
     }
 
     public applyImpulse(){
