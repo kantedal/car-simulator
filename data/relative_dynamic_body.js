@@ -66,6 +66,7 @@ var RelativeDynamicBody = (function (_super) {
     };
     RelativeDynamicBody.prototype.attatchMesh = function (mesh) {
         this._attatchedMesh = mesh;
+        this._attatchedMesh.translateY(1);
         this.object.add(this._attatchedMesh);
     };
     return RelativeDynamicBody;

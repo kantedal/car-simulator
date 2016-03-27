@@ -36,7 +36,6 @@ class CarSimulator {
     private _particleSystem : ParticleSystem;
     private _particleSystem2 : ParticleSystem;
 
-
     public static ground_width : number = 200;
     public static developer_mode : boolean = false;
     public static is_touch_device : boolean = false;
@@ -52,7 +51,6 @@ class CarSimulator {
 
         this.handleJqueryEvents();
         //this._dynamicBody = new DynamicRigidBody(new THREE.BoxGeometry( 6, 3, 8 ), new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true}), this._renderer, 500, this);
-
     }
 
     start(){

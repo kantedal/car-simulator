@@ -85,6 +85,7 @@ class RelativeDynamicBody extends DynamicRigidBody {
 
     public attatchMesh(mesh:THREE.Mesh){
         this._attatchedMesh = mesh;
-        this.object.add(this._attatchedMesh)
+        this._attatchedMesh.translateY(1);
+        this.object.add(this._attatchedMesh);
     }
 }
