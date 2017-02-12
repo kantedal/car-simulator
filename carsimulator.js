@@ -199,9 +199,8 @@ var CarSimulator = (function () {
     CarSimulator.developer_mode = false;
     CarSimulator.is_touch_device = false;
     return CarSimulator;
-})();
+}());
 window.onload = function () {
     var app = new CarSimulator();
     app.start();
 };
-//# sourceMappingURL=carsimulator.js.map

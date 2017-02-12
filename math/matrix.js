@@ -78,5 +78,4 @@ var Matrix = (function () {
         configurable: true
     });
     return Matrix;
-})();
-//# sourceMappingURL=matrix.js.map
+}());

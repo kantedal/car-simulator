@@ -52,5 +52,4 @@ var SpringConstraint = (function () {
         configurable: true
     });
     return SpringConstraint;
-})();
-//# sourceMappingURL=spring_constraint.js.map
+}());

@@ -20,8 +20,8 @@ var Particle = (function () {
         var currentTime = (time - this._startTime);
         if (currentTime > this._lifeLength) {
             this._isDead = true;
-            this._particleSprite.material.dispose();
-            this._particleSprite.geometry.dispose();
+            //this._particleSprite.material.dispose();
+            //this._particleSprite.geometry.dispose();
             this._renderer.scene.remove(this._particleSprite);
         }
         this._velocity.add(this._acceleration.clone().multiplyScalar(delta));
@@ -39,5 +39,4 @@ var Particle = (function () {
         configurable: true
     });
     return Particle;
-})();
-//# sourceMappingURL=particle.js.map
+}());

@@ -46,7 +46,7 @@ var Bushes = (function () {
         }
     };
     return Bushes;
-})();
+}());
 var Bush = (function () {
     function Bush(material) {
         this._isSimulating = false;
@@ -107,5 +107,4 @@ var Bush = (function () {
         configurable: true
     });
     return Bush;
-})();
-//# sourceMappingURL=bush.js.map
+}());

@@ -2,15 +2,45 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eca5ffb2-22ff-487c-870c-cac14447c28b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/carsimulator.js.map" afterPath="$PROJECT_DIR$/carsimulator.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/carsimulator.ts" afterPath="$PROJECT_DIR$/carsimulator.ts" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/carsimulator.js" afterPath="$PROJECT_DIR$/carsimulator.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/car.js" afterPath="$PROJECT_DIR$/data/car.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/car.js.map" afterPath="$PROJECT_DIR$/data/car.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/car.ts" afterPath="$PROJECT_DIR$/data/car.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/car_test.js" afterPath="$PROJECT_DIR$/data/car_test.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/constraints/collision_constraint.js" afterPath="$PROJECT_DIR$/data/constraints/collision_constraint.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/constraints/spring_constraint.js" afterPath="$PROJECT_DIR$/data/constraints/spring_constraint.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/dynamic_car_body.js" afterPath="$PROJECT_DIR$/data/dynamic_car_body.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/dynamic_rigid_body.js" afterPath="$PROJECT_DIR$/data/dynamic_rigid_body.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/bush.js" afterPath="$PROJECT_DIR$/data/environment/bush.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/cloud.js" afterPath="$PROJECT_DIR$/data/environment/cloud.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/flower.js" afterPath="$PROJECT_DIR$/data/environment/flower.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/grass.js" afterPath="$PROJECT_DIR$/data/environment/grass.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/ground_objects.js" afterPath="$PROJECT_DIR$/data/environment/ground_objects.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/ground_plane.js" afterPath="$PROJECT_DIR$/data/environment/ground_plane.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/object_loader.js" afterPath="$PROJECT_DIR$/data/environment/object_loader.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/environment/tree.js" afterPath="$PROJECT_DIR$/data/environment/tree.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/network/connected_vehicle.js" afterPath="$PROJECT_DIR$/data/network/connected_vehicle.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/network/race/checkpoint.js" afterPath="$PROJECT_DIR$/data/network/race/checkpoint.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/network/race/race_track.js" afterPath="$PROJECT_DIR$/data/network/race/race_track.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/network/socket.js" afterPath="$PROJECT_DIR$/data/network/socket.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/particle/force_field.js" afterPath="$PROJECT_DIR$/data/particle/force_field.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/particle/gravity.js" afterPath="$PROJECT_DIR$/data/particle/gravity.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/particle/particle.js" afterPath="$PROJECT_DIR$/data/particle/particle.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/particle/particle.ts" afterPath="$PROJECT_DIR$/data/particle/particle.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/particle/particle_system.js" afterPath="$PROJECT_DIR$/data/particle/particle_system.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/particle_collider.js" afterPath="$PROJECT_DIR$/data/particle_collider.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/parts/motor.js" afterPath="$PROJECT_DIR$/data/parts/motor.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/parts/spring.js" afterPath="$PROJECT_DIR$/data/parts/spring.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/parts/spring_connector.js" afterPath="$PROJECT_DIR$/data/parts/spring_connector.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/parts/steering.js" afterPath="$PROJECT_DIR$/data/parts/steering.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/parts/vehicle_camera.js" afterPath="$PROJECT_DIR$/data/parts/vehicle_camera.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/parts/wheel.js" afterPath="$PROJECT_DIR$/data/parts/wheel.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/physics_object3d.js" afterPath="$PROJECT_DIR$/data/physics_object3d.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/relative_dynamic_body.js" afterPath="$PROJECT_DIR$/data/relative_dynamic_body.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/relative_dynamic_body.js.map" afterPath="$PROJECT_DIR$/data/relative_dynamic_body.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/relative_dynamic_body.ts" afterPath="$PROJECT_DIR$/data/relative_dynamic_body.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/vehicle.js" afterPath="$PROJECT_DIR$/data/vehicle.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/vehiclesetup.js" afterPath="$PROJECT_DIR$/data/vehiclesetup.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/math/matrix.js" afterPath="$PROJECT_DIR$/math/matrix.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/math/vector.js" afterPath="$PROJECT_DIR$/math/vector.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/renderer.js" afterPath="$PROJECT_DIR$/renderer.js" />
     </list>
     <ignored path="carsimulator.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -21,7 +51,6 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
@@ -34,8 +63,8 @@
       <file leaf-file-name="carsimulator.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/carsimulator.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="83" column="60" selection-start-line="83" selection-start-column="60" selection-end-line="83" selection-end-column="60" />
+            <state relative-caret-position="1245">
+              <caret line="83" column="60" lean-forward="false" selection-start-line="83" selection-start-column="60" selection-end-line="83" selection-end-column="60" />
               <folding />
             </state>
           </provider>
@@ -44,8 +73,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.409091">
-              <caret line="22" column="59" selection-start-line="22" selection-start-column="59" selection-end-line="22" selection-end-column="59" />
+            <state relative-caret-position="330">
+              <caret line="22" column="59" lean-forward="false" selection-start-line="22" selection-start-column="59" selection-end-line="22" selection-end-column="59" />
               <folding>
                 <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -56,8 +85,8 @@
       <file leaf-file-name="renderer.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/renderer.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="21" column="36" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="36" />
+            <state relative-caret-position="315">
+              <caret line="21" column="36" lean-forward="false" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -66,8 +95,8 @@
       <file leaf-file-name="gravity.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/particle/gravity.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+            <state relative-caret-position="195">
+              <caret line="15" column="1" lean-forward="true" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
               <folding>
                 <element signature="n#!!doc;n#Gravity#0" expanded="false" />
               </folding>
@@ -75,41 +104,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="car.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data/car.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="56" selection-start-line="16" selection-start-column="56" selection-end-line="16" selection-end-column="56" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dynamic_rigid_body.ts" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/data/dynamic_rigid_body.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.68410254">
-              <caret line="135" column="72" selection-start-line="135" selection-start-column="72" selection-end-line="135" selection-end-column="72" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="relative_dynamic_body.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data/relative_dynamic_body.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="87" column="40" selection-start-line="87" selection-start-column="40" selection-end-line="87" selection-end-column="40" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="vehicle.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/vehicle.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+            <state relative-caret-position="795">
+              <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -118,8 +117,18 @@
       <file leaf-file-name="particle.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/data/particle/particle.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+            <state relative-caret-position="75">
+              <caret line="5" column="40" lean-forward="true" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="40" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="particle.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/data/particle/particle.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="345">
+              <caret line="23" column="50" lean-forward="false" selection-start-line="23" selection-start-column="50" selection-end-line="23" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -128,8 +137,8 @@
       <file leaf-file-name="connection_start.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/style/connection_start.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
+            <state relative-caret-position="60">
+              <caret line="4" column="6" lean-forward="false" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -196,27 +205,21 @@
         <option value="$PROJECT_DIR$/data/car.ts" />
         <option value="$PROJECT_DIR$/data/relative_dynamic_body.ts" />
         <option value="$PROJECT_DIR$/data/dynamic_rigid_body.ts" />
+        <option value="$PROJECT_DIR$/data/particle/particle.ts" />
       </list>
     </option>
   </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" />
-  <component name="JsBuildToolPackageJson" detection-done="true" />
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1680" />
-    <option name="height" value="1050" />
-  </component>
-  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
-    <OptionsSetting value="true" id="Add" />
-    <OptionsSetting value="true" id="Remove" />
-    <OptionsSetting value="true" id="Checkout" />
-    <OptionsSetting value="true" id="Update" />
-    <OptionsSetting value="true" id="Status" />
-    <OptionsSetting value="true" id="Edit" />
-    <ConfirmationsSetting value="0" id="Add" />
-    <ConfirmationsSetting value="0" id="Remove" />
+    <option name="x" value="7" />
+    <option name="y" value="23" />
+    <option name="width" value="2487" />
+    <option name="height" value="2063" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -234,7 +237,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -242,14 +244,8 @@
               <option name="myItemId" value="carsimulator" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
+              <option name="myItemId" value="car-simulator" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -259,63 +255,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="typed" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="threejs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="style" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="math" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
+              <option name="myItemId" value="car-simulator" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -329,25 +269,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="parts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
+              <option name="myItemId" value="car-simulator" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -365,7 +287,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
+              <option name="myItemId" value="car-simulator" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -373,70 +295,17 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="network" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
+              <option name="myItemId" value="particle" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="network" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="race" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="environment" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="carsimulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="constraints" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+              <option name="myItemId" value="particle.ts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NestingTreeNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -446,7 +315,8 @@
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
-    <property name="FullScreen" value="true" />
+    <property name="nodejs_interpreter_path" value="/usr/local/bin/node" />
+    <property name="settings.editor.selected.configurable" value="settings.typescriptcompiler" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -462,14 +332,22 @@
     <configuration default="true" type="DartTestRunConfigurationType" factoryName="Dart Test">
       <method />
     </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma">
+      <config-file value="" />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
+      <config-file value="" />
+      <node-interpreter value="project" />
       <envs />
       <method />
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
       <method />
     </configuration>
-    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" working-dir="">
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
       <method />
     </configuration>
     <configuration default="true" type="cucumber.js" factoryName="Cucumber.js">
@@ -479,6 +357,7 @@
       <method />
     </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-interpreter>project</node-interpreter>
       <node-options />
       <gulpfile />
       <tasks />
@@ -489,10 +368,12 @@
     <configuration default="true" type="js.build_tools.npm" factoryName="npm">
       <command value="run-script" />
       <scripts />
+      <node-interpreter value="project" />
       <envs />
       <method />
     </configuration>
     <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
+      <node-interpreter />
       <node-options />
       <working-directory>$PROJECT_DIR$</working-directory>
       <pass-parent-env>true</pass-parent-env>
@@ -505,7 +386,9 @@
       <method />
     </configuration>
   </component>
-  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -514,51 +397,207 @@
       <changelist id="eca5ffb2-22ff-487c-870c-cac14447c28b" name="Default" comment="" />
       <created>1457451019620</created>
       <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
       <updated>1457451019620</updated>
+      <workItem from="1486941556964" duration="137000" />
     </task>
     <servers />
   </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="137000" />
+  </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
+    <frame x="7" y="23" width="2487" height="2063" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13095239" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20184962" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="TypeScript Compiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34097707" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3030754" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901296" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6302428" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24969599" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="TypeScript Compiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34097707" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901296" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="TypeScript Compiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34275794" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="TypeScript Compiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34097707" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3030754" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6302428" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14443535" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3030754" sideWeight="0.5" order="9" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6302428" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20184962" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901296" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24969599" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="processedProjectFiles" value="true" />
+    <option name="exactExcludedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/carsimulator.js" />
+        <option value="$PROJECT_DIR$/carsimulator.js.map" />
+        <option value="$PROJECT_DIR$/data/car.js" />
+        <option value="$PROJECT_DIR$/data/car.js.map" />
+        <option value="$PROJECT_DIR$/data/relative_dynamic_body.js" />
+        <option value="$PROJECT_DIR$/data/relative_dynamic_body.js.map" />
+        <option value="$PROJECT_DIR$/renderer.js" />
+        <option value="$PROJECT_DIR$/renderer.js.map" />
+        <option value="$PROJECT_DIR$/data/dynamic_rigid_body.js" />
+        <option value="$PROJECT_DIR$/data/dynamic_rigid_body.js.map" />
+        <option value="$PROJECT_DIR$/data/vehiclesetup.js" />
+        <option value="$PROJECT_DIR$/data/vehiclesetup.js.map" />
+        <option value="$PROJECT_DIR$/data/vehicle.js" />
+        <option value="$PROJECT_DIR$/data/vehicle.js.map" />
+        <option value="$PROJECT_DIR$/data/particle_collider.js" />
+        <option value="$PROJECT_DIR$/data/particle_collider.js.map" />
+        <option value="$PROJECT_DIR$/data/dynamic_car_body.js" />
+        <option value="$PROJECT_DIR$/data/dynamic_car_body.js.map" />
+        <option value="$PROJECT_DIR$/data/physics_object3d.js" />
+        <option value="$PROJECT_DIR$/data/physics_object3d.js.map" />
+        <option value="$PROJECT_DIR$/data/car_test.js" />
+        <option value="$PROJECT_DIR$/data/car_test.js.map" />
+        <option value="$PROJECT_DIR$/data/parts/motor.js" />
+        <option value="$PROJECT_DIR$/data/parts/motor.js.map" />
+        <option value="$PROJECT_DIR$/data/parts/spring.js" />
+        <option value="$PROJECT_DIR$/data/parts/spring.js.map" />
+        <option value="$PROJECT_DIR$/data/parts/steering.js" />
+        <option value="$PROJECT_DIR$/data/parts/steering.js.map" />
+        <option value="$PROJECT_DIR$/data/parts/spring_connector.js" />
+        <option value="$PROJECT_DIR$/data/parts/spring_connector.js.map" />
+        <option value="$PROJECT_DIR$/data/parts/vehicle_camera.js" />
+        <option value="$PROJECT_DIR$/data/parts/vehicle_camera.js.map" />
+        <option value="$PROJECT_DIR$/data/parts/wheel.js" />
+        <option value="$PROJECT_DIR$/data/parts/wheel.js.map" />
+        <option value="$PROJECT_DIR$/data/network/connected_vehicle.js" />
+        <option value="$PROJECT_DIR$/data/network/connected_vehicle.js.map" />
+        <option value="$PROJECT_DIR$/data/network/socket.js" />
+        <option value="$PROJECT_DIR$/data/network/socket.js.map" />
+        <option value="$PROJECT_DIR$/data/network/race/race_track.js" />
+        <option value="$PROJECT_DIR$/data/network/race/race_track.js.map" />
+        <option value="$PROJECT_DIR$/data/network/race/race.js" />
+        <option value="$PROJECT_DIR$/data/network/race/race.js.map" />
+        <option value="$PROJECT_DIR$/data/network/race/checkpoint.js" />
+        <option value="$PROJECT_DIR$/data/network/race/checkpoint.js.map" />
+        <option value="$PROJECT_DIR$/data/particle/gravity.js" />
+        <option value="$PROJECT_DIR$/data/particle/gravity.js.map" />
+        <option value="$PROJECT_DIR$/data/particle/particle.js" />
+        <option value="$PROJECT_DIR$/data/particle/particle.js.map" />
+        <option value="$PROJECT_DIR$/data/particle/particle_system.js" />
+        <option value="$PROJECT_DIR$/data/particle/particle_system.js.map" />
+        <option value="$PROJECT_DIR$/data/particle/force_field.js" />
+        <option value="$PROJECT_DIR$/data/particle/force_field.js.map" />
+        <option value="$PROJECT_DIR$/data/constraints/spring_constraint.js" />
+        <option value="$PROJECT_DIR$/data/constraints/spring_constraint.js.map" />
+        <option value="$PROJECT_DIR$/data/constraints/collision_constraint.js" />
+        <option value="$PROJECT_DIR$/data/constraints/collision_constraint.js.map" />
+        <option value="$PROJECT_DIR$/data/environment/ground_plane.js" />
+        <option value="$PROJECT_DIR$/data/environment/ground_plane.js.map" />
+        <option value="$PROJECT_DIR$/data/environment/bush.js" />
+        <option value="$PROJECT_DIR$/data/environment/bush.js.map" />
+        <option value="$PROJECT_DIR$/data/environment/ground_objects.js" />
+        <option value="$PROJECT_DIR$/data/environment/ground_objects.js.map" />
+        <option value="$PROJECT_DIR$/data/environment/tree.js" />
+        <option value="$PROJECT_DIR$/data/environment/tree.js.map" />
+        <option value="$PROJECT_DIR$/data/environment/grass.js" />
+        <option value="$PROJECT_DIR$/data/environment/grass.js.map" />
+        <option value="$PROJECT_DIR$/data/environment/flower.js" />
+        <option value="$PROJECT_DIR$/data/environment/flower.js.map" />
+        <option value="$PROJECT_DIR$/data/environment/cloud.js" />
+        <option value="$PROJECT_DIR$/data/environment/cloud.js.map" />
+        <option value="$PROJECT_DIR$/data/environment/object_loader.js" />
+        <option value="$PROJECT_DIR$/data/environment/object_loader.js.map" />
+        <option value="$PROJECT_DIR$/math/matrix.js" />
+        <option value="$PROJECT_DIR$/math/matrix.js.map" />
+        <option value="$PROJECT_DIR$/math/vector.js" />
+        <option value="$PROJECT_DIR$/math/vector.js.map" />
+        <option value="$PROJECT_DIR$/threejs/three-tests.js" />
+        <option value="$PROJECT_DIR$/threejs/three-tests.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/three-tests-setup.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/three-tests-setup.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/math/test_unit_math.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/math/test_unit_math.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/css3d/css3d_periodictable.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/css3d/css3d_periodictable.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/css3d/css3d_sprites.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/css3d/css3d_sprites.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_custom_attributes.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_custom_attributes.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_geometries.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_geometries.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_interactive_raycasting_points.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_interactive_raycasting_points.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_postprocessing.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_postprocessing.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_points_billboards.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_points_billboards.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_camera.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_camera.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_shader.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_shader.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_animation_skinning_morph.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_animation_skinning_morph.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_interactive_cubes.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_interactive_cubes.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_morphtargets.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_morphtargets.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_lensflares.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_lensflares.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_buffergeometry.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_buffergeometry.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_lights_heimsphere.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_lights_heimsphere.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_sprites.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_sprites.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_lines_colors.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_lines_colors.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_materials.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_materials.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_animation_cloth.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_animation_cloth.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_loader_awd.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_loader_awd.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_helpers.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/webgl/webgl_helpers.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_particles_floor.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_particles_floor.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_geometry_cube.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_geometry_cube.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_interactive_cubes_tween.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_interactive_cubes_tween.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_materials.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_materials.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_camera_orthographic.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_camera_orthographic.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_lights_pointlights.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/canvas/canvas_lights_pointlights.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/examples/detector.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/examples/detector.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/examples/effects/vreffect.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/examples/effects/vreffect.js.map" />
+        <option value="$PROJECT_DIR$/threejs/tests/examples/controls/vrcontrols.js" />
+        <option value="$PROJECT_DIR$/threejs/tests/examples/controls/vrcontrols.js.map" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -578,32 +617,24 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/data/vehiclesetup.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="3" selection-start-line="0" selection-start-column="3" selection-end-line="0" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/data/particle/particle.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="5" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
+        <state relative-caret-position="0">
+          <caret line="31" column="5" lean-forward="false" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/environment/flower.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="29" column="11" selection-start-line="29" selection-start-column="11" selection-end-line="29" selection-end-column="11" />
+        <state relative-caret-position="0">
+          <caret line="29" column="11" lean-forward="false" selection-start-line="29" selection-start-column="11" selection-end-line="29" selection-end-column="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/environment/cloud.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="59" column="1" selection-start-line="59" selection-start-column="1" selection-end-line="59" selection-end-column="1" />
+        <state relative-caret-position="0">
+          <caret line="59" column="1" lean-forward="false" selection-start-line="59" selection-start-column="1" selection-end-line="59" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -612,73 +643,43 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Downloads/goodstuff/carsimulator.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7183099">
-          <caret line="128" column="7" selection-start-line="128" selection-start-column="7" selection-end-line="139" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/goodstuff/vehiclesetup.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6549296">
-          <caret line="109" column="12" selection-start-line="109" selection-start-column="12" selection-end-line="111" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/goodstuff/dynamic_rigid_body.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33299336">
-          <caret line="103" column="0" selection-start-line="103" selection-start-column="0" selection-end-line="125" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/goodstuff/particle_system.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="28" column="43" selection-start-line="0" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/goodstuff/particle.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="57" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/Downloads/goodstuff/carsimulator.ts" />
+    <entry file="file://$USER_HOME$/Downloads/goodstuff/vehiclesetup.ts" />
+    <entry file="file://$USER_HOME$/Downloads/goodstuff/dynamic_rigid_body.ts" />
+    <entry file="file://$USER_HOME$/Downloads/goodstuff/particle_system.ts" />
+    <entry file="file://$USER_HOME$/Downloads/goodstuff/particle.ts" />
     <entry file="file://$PROJECT_DIR$/style/connection_server.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1" column="59" selection-start-line="1" selection-start-column="59" selection-end-line="1" selection-end-column="59" />
+        <state relative-caret-position="0">
+          <caret line="1" column="59" lean-forward="false" selection-start-line="1" selection-start-column="59" selection-end-line="1" selection-end-column="59" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/style/client_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="19" selection-start-line="0" selection-start-column="9" selection-end-line="0" selection-end-column="19" />
+        <state relative-caret-position="0">
+          <caret line="0" column="19" lean-forward="false" selection-start-line="0" selection-start-column="9" selection-end-line="0" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/style/connection_name.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="11" selection-end-column="17" />
+        <state relative-caret-position="0">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="11" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/style/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="19" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
+        <state relative-caret-position="0">
+          <caret line="5" column="19" lean-forward="false" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/typed/firebase.d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.4084507">
-          <caret line="200" column="7" selection-start-line="200" selection-start-column="7" selection-end-line="200" selection-end-column="7" />
+        <state relative-caret-position="0">
+          <caret line="200" column="7" lean-forward="false" selection-start-line="200" selection-start-column="7" selection-end-line="200" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -689,220 +690,202 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/style/connection_client.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+        <state relative-caret-position="0">
+          <caret line="2" column="6" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/network/race/race.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="43" />
+        <state relative-caret-position="0">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="43" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/environment/ground_objects.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.112676054">
-          <caret line="16" column="11" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="11" />
+        <state relative-caret-position="0">
+          <caret line="16" column="11" lean-forward="false" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/environment/object_loader.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="85" column="61" selection-start-line="85" selection-start-column="61" selection-end-line="85" selection-end-column="61" />
+        <state relative-caret-position="0">
+          <caret line="85" column="61" lean-forward="false" selection-start-line="85" selection-start-column="61" selection-end-line="85" selection-end-column="61" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/network/race/race_track.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="50" />
+        <state relative-caret-position="0">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="50" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/environment/bush.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="26" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
+        <state relative-caret-position="0">
+          <caret line="15" column="26" lean-forward="false" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/physics_object3d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="140" column="140" selection-start-line="140" selection-start-column="140" selection-end-line="140" selection-end-column="140" />
+        <state relative-caret-position="0">
+          <caret line="140" column="140" lean-forward="false" selection-start-line="140" selection-start-column="140" selection-end-line="140" selection-end-column="140" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/style/connect_to_server.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="6" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
+        <state relative-caret-position="0">
+          <caret line="3" column="6" lean-forward="false" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/environment/flower.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="51" column="52" selection-start-line="51" selection-start-column="52" selection-end-line="51" selection-end-column="52" />
+        <state relative-caret-position="0">
+          <caret line="51" column="52" lean-forward="false" selection-start-line="51" selection-start-column="52" selection-end-line="51" selection-end-column="52" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/environment/grass.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="42" selection-start-line="19" selection-start-column="42" selection-end-line="19" selection-end-column="42" />
+        <state relative-caret-position="0">
+          <caret line="19" column="42" lean-forward="false" selection-start-line="19" selection-start-column="42" selection-end-line="19" selection-end-column="42" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/environment/tree.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="26" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
+        <state relative-caret-position="0">
+          <caret line="15" column="26" lean-forward="false" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/environment/cloud.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="52" column="5" selection-start-line="52" selection-start-column="5" selection-end-line="52" selection-end-column="5" />
+        <state relative-caret-position="0">
+          <caret line="52" column="5" lean-forward="false" selection-start-line="52" selection-start-column="5" selection-end-line="52" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/network/connected_vehicle.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.14358975">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="40" />
+        <state relative-caret-position="0">
+          <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="40" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/vehiclesetup.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.63179487">
-          <caret line="67" column="73" selection-start-line="67" selection-start-column="73" selection-end-line="67" selection-end-column="73" />
+        <state relative-caret-position="0">
+          <caret line="67" column="73" lean-forward="false" selection-start-line="67" selection-start-column="73" selection-end-line="67" selection-end-column="73" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/parts/vehicle_camera.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6605128">
-          <caret line="48" column="55" selection-start-line="48" selection-start-column="55" selection-end-line="48" selection-end-column="55" />
+        <state relative-caret-position="0">
+          <caret line="48" column="55" lean-forward="false" selection-start-line="48" selection-start-column="55" selection-end-line="48" selection-end-column="55" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/parts/motor.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/environment/ground_plane.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31589743">
-          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/parts/wheel.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2820513">
-          <caret line="136" column="22" selection-start-line="136" selection-start-column="22" selection-end-line="136" selection-end-column="22" />
+        <state relative-caret-position="0">
+          <caret line="136" column="22" lean-forward="false" selection-start-line="136" selection-start-column="22" selection-end-line="136" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/network/race/checkpoint.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.24410257">
-          <caret line="19" column="113" selection-start-line="19" selection-start-column="113" selection-end-line="19" selection-end-column="113" />
+        <state relative-caret-position="0">
+          <caret line="19" column="113" lean-forward="false" selection-start-line="19" selection-start-column="113" selection-end-line="19" selection-end-column="113" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/parts/spring.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="47" selection-start-line="12" selection-start-column="47" selection-end-line="12" selection-end-column="47" />
+        <state relative-caret-position="0">
+          <caret line="12" column="47" lean-forward="false" selection-start-line="12" selection-start-column="47" selection-end-line="12" selection-end-column="47" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/network/socket.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="69" column="8" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="50" />
+        <state relative-caret-position="0">
+          <caret line="69" column="8" lean-forward="false" selection-start-line="69" selection-start-column="8" selection-end-line="69" selection-end-column="50" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/parts/spring_connector.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/particle/force_field.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="42" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="42" />
+        <state relative-caret-position="0">
+          <caret line="7" column="42" lean-forward="false" selection-start-line="7" selection-start-column="42" selection-end-line="7" selection-end-column="42" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/particle/particle_system.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="51" column="26" selection-start-line="51" selection-start-column="26" selection-end-line="51" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/particle/particle.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="51" column="26" lean-forward="false" selection-start-line="51" selection-start-column="26" selection-end-line="51" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/dynamic_car_body.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11487179">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/style/connection_start.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
+        <state relative-caret-position="60">
+          <caret line="4" column="6" lean-forward="false" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/particle/gravity.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc;n#Gravity#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/renderer.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="21" column="36" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="36" />
+        <state relative-caret-position="315">
+          <caret line="21" column="36" lean-forward="false" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="36" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.409091">
-          <caret line="22" column="59" selection-start-line="22" selection-start-column="59" selection-end-line="22" selection-end-column="59" />
+        <state relative-caret-position="330">
+          <caret line="22" column="59" lean-forward="false" selection-start-line="22" selection-start-column="59" selection-end-line="22" selection-end-column="59" />
           <folding>
             <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
@@ -911,40 +894,66 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/data/vehicle.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/car.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="56" selection-start-line="16" selection-start-column="56" selection-end-line="16" selection-end-column="56" />
+        <state relative-caret-position="795">
+          <caret line="53" column="0" lean-forward="false" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/carsimulator.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="83" column="60" selection-start-line="83" selection-start-column="60" selection-end-line="83" selection-end-column="60" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/relative_dynamic_body.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="87" column="40" selection-start-line="87" selection-start-column="40" selection-end-line="87" selection-end-column="40" />
+        <state relative-caret-position="1245">
+          <caret line="83" column="60" lean-forward="false" selection-start-line="83" selection-start-column="60" selection-end-line="83" selection-end-column="60" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/data/dynamic_rigid_body.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.68410254">
-          <caret line="135" column="72" selection-start-line="135" selection-start-column="72" selection-end-line="135" selection-end-column="72" />
+        <state relative-caret-position="1995">
+          <caret line="135" column="72" lean-forward="false" selection-start-line="135" selection-start-column="72" selection-end-line="135" selection-end-column="72" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/relative_dynamic_body.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1305">
+          <caret line="87" column="40" lean-forward="false" selection-start-line="87" selection-start-column="40" selection-end-line="87" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/car.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="33" lean-forward="true" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/particle/gravity.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="15" column="1" lean-forward="true" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+          <folding>
+            <element signature="n#!!doc;n#Gravity#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/particle/particle.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="40" lean-forward="true" selection-start-line="5" selection-start-column="40" selection-end-line="5" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/particle/particle.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" column="50" lean-forward="false" selection-start-line="23" selection-start-column="50" selection-end-line="23" selection-end-column="50" />
           <folding />
         </state>
       </provider>

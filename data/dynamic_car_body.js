@@ -46,5 +46,4 @@ var DynamicCarBody = (function (_super) {
         }
     };
     return DynamicCarBody;
-})(PhysicsObject3d);
-//# sourceMappingURL=dynamic_car_body.js.map
+}(PhysicsObject3d));

@@ -70,5 +70,4 @@ var RelativeDynamicBody = (function (_super) {
         this.object.add(this._attatchedMesh);
     };
     return RelativeDynamicBody;
-})(DynamicRigidBody);
-//# sourceMappingURL=relative_dynamic_body.js.map
+}(DynamicRigidBody));

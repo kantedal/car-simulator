@@ -40,5 +40,4 @@ var Tree = (function () {
         }
     };
     return Tree;
-})();
-//# sourceMappingURL=tree.js.map
+}());

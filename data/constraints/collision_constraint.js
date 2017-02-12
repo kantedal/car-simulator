@@ -17,5 +17,4 @@ var CollisionConstraint = (function () {
         return velocity.clone();
     };
     return CollisionConstraint;
-})();
-//# sourceMappingURL=collision_constraint.js.map
+}());

@@ -45,5 +45,4 @@ var ParticleSystem = (function () {
         this.simulateParticles(time, delta);
     };
     return ParticleSystem;
-})();
-//# sourceMappingURL=particle_system.js.map
+}());

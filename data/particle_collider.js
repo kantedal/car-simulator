@@ -103,5 +103,4 @@ var ParticleCollider = (function (_super) {
         configurable: true
     });
     return ParticleCollider;
-})(PhysicsObject3d);
-//# sourceMappingURL=particle_collider.js.map
+}(PhysicsObject3d));

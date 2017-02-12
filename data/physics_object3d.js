@@ -425,5 +425,4 @@ var PhysicsObject3d = (function () {
         configurable: true
     });
     return PhysicsObject3d;
-})();
-//# sourceMappingURL=physics_object3d.js.map
+}());

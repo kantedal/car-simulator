@@ -16,5 +16,4 @@ var Gravity = (function (_super) {
     Gravity.prototype.update = function (time, delta) {
     };
     return Gravity;
-})(ForceField);
-//# sourceMappingURL=gravity.js.map
+}(ForceField));

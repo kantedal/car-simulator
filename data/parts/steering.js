@@ -50,5 +50,4 @@ var Steering = (function () {
         configurable: true
     });
     return Steering;
-})();
-//# sourceMappingURL=steering.js.map
+}());

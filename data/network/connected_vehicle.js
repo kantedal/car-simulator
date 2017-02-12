@@ -86,5 +86,4 @@ var ConnectedVehicle = (function () {
         configurable: true
     });
     return ConnectedVehicle;
-})();
-//# sourceMappingURL=connected_vehicle.js.map
+}());

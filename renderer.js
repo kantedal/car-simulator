@@ -52,5 +52,4 @@ var Renderer = (function () {
         configurable: true
     });
     return Renderer;
-})();
-//# sourceMappingURL=renderer.js.map
+}());

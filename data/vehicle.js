@@ -136,5 +136,4 @@ var Vehicle = (function () {
         configurable: true
     });
     return Vehicle;
-})();
-//# sourceMappingURL=vehicle.js.map
+}());

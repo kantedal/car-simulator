@@ -22,5 +22,4 @@ var Checkpoint = (function () {
         renderer.scene.add(this._targetMesh2);
     }
     return Checkpoint;
-})();
-//# sourceMappingURL=checkpoint.js.map
+}());

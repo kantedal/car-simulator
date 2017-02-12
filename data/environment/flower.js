@@ -44,5 +44,4 @@ var Flower = (function () {
         this._particles.boundingSphere.radius = 1000;
     };
     return Flower;
-})();
-//# sourceMappingURL=flower.js.map
+}());

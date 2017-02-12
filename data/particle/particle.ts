@@ -36,8 +36,8 @@ class Particle {
         if(currentTime > this._lifeLength)
         {
             this._isDead = true;
-            this._particleSprite.material.dispose();
-            this._particleSprite.geometry.dispose();
+            //this._particleSprite.material.dispose();
+            //this._particleSprite.geometry.dispose();
             this._renderer.scene.remove(this._particleSprite);
         }
 

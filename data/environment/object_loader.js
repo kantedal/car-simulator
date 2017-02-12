@@ -129,7 +129,7 @@ var ObjectLoader = (function () {
         mtlLoader.load('tree.mtl', function (materials) {
             materials.preload();
             materials.materials.lambert2SG = new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load("models/FirBranches_Df.png")
+                map: new THREE.TextureLoader().load("models/FirBranches_Df.png"),
             });
             materials.materials.lambert2SG = new THREE.MeshLambertMaterial({
                 map: new THREE.TextureLoader().load("models/FirBranches_Df.png"),
@@ -191,5 +191,4 @@ var ObjectLoader = (function () {
             return false;
     };
     return ObjectLoader;
-})();
-//# sourceMappingURL=object_loader.js.map
+}());

@@ -197,5 +197,4 @@ var CarTest = (function () {
         configurable: true
     });
     return CarTest;
-})();
-//# sourceMappingURL=car_test.js.map
+}());

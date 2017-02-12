@@ -123,5 +123,4 @@ var Spring = (function () {
         configurable: true
     });
     return Spring;
-})();
-//# sourceMappingURL=spring.js.map
+}());

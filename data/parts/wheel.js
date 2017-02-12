@@ -191,5 +191,4 @@ var Wheel = (function (_super) {
         configurable: true
     });
     return Wheel;
-})(ParticleCollider);
-//# sourceMappingURL=wheel.js.map
+}(ParticleCollider));

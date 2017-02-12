@@ -52,5 +52,4 @@ var Vector = (function () {
         configurable: true
     });
     return Vector;
-})();
-//# sourceMappingURL=vector.js.map
+}());

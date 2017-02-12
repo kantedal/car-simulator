@@ -219,5 +219,4 @@ var DynamicRigidBody = (function (_super) {
         configurable: true
     });
     return DynamicRigidBody;
-})(PhysicsObject3d);
-//# sourceMappingURL=dynamic_rigid_body.js.map
+}(PhysicsObject3d));

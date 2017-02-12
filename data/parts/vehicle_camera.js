@@ -36,5 +36,4 @@ var VehicleCamera = (function () {
         }
     };
     return VehicleCamera;
-})();
-//# sourceMappingURL=vehicle_camera.js.map
+}());

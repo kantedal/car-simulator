@@ -62,5 +62,4 @@ var Car = (function (_super) {
         this.vehicleBody.object.add(this.spotLight);
     }
     return Car;
-})(VehicleSetup);
-//# sourceMappingURL=car.js.map
+}(VehicleSetup));

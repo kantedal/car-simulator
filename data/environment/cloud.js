@@ -40,5 +40,4 @@ var Cloud = (function () {
         }
     };
     return Cloud;
-})();
-//# sourceMappingURL=cloud.js.map
+}());

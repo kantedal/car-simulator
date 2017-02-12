@@ -50,5 +50,4 @@ var Motor = (function () {
         configurable: true
     });
     return Motor;
-})();
-//# sourceMappingURL=motor.js.map
+}());

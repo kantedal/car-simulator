@@ -49,5 +49,4 @@ var Grass = (function () {
         this._particles.boundingSphere.radius = 10000;
     };
     return Grass;
-})();
-//# sourceMappingURL=grass.js.map
+}());

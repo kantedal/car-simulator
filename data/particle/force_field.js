@@ -14,5 +14,4 @@ var ForceField = (function () {
         configurable: true
     });
     return ForceField;
-})();
-//# sourceMappingURL=force_field.js.map
+}());

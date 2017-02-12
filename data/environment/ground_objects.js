@@ -38,5 +38,4 @@ var GroundObjects = (function () {
         configurable: true
     });
     return GroundObjects;
-})();
-//# sourceMappingURL=ground_objects.js.map
+}());

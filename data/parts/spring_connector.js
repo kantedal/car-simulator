@@ -56,5 +56,4 @@ var SpringConnector = (function () {
         //this._springTopConnector.scale.set(0.6, 0.6, 0.6);
     };
     return SpringConnector;
-})();
-//# sourceMappingURL=spring_connector.js.map
+}());

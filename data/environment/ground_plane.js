@@ -123,5 +123,4 @@ var GroundPlane = (function () {
     GroundPlane._noise1 = new Noise(0.23);
     GroundPlane._noise2 = new Noise(0.59);
     return GroundPlane;
-})();
-//# sourceMappingURL=ground_plane.js.map
+}());

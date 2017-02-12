@@ -27,5 +27,4 @@ var RaceTrack = (function () {
         }
     };
     return RaceTrack;
-})();
-//# sourceMappingURL=race_track.js.map
+}());

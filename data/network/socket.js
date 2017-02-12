@@ -111,7 +111,7 @@ var Socket = (function () {
                                 rel_y: this._connectedVehicles[i].cardata.rel_y,
                                 rel_rx: this._connectedVehicles[i].cardata.rel_rx,
                                 rel_ry: this._connectedVehicles[i].cardata.rel_ry,
-                                rel_rz: this._connectedVehicles[i].cardata.rel_rz
+                                rel_rz: this._connectedVehicles[i].cardata.rel_rz,
                             }
                         });
                     }
@@ -129,7 +129,7 @@ var Socket = (function () {
                             rel_y: rel_pos.y,
                             rel_rx: rel_rot.x,
                             rel_ry: rel_rot.y,
-                            rel_rz: rel_rot.z
+                            rel_rz: rel_rot.z,
                         }
                     });
                 }
@@ -149,7 +149,7 @@ var Socket = (function () {
                         rel_y: rel_pos.y,
                         rel_rx: rel_rot.x,
                         rel_ry: rel_rot.y,
-                        rel_rz: rel_rot.z
+                        rel_rz: rel_rot.z,
                     }
                 });
             }
@@ -212,5 +212,4 @@ var Socket = (function () {
         configurable: true
     });
     return Socket;
-})();
-//# sourceMappingURL=socket.js.map
+}());
